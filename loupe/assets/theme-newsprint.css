@@ -78,9 +78,9 @@
   --plate-start-scale: 0.32;
   --plate-exit-scale:  1.08;
   --thumb-start-scale: 0.7;
-  --scatter-radius: 88px;
+  --scatter-radius: 77px;
   --scatter-spread: 120deg;
-  --thumb-tilt:     6deg;
+  --thumb-tilt:     15deg;
   --drift:       60s;
 
   --cell-size:   146px;

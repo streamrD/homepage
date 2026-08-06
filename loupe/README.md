@@ -103,6 +103,13 @@ so the axis can be compared without inventing colours per test.
 Blend modes cannot be switched by a custom property, so `loupe.js` turns
 `--rail-duotone: 1` into a class and themes stay pure token blocks.
 
+**The filler tiles are git-ignored, so on a deployed site they are absent.**
+`assets/config.js` carries `FILLER_PRESENT`, and when it is false the pages
+refuse a request for them rather than serving a screen of 404s: the content
+mode falls back to photographs, the picker's switch is disabled and says why,
+and the contact sheet explains itself instead of drawing broken images. Run
+`make-tiles.sh` and add `?filler=1` to use them locally.
+
 **Judge these against photographs, not tiles.** `?tiles=photographs` swaps in
 the Moore light studies from `../jimmy/`, on both page types. A section shows
 the six available frames rather than repeating five of them four times to
@@ -136,7 +143,13 @@ so the miniatures' proportions are the gallery's proportions.
 Both are worth keeping as template options. The engine implements the first;
 `jimmy/` now demonstrates the second, and porting it back here is small.
 
-**scatter** — what loupe does today. Each thumbnail is thrown from a point on
+**scatter** — what loupe does, and it is `jimmy/v1`'s routine exactly:
+at five frames the arc runs −148° to −12°, the radius 96px to 216px, and the
+twist ±7° to ±23°, which is arithmetically identical to v1's `-148 + i*34`,
+`96 + i*30` and `±(7 + i*4)`. The difference is that loupe states them as
+proportions — a sweep divided by the item count, a radius grown to 2.25×
+across the row, a twist from a third of `--thumb-tilt` to all of it — so the
+character holds at ten frames instead of wrapping the circle. Each thumbnail is thrown from a point on
 an arc near the middle of the screen and flies to its resting place, tilting
 as it goes. Three tokens drive it, so a theme can dial it from a hurl to a
 nudge without touching JavaScript:

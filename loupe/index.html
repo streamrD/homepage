@@ -281,7 +281,13 @@
     transition: all 180ms ease;
   }
 
-  .axes button:hover { border-color: rgba(255, 214, 160, 0.5); color: #d3c6b6; }
+  .axes button:hover:not([disabled]) { border-color: rgba(255, 214, 160, 0.5); color: #d3c6b6; }
+
+  .axes button[disabled] {
+    opacity: 0.45;
+    cursor: default;
+    border-style: dashed;
+  }
 
   .axes em {
     font-style: normal;
@@ -393,6 +399,14 @@
   }
 
   [].forEach.call(document.querySelectorAll('.axes button'), function (b) {
+    // With no filler tiles present there is nothing to switch to, so the
+    // control says so instead of turning the cards into broken images.
+    if (b.dataset.axis === 'tiles' && !LOUPE_CONFIG.filler) {
+      b.disabled = true;
+      b.textContent = 'real photographs — the only set here';
+      b.title = 'The generated filler tiles are git-ignored. Run ' +
+                'loupe/make-tiles.sh, then add ?filler=1.';
+    }
     b.setAttribute('aria-pressed', String(!!AXES[b.dataset.axis]));
     b.addEventListener('click', function () {
       var k = b.dataset.axis;

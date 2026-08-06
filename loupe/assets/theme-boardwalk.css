@@ -82,9 +82,9 @@
   --plate-start-scale: 0.13;
   --plate-exit-scale:  1.16;
   --thumb-start-scale: 0.42;
-  --scatter-radius: 110px;
+  --scatter-radius: 96px;
   --scatter-spread: 136deg;
-  --thumb-tilt:     9deg;
+  --thumb-tilt:     23deg;
   --drift:       54s;
   --drift-scale: 1.07;
 }

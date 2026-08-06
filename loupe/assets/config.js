@@ -29,13 +29,24 @@ window.LOUPE_CONFIG = (function () {
   // ?tiles=photographs | filler overrides for one request.
   var DEFAULT_CONTENT = 'photographs';
 
+  // Are the generated filler tiles actually present? They are git-ignored,
+  // so on the deployed site they are not, and asking for them yields a page
+  // of 404s rather than a gallery. Run loupe/make-tiles.sh and add ?filler=1
+  // to use them locally; flip this to true once a bucket holds them.
+  var FILLER_PRESENT = false;
+
   var q = new URLSearchParams(location.search).get('assets');
   var assets = q === null ? DEFAULT_ASSETS : q;
 
   // A prefix without a trailing slash silently concatenates into nonsense.
   if (assets && !/\/$/.test(assets)) assets += '/';
 
-  var content = new URLSearchParams(location.search).get('tiles') || DEFAULT_CONTENT;
+  var qs = new URLSearchParams(location.search);
+  var filler = qs.get('filler') === '1' ? true : FILLER_PRESENT;
 
-  return { assets: assets, content: content };
+  var content = qs.get('tiles') || DEFAULT_CONTENT;
+  // Never serve a request for pictures that are not there.
+  if (content === 'filler' && !filler) content = 'photographs';
+
+  return { assets: assets, content: content, filler: filler };
 })();

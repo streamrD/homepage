@@ -337,23 +337,36 @@
 
     var cx = window.innerWidth / 2;
     var cy = window.innerHeight / 2;
-    var R      = px('--scatter-radius', 110);
+    var R      = px('--scatter-radius', 96);
     var spread = px('--scatter-spread', 136);
-    var tilt   = px('--thumb-tilt', 9);
+    var from   = px('--scatter-from', -80);
+    var tilt   = px('--thumb-tilt', 23);
     var n      = thumbs.length;
 
+    // jimmy/v1's routine, which is the one that reads as a tail lashing
+    // rather than five separate arrivals. Three things make it work, and all
+    // three are proportions rather than constants so the character holds at
+    // any item count:
+    //
+    //   the arc is centred at --scatter-from, above and a little left of the
+    //   middle, and divided by however many frames there are — so ten fan
+    //   out over the same sweep five do instead of wrapping the circle;
+    //
+    //   the radius grows to 2.25x across the row, so the frames furthest
+    //   along the rail start furthest out and the group unfurls;
+    //
+    //   the twist grows with it, from about a third of --thumb-tilt to all
+    //   of it, alternating in sign so neighbours lean opposite ways.
     thumbs.forEach(function (t, i) {
       var r = t.getBoundingClientRect();
       var f = n > 1 ? i / (n - 1) : 0.5;
-      // A fixed arc divided by however many there are, so ten thumbnails fan
-      // out over the same sweep five do rather than wrapping the circle.
-      var ang = (-90 - spread / 2 + spread * f) * Math.PI / 180;
-      var rad = R * (0.75 + 0.5 * f);
+      var ang = (from - spread / 2 + spread * f) * Math.PI / 180;
+      var rad = R * (1 + f * 1.25);
       var sx  = cx + Math.cos(ang) * rad;
       var sy  = cy + Math.sin(ang) * rad * 0.78;
       t.style.setProperty('--dx', (sx - (r.left + r.width / 2)).toFixed(1) + 'px');
       t.style.setProperty('--dy', (sy - (r.top + r.height / 2)).toFixed(1) + 'px');
-      t.style.setProperty('--rot', ((i % 2 ? 1 : -1) * tilt * (0.5 + f)).toFixed(1) + 'deg');
+      t.style.setProperty('--rot', ((i % 2 ? 1 : -1) * tilt * (0.30 + f * 0.70)).toFixed(1) + 'deg');
     });
 
     void rail.offsetWidth;   // lock in the scattered start before animating
