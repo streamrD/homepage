@@ -229,6 +229,15 @@ body {
 }
 .full__cap:empty { display: none; }
 
+/* --- position dots -------------------------------------------------
+   A portrait affordance for swipe, switched on inside the portrait block
+   below. On a desktop the arrow keys do this job and there is no gesture
+   to hint at, so it never renders. Declared here rather than after that
+   block so the media query can override it — same specificity, and the
+   later rule would otherwise win. ---------------------------------- */
+
+.pager { display: none; }
+
 /* --- no-JS fallback ------------------------------------------------
    Without JS the thumbs are plain links straight to the full images,
    and the enlargement layer never appears. ------------------------- */
@@ -347,7 +356,8 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 76px 12px 64px;
+    /* Bottom padding clears the dots at 56px and the wordmark below them. */
+    padding: 76px 12px 78px;
   }
   .full__img {
     position: static;
@@ -362,6 +372,33 @@ body {
     margin-top: 12px;
     flex: none;
   }
+
+  /* Position dots. They sit between the photograph and the wordmark, and
+     appear only while a photograph is open — the grid is its own map, so
+     with the grid showing they would say nothing. */
+  .pager {
+    display: flex;
+    justify-content: center;
+    gap: 7px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 56px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--fade) ease-out;
+  }
+  .stage:has(.full.is-open) .pager { opacity: 1; }
+
+  .pager i {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.26);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.22);
+    transition: background var(--fade-quick) ease-out;
+  }
+  .pager i.is-on { background: rgba(0, 0, 0, 0.72); }
 }
 
 @media (prefers-reduced-motion: reduce) {

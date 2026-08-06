@@ -94,6 +94,17 @@
     function (fig) { return fig.id.replace(/^full-/, ''); }
   );
 
+  // Position dots. build.py emits one per photograph; CSS shows them only in
+  // portrait and only while a photograph is open, so all this does is move
+  // the filled one. Empty on the cover, where there is no pager.
+  var dots = stage.querySelectorAll('.pager i');
+
+  function mark(i) {
+    for (var d = 0; d < dots.length; d++) {
+      dots[d].classList.toggle('is-on', d === i);
+    }
+  }
+
   function show(id) {
     var fig = document.getElementById('full-' + id);
     if (!fig) return;
@@ -102,6 +113,7 @@
     current = id;
     fig.classList.add('is-open');
     thumbs.classList.add('is-hidden');
+    mark(ids.indexOf(id));
     warmNeighbours(id);
   }
 
@@ -110,6 +122,7 @@
     open = null;
     current = null;
     thumbs.classList.remove('is-hidden');
+    mark(-1);
   }
 
   thumbs.addEventListener('click', function (e) {
