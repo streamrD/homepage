@@ -19,9 +19,55 @@
   var stage = document.querySelector('.stage');
   if (!stage) return;
 
-  /* --- fit the stage to the viewport ------------------------------ */
+  /* --- fit the stage to the viewport ------------------------------
+
+     Two layouts. Landscape scales the whole 1000x714 stage down to fit.
+     Portrait does not scale it at all — the stage becomes the viewport,
+     the background photograph fills it, and only the grid is scaled, so
+     that it can never collide with the wordmark on a short screen.
+
+     The media query is duplicated from site.css deliberately: they have
+     to agree, and a mismatch would leave portrait CSS applied with
+     landscape measurements. Keep them in step.                       */
+
+  var PORTRAIT = window.matchMedia('(orientation: portrait) and (max-width: 540px)');
+
+  var GRID_SCALE_MAX = 0.85;   // caps how much of the photograph the grid may cover
+  var WM_MAX = 340;            // wordmark width, px
+  var WM_RATIO = 34.805 / 388.569;
+  var NAV_BAND = 92;           // nav tiles at the top, plus breathing room
+
+  function px(name, fallback) {
+    var v = parseFloat(getComputedStyle(stage).getPropertyValue(name));
+    return isNaN(v) ? fallback : v;
+  }
+
+  function fitPortrait() {
+    var vw = window.innerWidth;
+    var vh = stage.clientHeight || window.innerHeight;
+
+    var wmW = Math.min(WM_MAX, vw - 28);
+    var gridBottom = Math.round(13 + wmW * WM_RATIO + 22);
+
+    stage.style.setProperty('--wm-w', wmW + 'px');
+    stage.style.setProperty('--grid-bottom', gridBottom + 'px');
+
+    var gw = px('--grid-w', 0);
+    if (gw) {
+      var gh = px('--grid-h', 507);
+      stage.style.setProperty('--gscale', Math.min(
+        GRID_SCALE_MAX,
+        (vw - 24) / gw,
+        (vh - gridBottom - NAV_BAND) / gh
+      ));
+    }
+
+    stage.style.removeProperty('--scale');
+    document.body.style.height = '';
+  }
 
   function fit() {
+    if (PORTRAIT.matches) return fitPortrait();
     var scale = Math.min(1, window.innerWidth / STAGE_W, window.innerHeight / STAGE_H);
     stage.style.setProperty('--scale', scale);
     // Keep the page from scrolling: the stage is transform-scaled, so its
@@ -31,6 +77,7 @@
 
   fit();
   window.addEventListener('resize', fit);
+  window.addEventListener('orientationchange', fit);
 
   /* --- enlargements ----------------------------------------------- */
 
@@ -74,7 +121,12 @@
   });
 
   // Clicking the open photo puts the grid back, exactly as the original did.
+  // A swipe ends in a click too, so a step suppresses the next one — without
+  // this, every swipe would step to the next photograph and then close it.
+  var swiped = false;
+
   stage.addEventListener('click', function (e) {
+    if (swiped) { swiped = false; return; }
     if (e.target.closest('.full.is-open')) location.hash = '';
   });
 
@@ -90,6 +142,28 @@
     current = ids[(i + delta + ids.length) % ids.length];
     location.hash = current;
   }
+
+  /* Swipe does on a phone what the arrow keys do on a desktop. Horizontal
+     intent only: a mostly-vertical drag is left alone, and so is anything
+     too short to be deliberate. */
+  var SWIPE_MIN = 45;
+  var touch = null;
+
+  stage.addEventListener('touchstart', function (e) {
+    if (!current || e.touches.length !== 1) return;
+    touch = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  }, { passive: true });
+
+  stage.addEventListener('touchend', function (e) {
+    if (!touch || !current) return;
+    var t = e.changedTouches[0];
+    var dx = t.clientX - touch.x;
+    var dy = t.clientY - touch.y;
+    touch = null;
+    if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < Math.abs(dy)) return;
+    swiped = true;
+    step(dx < 0 ? 1 : -1);
+  }, { passive: true });
 
   document.addEventListener('keydown', function (e) {
     // Leave modified presses alone — those are browser shortcuts.

@@ -137,6 +137,7 @@ body {
   display: block;
 }
 .nav__sq:hover,
+.nav__sq:active,
 .nav__sq:focus-visible { transform: scale(1); }
 .nav__sq:focus-visible { outline: 1px solid rgba(255, 255, 255, 0.7); outline-offset: 2px; }
 
@@ -157,9 +158,22 @@ body {
 .thumb img { width: 100px; height: 100px; display: block; }
 
 /* Hovering one thumb fades the other eleven back — the original's
-   "firstout" tween. */
-.thumbs:hover .thumb { opacity: var(--dim); }
-.thumbs .thumb:hover,
+   "firstout" tween.
+
+   Scoped to pointers that can actually hover: on a touchscreen :hover
+   sticks after a tap, which would leave eleven thumbs dimmed with nothing
+   under the finger. Touch gets the same fade from :active below. */
+@media (hover: hover) {
+  .thumbs:hover .thumb { opacity: var(--dim); }
+  .thumbs .thumb:hover { opacity: var(--rest); }
+}
+/* The same fade by touch: pressing a thumbnail fades the other eleven.
+
+   Written as :not(:active) rather than as a pair of rules because :has()
+   takes the specificity of its argument — `.thumbs:has(.thumb:active) .thumb`
+   outweighs `.thumbs .thumb:active`, so the obvious pairing dims the
+   thumbnail under the finger along with the other eleven. */
+.thumbs:has(.thumb:active) .thumb:not(:active) { opacity: var(--dim); }
 .thumbs .thumb:focus-visible { opacity: var(--rest); }
 .thumb:focus-visible { outline: 1px solid rgba(255, 255, 255, 0.7); outline-offset: 2px; }
 
@@ -220,3 +234,138 @@ body {
    and the enlargement layer never appears. ------------------------- */
 
 .no-js .full { display: none; }
+
+/* --- portrait ------------------------------------------------------
+   A phone held upright is about 0.46:1; the stage is 1.40:1. Scaling
+   the stage to fit that leaves it a band across the middle of the
+   screen, so portrait rebuilds the frame instead: the background
+   photograph goes full-bleed and the grid, nav tiles and wordmark are
+   re-anchored over it.
+
+   Nothing here reflows the grid. Thumbnails keep the original 138x136
+   pitch and their measured offsets — the grid box moves and scales as
+   one piece, so the composition inside it is the 2005 one.
+
+   The crop is hand-fitted per page (--focus, from photos.json). That
+   is the same decision the original made when it hand-placed each grid
+   to dodge the face in its background; portrait just moves the
+   variable from where the grid sits to where the crop lands.
+   ------------------------------------------------------------------ */
+
+@media (orientation: portrait) and (max-width: 540px) {
+
+  body { display: block; overflow: hidden; }
+
+  /* The stage stops being a fixed box and becomes the viewport. dvh so
+     that Safari's collapsing toolbars do not leave a strip of #CCCCCC
+     along the bottom edge. */
+  .stage {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    transform: none;
+  }
+  .stage__bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--focus, 50% 40%);
+  }
+
+  /* The grid box, positioned and scaled as a unit. --gscale is set by
+     site.js so the grid can never collide with the wordmark on a short
+     screen; transform-origin pins the scaling to the bottom edge. */
+  .thumbs {
+    inset: auto auto var(--grid-bottom) 50%;
+    width: var(--grid-w);
+    height: var(--grid-h);
+    transform: translateX(-50%) scale(var(--gscale, 0.85));
+    transform-origin: 50% 100%;
+  }
+  .thumb { left: var(--px); top: var(--py); }
+
+  /* Nav tiles: a row over the photograph, top-left. They sit at rest
+     size here rather than at 0.68 — there is no room for a tile to
+     grow into on a phone, and a 41px tap target is too small. */
+  .nav {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    display: flex;
+    gap: 12px;
+    z-index: 4;
+  }
+  .nav__sq {
+    position: static;
+    margin: 0;
+    width: var(--nav-size, 60px);
+    height: var(--nav-size, 60px);
+    transform: none;
+  }
+  .nav__sq img { width: 100%; height: 100%; }
+  .nav__sq:hover,
+  .nav__sq:active,
+  .nav__sq:focus-visible { transform: scale(1.14); }
+
+  .wordmark {
+    left: 14px;
+    top: auto;
+    bottom: 13px;
+    width: var(--wm-w, 340px);
+    height: auto;
+  }
+  .wordmark svg {
+    position: static;
+    width: 100%;
+    height: auto;
+    /* On the stage the wordmark always sat on a quiet corner of the
+       background. Full-bleed puts it on skin tones in galleries 2 and 3,
+       where the red name loses contrast — this is the least it takes to
+       hold the letterforms, and it does nothing where the ground is
+       already dark. Portrait only; the stage is untouched. */
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.45));
+  }
+
+  /* Cover page: headline and subhead stack above the tiles rather than
+     sitting at their measured stage coordinates. */
+  .stage--cover .type {
+    left: 16px;
+    width: min(calc(100vw - 32px), 416px);
+    height: auto;
+  }
+  .stage--cover .type--title  { top: auto; bottom: 92px; }
+  .stage--cover .type--subtitle { top: auto; bottom: 52px; width: min(calc(100vw - 32px), 346px); }
+  .stage--cover .nav { top: auto; bottom: 152px; }
+
+  /* An open photograph centres itself over the same background, which
+     is what the original did — the enlargement never covered the whole
+     stage there either. Captions go beneath, for both orientations of
+     photograph; the original put them beside portraits, and there is
+     no room for that at this width. */
+  .full {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 76px 12px 64px;
+  }
+  .full__img {
+    position: static;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+  }
+  .full__cap {
+    position: static;
+    width: min(100%, 380px);
+    margin-top: 12px;
+    flex: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .thumb, .nav__sq, .thumbs, .full, .wordmark .wm-name, .wordmark .wm-word {
+    transition-duration: 0.01ms;
+  }
+}
