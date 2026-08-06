@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<base href="/jimmy/">
+<title>Light Studies — James Vincent Moore, Detroit, early to mid 1960s</title>
+
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+<meta name="description" content="Five long exposures on 2 1/4-inch film by James Vincent Moore — abstract light play, Detroit, shot in the early to mid 1960s.">
+<meta property="og:title" content="Light Studies">
+<meta property="og:description" content="Five long exposures on 2 1/4-inch film by James Vincent Moore — abstract light play, Detroit, early to mid 1960s.">
+<meta property="og:image" content="https://todd.up.railway.app/jimmy/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A long exposure of coloured lights, beside the words light studies, james vincent moore (jimmy).">
+<meta property="og:url" content="https://todd.up.railway.app/jimmy/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://todd.up.railway.app/jimmy/og.jpg">
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    background: #07060a;
+    color: #cfc6bd;
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    overflow: hidden;
+  }
+
+  /* ---------- full-bleed background plates ---------- */
+
+  #stage {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    transition: opacity 900ms ease, filter 900ms ease;
+  }
+
+  body.lit #stage { opacity: 0.07; filter: saturate(0.5); }
+
+  .plate {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 700ms ease;
+  }
+
+  .plate.on  { opacity: 1; }
+  .plate.out { opacity: 0; }
+
+  /* A square the size of the viewport's long edge: at scale 1 it covers the
+     screen exactly, and small it shows the whole square frame — the same
+     framing as the thumbnails. */
+  .plate img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100vmax;
+    height: 100vmax;
+    margin: -50vmax 0 0 -50vmax;
+    object-fit: cover;
+    display: block;
+    transform: scale(0.13);
+    transition: transform 1500ms cubic-bezier(0.14, 0.76, 0.18, 1);
+  }
+
+  .plate.on img { transform: scale(1); }
+
+  /* the outgoing frame keeps opening as it fades, so the cut carries through */
+  .plate.out img { transform: scale(1.16); }
+
+  /* the plate that comes to rest breathes, very slowly */
+  .plate.resting img {
+    transition: none;
+    animation: drift 54s ease-in-out infinite alternate;
+  }
+
+  @keyframes drift {
+    from { transform: scale(1.00) translate3d(0, 0, 0); }
+    to   { transform: scale(1.07) translate3d(-1.2%, 1%, 0); }
+  }
+
+  /* a whisper of film grain, background only — never over an enlargement */
+  #grain {
+    position: fixed;
+    inset: -50%;
+    pointer-events: none;
+    opacity: 0;
+    mix-blend-mode: overlay;
+    transition: opacity 1.4s ease;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='0.5'/></svg>");
+  }
+
+  body.ready #grain { opacity: 0.16; }
+  body.lit #grain { opacity: 0; }
+
+  /* darkening at both bottom corners, so the row and the credit always read
+     whichever photograph is standing behind them */
+  #shade {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    height: 46vh;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+    background:
+      radial-gradient(ellipse 44% 62% at 92% 90%, rgba(0,0,0,0.68), rgba(0,0,0,0) 100%),
+      radial-gradient(ellipse 40% 52% at 4% 94%, rgba(0,0,0,0.62), rgba(0,0,0,0) 100%);
+  }
+
+  body.ready #shade { opacity: 1; }
+  body.lit   #shade { opacity: 0; }
+
+  /* ---------- the thumbnail row ---------- */
+
+  #rail {
+    position: fixed;
+    right: max(3vw, 22px);
+    bottom: max(3vh, 20px);
+    display: flex;
+    gap: 13px;
+    z-index: 3;
+    transition: opacity 500ms ease;
+  }
+
+  body.lit #rail { opacity: 0; pointer-events: none; }
+
+  .thumb {
+    position: relative;
+    width: 78px;
+    height: 78px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 2px;
+    background: #0a0809;
+    cursor: pointer;
+    touch-action: manipulation;
+    opacity: 0;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.65);
+    transform: translate(var(--dx, 0px), var(--dy, 0px)) scale(0.42) rotate(var(--rot, 0deg));
+  }
+
+  .thumb.animate {
+    transition:
+      transform 1250ms cubic-bezier(0.16, 0.9, 0.22, 1),
+      opacity 700ms ease,
+      border-color 260ms ease,
+      box-shadow 260ms ease;
+  }
+
+  .thumb.settled {
+    opacity: 1;
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+
+  .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.86) saturate(0.94);
+    transition: filter 260ms ease, transform 400ms ease;
+  }
+
+  #rail.live .thumb:hover img,
+  #rail.live .thumb:focus-visible img {
+    filter: brightness(1.12) saturate(1.06);
+    transform: scale(1.07);
+  }
+
+  #rail.live .thumb:hover,
+  #rail.live .thumb:focus-visible {
+    border-color: rgba(255, 214, 160, 0.75);
+    box-shadow: 0 10px 34px rgba(0, 0, 0, 0.7), 0 0 22px rgba(255, 176, 90, 0.28);
+    outline: none;
+  }
+
+  .thumb .n {
+    position: absolute;
+    inset: auto 0 0 0;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    color: rgba(255, 255, 255, 0.72);
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.72));
+    padding: 10px 0 2px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 240ms ease;
+  }
+
+  #rail.live .thumb:hover .n,
+  #rail.live .thumb:focus-visible .n { opacity: 1; }
+
+  /* ---------- the standing caption ---------- */
+
+  #plate-text {
+    position: fixed;
+    left: max(3vw, 22px);
+    bottom: max(3vh, 22px);
+    z-index: 3;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    line-height: 1.9;
+    text-transform: lowercase;
+    color: #b8ada2;
+    text-shadow: 0 1px 14px rgba(0, 0, 0, 0.9);
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 1.5s ease 0.5s, transform 1.5s ease 0.5s;
+    pointer-events: none;
+    /* stop short of the row: five 78px thumbs, their gaps, and the margin */
+    max-width: calc(100vw - 500px);
+  }
+
+  body.ready #plate-text { opacity: 1; transform: none; }
+  body.lit   #plate-text { opacity: 0; transition-delay: 0s; transition-duration: 400ms; }
+
+  #plate-text .t { color: #e8dcc9; letter-spacing: 0.34em; }
+  #plate-text .s { color: #978d82; font-size: 10px; }
+
+  /* him, above his own work — same treatment as the row, but left in the
+     slide's own 5:4 landscape rather than cropped square */
+  #portrait {
+    display: block;
+    position: relative;
+    width: 78px;
+    height: 62px;
+    margin-bottom: 15px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 2px;
+    background: #0a0809;
+    overflow: hidden;
+    cursor: pointer;
+    touch-action: manipulation;
+    pointer-events: auto;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.65);
+    transition: border-color 260ms ease, box-shadow 260ms ease;
+  }
+
+  #portrait img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.86) saturate(0.94);
+    transition: filter 260ms ease, transform 400ms ease;
+  }
+
+  body.live #portrait:hover img,
+  body.live #portrait:focus-visible img {
+    filter: brightness(1.12) saturate(1.06);
+    transform: scale(1.07);
+  }
+
+  body.live #portrait:hover,
+  body.live #portrait:focus-visible {
+    border-color: rgba(255, 214, 160, 0.75);
+    box-shadow: 0 10px 34px rgba(0, 0, 0, 0.7), 0 0 22px rgba(255, 176, 90, 0.28);
+    outline: none;
+  }
+
+  /* ---------- the enlargement ---------- */
+
+  #light {
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+    display: grid;
+    place-items: center;
+    background: #0a090c;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 700ms ease;
+    cursor: zoom-out;
+  }
+
+  body.lit #light { opacity: 1; pointer-events: auto; }
+
+  #light img {
+    max-width: 88vw;
+    max-height: 86vh;
+    object-fit: contain;
+    display: block;
+    opacity: 0;
+    transform: scale(0.965);
+    transition: opacity 800ms ease, transform 1100ms cubic-bezier(0.16, 0.9, 0.22, 1);
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.8);
+  }
+
+  #light img.shown { opacity: 1; transform: scale(1); }
+
+  #light .meta {
+    position: fixed;
+    left: 0; right: 0; bottom: max(2.4vh, 18px);
+    text-align: center;
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: lowercase;
+    color: #6e6660;
+    opacity: 0;
+    transition: opacity 700ms ease 400ms;
+  }
+
+  body.lit #light .meta { opacity: 1; }
+
+  /* ---------- small screens ---------- */
+
+  /* Too narrow to sit beside the row — the credit moves above it instead. */
+  @media (max-width: 900px) {
+    #plate-text { bottom: 112px; max-width: 92vw; }
+  }
+
+  @media (max-width: 720px) {
+    .thumb { width: 54px; height: 54px; }
+    #portrait { width: 54px; height: 43px; margin-bottom: 11px; }
+    #rail { gap: 9px; right: 16px; bottom: 16px; }
+    #plate-text { font-size: 10px; letter-spacing: 0.16em; bottom: 94px; max-width: 88vw; }
+    #light img { max-width: 94vw; max-height: 78vh; }
+  }
+
+  /* A phone held upright. The row turns on its side and runs down the right
+     edge, which leaves the whole bottom for the credit and keeps the tall
+     middle of the screen clear for the photograph. */
+  @media (max-width: 720px) and (orientation: portrait) {
+    #rail {
+      flex-direction: column;
+      top: 50%;
+      bottom: auto;
+      right: calc(13px + env(safe-area-inset-right, 0px));
+      transform: translateY(-50%);
+      gap: 10px;
+    }
+
+    /* the column needs the right edge dark, not the bottom-right corner */
+    #shade {
+      top: 0;
+      height: auto;
+      background:
+        linear-gradient(to left, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0) 32%),
+        linear-gradient(to top, rgba(0,0,0,0.74) 0%, rgba(0,0,0,0) 27%);
+    }
+
+    /* nothing sits beside it down there any more — it can have the width */
+    #plate-text {
+      left: calc(20px + env(safe-area-inset-left, 0px));
+      bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+      max-width: calc(100vw - 42px);
+    }
+
+    #light img { max-width: 92vw; max-height: 76vh; }
+    #light .meta { bottom: calc(18px + env(safe-area-inset-bottom, 0px)); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .plate img { transform: none !important; transition: none !important; }
+    .plate.resting img { animation: none; }
+    .thumb.animate { transition: opacity 500ms ease; }
+    .thumb { transform: none !important; }
+    #light img { transition: opacity 400ms ease; transform: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div id="stage" aria-hidden="true"></div>
+<div id="grain" aria-hidden="true"></div>
+<div id="shade" aria-hidden="true"></div>
+
+<div id="plate-text">
+  <button id="portrait" type="button" aria-label="Portrait of James Vincent Moore — enlarge">
+    <img src="thumbs/jimmy.jpg" alt="" decoding="async">
+  </button>
+  <div class="t">light studies</div>
+  <div class="s">james vincent moore (jimmy) · 2 1/4-inch film · detroit, mi · early–mid 1960s</div>
+</div>
+
+<nav id="rail" aria-label="Photographs"></nav>
+
+<div id="light" role="dialog" aria-modal="true" aria-label="Enlargement">
+  <img id="light-img" alt="">
+  <div class="meta" id="light-meta"></div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var PHOTOS = [
+    { id: '01', alt: 'Long exposure — petals of red, green and yellow light' },
+    { id: '02', alt: 'Long exposure — scattered warm bokeh over deep red' },
+    { id: '03', alt: 'Long exposure — looping gold and orange light trails' },
+    { id: '04', alt: 'Long exposure — beaded curtains of gold light' },
+    { id: '05', alt: 'Long exposure — soft amber glow scattered with sparks' }
+  ];
+
+  // Him, from the same years. Not part of the numbered five — it hangs above
+  // the credit and carries its own label in the enlargement.
+  var PORTRAIT = {
+    id: 'jimmy',
+    alt: 'James Vincent Moore seated in a living room, early to mid 1960s',
+    label: 'james vincent moore · early–mid 1960s'
+  };
+
+  // The opening: each frame rushes out from a small square to full bleed.
+  // Two short bursts, then the third comes to rest.
+  var INTRO = ['01', '05', '02'];
+  var BURST = 2000;   // beat to beat
+  var GROW  = 1500;   // small to full bleed, matches the CSS transition
+
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var stage = document.getElementById('stage');
+  var rail = document.getElementById('rail');
+  var light = document.getElementById('light');
+  var lightImg = document.getElementById('light-img');
+  var lightMeta = document.getElementById('light-meta');
+
+  var plates = {};
+  var thumbs = [];
+  var current = null;
+  var openItem = null;   // the photograph currently enlarged, or null
+  var openIdx = -1;      // its place in PHOTOS; -1 for the portrait
+  var railLive = false;
+  var timers = [];
+
+  function at(fn, ms) { timers.push(setTimeout(fn, ms)); }
+  function clearTimers() { timers.forEach(clearTimeout); timers = []; }
+
+  // The five are lights-NN; the portrait keeps its own name.
+  function full(id) {
+    return 'img/' + (id === PORTRAIT.id ? id : 'lights-' + id) + '.jpg';
+  }
+
+  // ---- build the background plates and the thumbnail row ----
+
+  PHOTOS.forEach(function (p, i) {
+    var plate = document.createElement('div');
+    plate.className = 'plate';
+    var img = document.createElement('img');
+    img.src = full(p.id);
+    img.alt = '';
+    img.decoding = 'async';
+    // Only the opening frames are worth fetching eagerly.
+    img.loading = INTRO.indexOf(p.id) === -1 ? 'lazy' : 'eager';
+    plate.appendChild(img);
+    stage.appendChild(plate);
+    plates[p.id] = plate;
+
+    var b = document.createElement('button');
+    b.className = 'thumb';
+    b.type = 'button';
+    b.setAttribute('aria-label', 'Photograph ' + p.id + ' of ' + PHOTOS.length);
+    b.innerHTML = '<img src="thumbs/lights-' + p.id + '.jpg" alt="" decoding="async">' +
+                  '<span class="n">' + p.id + '</span>';
+    b.addEventListener('click', function () { if (railLive) show(p, i); });
+    // Warm the enlargement before the click lands.
+    b.addEventListener('mouseenter', function () { new Image().src = full(p.id); }, { once: true });
+    rail.appendChild(b);
+    thumbs.push(b);
+  });
+
+  function showPlate(id) {
+    if (current === id) return;
+    if (current) {
+      var prev = plates[current];
+      prev.classList.remove('on', 'resting');
+      prev.classList.add('out');   // fades while still opening
+    }
+    plates[id].classList.remove('out');
+    plates[id].classList.add('on');
+    current = id;
+  }
+
+  // Once the last frame has finished opening, let it breathe and bring in the row.
+  function land() {
+    at(function () { plates[INTRO[2]].classList.add('resting'); }, reduced ? 0 : GROW);
+    at(settleRail, reduced ? 0 : GROW + 300);
+  }
+
+  // ---- the opening sequence ----
+
+  function settleRail() {
+    document.body.classList.add('ready');
+
+    var cx = window.innerWidth / 2;
+    var cy = window.innerHeight / 2;
+
+    thumbs.forEach(function (t, i) {
+      var r = t.getBoundingClientRect();
+      // A loose arc around the middle of the screen to fly in from.
+      var ang = (-148 + i * 34) * Math.PI / 180;
+      var rad = 96 + i * 30;
+      var sx = cx + Math.cos(ang) * rad;
+      var sy = cy + Math.sin(ang) * rad * 0.78;
+      t.style.setProperty('--dx', (sx - (r.left + r.width / 2)).toFixed(1) + 'px');
+      t.style.setProperty('--dy', (sy - (r.top + r.height / 2)).toFixed(1) + 'px');
+      t.style.setProperty('--rot', ((i % 2 ? 1 : -1) * (7 + i * 4)) + 'deg');
+    });
+
+    void rail.offsetWidth; // lock in the scattered start before animating
+
+    thumbs.forEach(function (t, i) {
+      t.classList.add('animate');
+      at(function () { t.classList.add('settled'); }, reduced ? 0 : i * 130);
+    });
+
+    // Clickable only once the row has come to rest.
+    at(function () {
+      railLive = true;
+      rail.classList.add('live');
+      document.body.classList.add('live');
+    }, reduced ? 0 : (thumbs.length - 1) * 130 + 1250);
+  }
+
+  function finish() {
+    clearTimers();
+    showPlate(INTRO[2]);
+    land();
+  }
+
+  function run() {
+    if (reduced) { finish(); return; }
+    showPlate(INTRO[0]);
+    at(function () { showPlate(INTRO[1]); }, BURST);
+    at(finish, BURST * 2);
+  }
+
+  // ---- enlargement ----
+
+  function mark(hash) {
+    if (history.replaceState) history.replaceState(null, '', hash || location.pathname);
+  }
+
+  function show(item, idx) {
+    openItem = item;
+    openIdx = typeof idx === 'number' ? idx : -1;
+    lightImg.classList.remove('shown');
+    lightImg.alt = item.alt;
+    lightMeta.textContent =
+      item.label || (item.id + ' / ' + String(PHOTOS.length).padStart(2, '0'));
+    document.body.classList.add('lit');
+    mark('#' + item.id);
+
+    var im = new Image();
+    var done = false;
+    im.onload = function () {
+      if (done) return;
+      done = true;
+      lightImg.src = im.src;
+      requestAnimationFrame(function () { lightImg.classList.add('shown'); });
+    };
+    im.src = full(item.id);
+    if (im.complete) im.onload();
+  }
+
+  function close() {
+    if (!openItem) return;
+    openItem = null;
+    openIdx = -1;
+    lightImg.classList.remove('shown');
+    document.body.classList.remove('lit');
+    mark('');
+  }
+
+  var portrait = document.getElementById('portrait');
+  portrait.addEventListener('click', function () { if (railLive) show(PORTRAIT); });
+  portrait.addEventListener('mouseenter', function () {
+    new Image().src = full(PORTRAIT.id);
+  }, { once: true });
+
+  light.addEventListener('click', close);
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { close(); return; }
+    // Arrows walk the five; the portrait sits outside that sequence.
+    if (openIdx >= 0 && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
+      e.preventDefault();
+      var n = (openIdx + (e.key === 'ArrowRight' ? 1 : PHOTOS.length - 1)) % PHOTOS.length;
+      show(PHOTOS[n], n);
+    }
+  });
+
+  // A click during the opening skips straight to the menu.
+  function skip(e) {
+    if (railLive || openItem || current === INTRO[2]) return;
+    if (e.target.closest && e.target.closest('#rail, #plate-text')) return;
+    finish();
+  }
+  document.addEventListener('click', skip);
+
+  // ---- go, once the opening frames are actually decoded ----
+
+  var waiting = INTRO.map(function (id) {
+    var im = new Image();
+    im.src = full(id);
+    return im.decode ? im.decode().catch(function () {}) : Promise.resolve();
+  });
+
+  // A link straight to one photograph — /jimmy/#03, or /jimmy/#jimmy for the
+  // portrait — skips the opening.
+  var hash = location.hash.slice(1);
+  var deep = PHOTOS.map(function (p) { return p.id; }).indexOf(hash);
+
+  var started = false;
+  function start() {
+    if (started) return;
+    started = true;
+    if (deep >= 0) { finish(); show(PHOTOS[deep], deep); }
+    else if (hash === PORTRAIT.id) { finish(); show(PORTRAIT); }
+    else { run(); }
+  }
+
+  Promise.all(waiting).then(start);
+  setTimeout(start, 3500); // never let a slow network hold the door
+})();
+</script>
+
+</body>
+</html>

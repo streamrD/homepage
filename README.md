@@ -74,7 +74,13 @@ trailing slash. They do not affect this page's own favicon.
 
 ## `jimmy/`
 
-Five long exposures on 2 1/4-inch film, early to mid 1960s — a full-bleed
-gallery at [/jimmy](https://todd.up.railway.app/jimmy). Hand-written here,
-unlike `jshimron/`, so it is safe to edit in place. The camera originals are
-git-ignored; see `jimmy/README.md` for how the served copies are made.
+Five long exposures on 2 1/4-inch film by James Vincent Moore, Detroit, early
+to mid 1960s — a full-bleed gallery at
+[/jimmy](https://todd.up.railway.app/jimmy). Hand-written here, unlike
+`jshimron/`, so it is safe to edit in place.
+
+Unlike this page, it serves its own images out of the repo rather than the
+bucket — `jimmy/img/` and `jimmy/thumbs/`, about 3 MB. The camera originals
+are git-ignored. It also carries its own favicon and share card, cut from one
+of the photographs, so `/jimmy` does not borrow the TS monogram. See
+`jimmy/README.md` for how all of it is regenerated.
