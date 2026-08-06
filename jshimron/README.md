@@ -1,13 +1,14 @@
 # Joseph Shimron — Photographs, 1962–1968
 
-The complete site, ready to publish. Everything it needs is in this folder
-and every path inside it is relative, so it runs from a web root or any
-subfolder without modification.
+Served at https://todd.up.railway.app/jshimron/ by the nginx container in
+this repo, whose Dockerfile copies the repo into the web root.
 
-    python3 -m http.server 8000
+The photographs are NOT here. They live in the `stabley-homepage` Backblaze
+bucket under `jshimron/`, and the HTML references them by absolute URL — so
+this folder stays small and a Railway rebuild does not ship 3.4 MB of JPEGs.
+To change the photographs, see `tools/sync-photos.sh` in the Shimron source.
 
-Serve it over HTTP rather than opening index.html directly; `file://`
-breaks relative paths in some browsers.
+The `<base href="/jshimron/">` in each page is what makes the URL work with
+or without its trailing slash.
 
-GENERATED — do not edit these files. They are rebuilt from the project
-source by `tools/package.py`; changes made here are lost on the next run.
+GENERATED — do not edit. Rebuilt by `tools/package.py --target deploy`.
