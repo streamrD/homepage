@@ -19,17 +19,22 @@ secret belongs in the repo.
 
 ```
 index.html            the page — styles inline, no dependencies
-detroit750.jpg        Detroit, c. 1964, from Moore Archives
 favicon.ico           TS monogram, 16/32/48 packed
 favicon-32.png        \  referenced from index.html
 apple-touch-icon.png  /
 make-favicon.py       regenerates the three icon files
 jshimron/             a separate site — see below
+jimmy/                a separate site — see below
 ```
 
-The page loads the hero photograph from Backblaze, not from the copy in this
-repo. That local `detroit750.jpg` is kept because `make-favicon.py` samples
-its colours; deleting it would break icon regeneration but not the page.
+The page loads the hero photograph — Detroit, c. 1964, from Moore Archives —
+from Backblaze, at `stabley-homepage.s3.us-east-005.backblazeb2.com/detroit750.jpg`.
+No copy is kept in this repo. `make-favicon.py` does not need one: the two
+colours it uses were sampled by hand once and are hardcoded as `CREAM` and
+`SALMON`. To re-sample them, pull the file from the bucket.
+
+Nothing in this repo serves an image. The Shimron galleries under `jshimron/`
+take their 80 photographs from the same bucket, under `jshimron/`.
 
 ## The favicon
 
@@ -66,3 +71,10 @@ ourheroes.app can host bespoke designs.
 Those pages carry `<base href="/jshimron/">`, so their relative links and
 icons resolve within that folder and the URL works with or without a
 trailing slash. They do not affect this page's own favicon.
+
+## `jimmy/`
+
+Five long exposures on 2 1/4-inch film, early to mid 1960s — a full-bleed
+gallery at [/jimmy](https://todd.up.railway.app/jimmy). Hand-written here,
+unlike `jshimron/`, so it is safe to edit in place. The camera originals are
+git-ignored; see `jimmy/README.md` for how the served copies are made.
