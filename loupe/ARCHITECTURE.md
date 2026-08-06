@@ -19,7 +19,8 @@ something is unresolved it says so.
 | `loupe/` | the pattern generalised — one engine, fifteen themes, two page types |
 
 `loupe/` is not a framework anybody installs. It is one CSS file, one JS file,
-a stylesheet per theme, and four HTML pages. No build step, no dependencies,
+a stylesheet per theme, and four HTML pages —
+`index.html` is the picker, `gallery.html` the entry page. No build step, no dependencies,
 no npm. That is a deliberate constraint and it should survive
 platformisation: the artefact a customer's gallery *is* should stay something
 you can read in a browser's view-source.
@@ -63,7 +64,7 @@ without editing anything.
 duration, easing and distance is a `var()`. A theme is one file of tokens
 declared as `:root, .t-<name>`, which means it styles a whole page when loaded
 alone *and* scopes to an element when several are loaded together — that dual
-selector is what lets `themes.html` render fifteen themes accurately on one
+selector is what lets the picker render fifteen themes accurately on one
 page without duplicating a single value.
 
 Fifteen themes cost about 85 lines each. Adding one requires no engine change.

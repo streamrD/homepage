@@ -7,8 +7,8 @@ fly in, settle, and become the navigation for everything below them.
 Named for the loupe held over a contact sheet — small frames, choose one,
 magnify. That is the gesture the pattern is built on.
 
-**Start at `themes.html`** — twelve themes as cards, each rendered in its own
-tokens, with switches for the chrome axes, linking through to a full gallery. `index.html` is the entry page and
+**Start at `/loupe/`** — fifteen themes as cards, each rendered in its own
+tokens, with switches for the chrome axes, linking through to a full gallery. `gallery.html` is the entry page and
 takes `?theme=<name>`; the tiles come in matching palettes, so the whole page
 changes together.
 
@@ -52,9 +52,9 @@ warmth, texture, type and the generosity of the mat have to:
 
 | theme | ground | carried by |
 | --- | --- | --- |
-| gesso | warm white | the widest mat of the twelve, refined serif, hairlines |
+| gesso | warm white | the widest mat of the fifteen, refined serif, hairlines |
 | plaster | cool light grey | same value as gesso, opposite temperament — narrow mat, tight gaps |
-| newsprint | grey paper | heavy condensed sans, thick rules, the highest grain of the twelve |
+| newsprint | grey paper | heavy condensed sans, thick rules, the highest grain of the fifteen |
 | graphite | mid grey | monospace, tight mat, small frames close together |
 | slate | dark blue-grey | bleed, and the widest margins in the set |
 | obsidian | true black | no border, no shadow, no grain, no mat — value and tracking alone |
@@ -67,9 +67,9 @@ as a test of whether that is enough. The monochrome six also share one
 neutral tile set, `tiles/mono/`: with the content held constant, what you are
 comparing between them is chrome and nothing else.
 
-Twelve spans the space rather than filling it — two families, both grounds,
-motion from riso's 600ms settle to gesso's 1700ms. A thirteenth should earn
-its place by reaching somewhere none of these do.
+Fifteen spans the space rather than filling it — three families, both
+grounds, motion from riso's 600ms settle to gesso's 1700ms. A sixteenth should
+earn its place by reaching somewhere none of these do.
 
 ## Chrome that survives an upload
 
@@ -88,8 +88,8 @@ margin.
 `--plate-inset` is unitless and read as vmin rather than being folded into a
 single `calc()`, so a miniature can reproduce the same mat as a percentage of
 its own box without the viewport being involved. That is what lets the cards
-in `themes.html` show a matted theme *as matted* — an earlier version always
-drew them full-bleed and quietly misrepresented four of the twelve.
+on the picker show a matted theme *as matted* — an earlier version always
+drew them full-bleed and quietly misrepresented four of them.
 
 **Duotone the rail** — `--rail-duotone`, `--duo-dark`, `--duo-light`. The
 rail is remapped into two theme colours, shadows to one and highlights to the
@@ -114,7 +114,7 @@ descending into a section silently dropped the photographs and both chrome
 axes, and the trail then carried you back up to a gallery you had never been
 in. Duotone in particular is meaningless
 against flat colour swatches — it remaps a luminance ramp, and a flat tile has
-none. `themes.html` has switches for all three; they are independent axes and
+none. `/loupe/` has switches for all three; they are independent axes and
 combine freely, and each is reproduced on the cards rather than only appended
 to the links. The duotone preview mirrors the engine's rule exactly — an
 earlier version left that axis unpreviewed and the switch simply looked
@@ -127,7 +127,7 @@ meant to be matted needs its ground designed, not defaulted.
 
 Each theme file declares `:root, .t-<name>`, so loaded alone it styles a
 whole gallery and loaded alongside others it still scopes to an element.
-That is what lets `themes.html` show all twelve at once without duplicating a
+That is what lets the picker show all fifteen at once without duplicating a
 single colour value — each card is a real 1200×675 page under a `scale(0.32)`,
 so the miniatures' proportions are the gallery's proportions.
 
@@ -192,7 +192,7 @@ links, so local and bucket can be compared without editing anything.
 
 **Code in git, pixels in the bucket.** `tiles/` is git-ignored — 441 files
 and about 21 MB of generated scaffolding has no business in a repo that is
-deployed verbatim on every push. The engine, the twelve themes and the four
+deployed verbatim on every push. The engine, the fifteen themes and the four
 pages are small, change often, and belong in history.
 
 To stage: build the tiles, upload them under a `loupe/` prefix beside the
@@ -226,8 +226,8 @@ One engine, three files, and a theme is a block of custom properties:
 assets/loupe.css            the engine — no appearance decisions in it
 assets/loupe.js             builds the page from a manifest
 assets/theme-<name>.css     the tokens, and the only thing a theme is
-themes.html                 the picker — every theme, rendered in its own tokens
-index.html                  the entry page, plus its manifest as JSON
+index.html                  the picker — every theme, rendered in its own tokens
+gallery.html                the entry page, plus its manifest as JSON
 section.html                a section page, fade only
 ```
 

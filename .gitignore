@@ -1,0 +1,3 @@
+# macOS Finder metadata. Everything committed here is served verbatim on
+# every push, so this must never ride along.
+.DS_Store
