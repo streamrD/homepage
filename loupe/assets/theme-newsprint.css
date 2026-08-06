@@ -1,0 +1,90 @@
+/* newsprint — grey paper, heavy condensed sans, thick rules, visible tooth.
+ * The loud monochrome: with no colour to spend, weight and texture do the
+ * shouting. Grain is set higher here than anywhere else in either family.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@600;700&display=swap');
+
+:root, .t-newsprint {
+  --ground:      #c9c6bd;
+  --ink:         #131313;
+  --ink-dim:     #3a3a38;
+  --ink-faint:   #62615c;
+  --scrim-rgb:   208 205 197;
+  --scrim:       0.8;
+  --chrome-shadow: none;
+
+  --font-display:  'Archivo Narrow', 'Helvetica Neue', sans-serif;
+  --font-label:    'Archivo Narrow', 'Helvetica Neue', sans-serif;
+  --title-size:    30px;
+  --title-tracking: 0.01em;
+  --title-case:    uppercase;
+  --label-size:    11px;
+  --label-tracking: 0.09em;
+  --label-case:    uppercase;
+  --sub-size:      11px;
+
+  /* framing: matted, with the picture pushed toward the top of the page */
+  /* framing. --plate-inset is unitless, in vmin, so a miniature can
+     reproduce the mat without knowing the viewport. Matted themes also
+     set --drift-scale: 1. */
+  --plate-base:  100vmin;
+  --plate-inset: 8;
+  --plate-fit:   contain;
+  --drift-scale: 1;
+
+  --rail-duotone: 0;
+  --duo-dark:     #131313;
+  --duo-light:    #d6d3ca;
+  --duo-contrast: 1.24;
+
+  --thumb-size:    74px;
+  --thumb-size-sm: 52px;
+  --thumb-gap:     9px;
+  --thumb-gap-sm:  7px;
+  --thumb-radius:  0px;
+  --thumb-border:  2px solid #131313;
+  --thumb-bg:      #c9c6bd;
+  --thumb-shadow:  none;
+  --thumb-shadow-hover: none;
+  --thumb-filter:       grayscale(0.7) contrast(1.16);
+  --thumb-filter-hover: grayscale(0) contrast(1.05);
+  --thumb-hover-scale:  1.03;
+  --accent:      #131313;
+  --accent-glow: rgba(19, 19, 19, 0.18);
+  --n-ink:       #131313;
+
+  /* the tooth of the paper — the highest grain in either family */
+  --grain:       0.26;
+  --grain-blend: multiply;
+
+  --lit-ground:     #c2bfb6;
+  --mount-pad:      10px;
+  --mount-bg:       #d6d3ca;
+  --mount-border:   3px solid #131313;
+  --enlarge-shadow: none;
+  --enlarge-max-w:  82vw;
+  --enlarge-max-h:  80vh;
+  --stage-lit-opacity:  0.14;
+  --stage-lit-saturate: 0.6;
+
+  --burst:       1700ms;
+  --grow:        900ms;
+  --grow-ease:   cubic-bezier(0.22, 1, 0.3, 1);
+  --settle:      700ms;
+  --settle-ease: cubic-bezier(0.2, 1.1, 0.32, 1);
+  --stagger:     70ms;
+  --fade:        420ms;
+  --plate-start-scale: 0.32;
+  --plate-exit-scale:  1.08;
+  --thumb-start-scale: 0.7;
+  --scatter-radius: 88px;
+  --scatter-spread: 120deg;
+  --thumb-tilt:     6deg;
+  --drift:       60s;
+
+  --cell-size:   146px;
+  --cell-gap:    12px;
+  --grid-stagger: 45ms;
+  --backdrop:    0.18;
+}

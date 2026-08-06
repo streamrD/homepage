@@ -1,0 +1,95 @@
+/* slate — dark blue-grey, quiet, wide margins. Bleed rather than matted:
+ * a mat on a dark ground reads as letterboxing, so the dark monochromes
+ * keep the full-bleed drama and spend their identity on space and type.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Karla:wght@300;400;500&display=swap');
+
+:root, .t-slate {
+  --ground:      #23282c;
+  --ink:         #cdd4d8;
+  --ink-dim:     #97a1a7;
+  --ink-faint:   #6d777d;
+  --scrim-rgb:   12 15 17;
+  --scrim:       0.7;
+  --chrome-shadow: 0 1px 14px rgba(12, 15, 17, 0.9);
+
+  --font-display:  'Karla', system-ui, sans-serif;
+  --font-label:    'Karla', system-ui, sans-serif;
+  --title-size:    15px;
+  --title-tracking: 0.26em;
+  --title-case:    lowercase;
+  --label-size:    11px;
+  --label-tracking: 0.1em;
+  --label-case:    lowercase;
+  --sub-size:      11px;
+
+  /* framing: bleed */
+  /* framing. --plate-inset is unitless, in vmin, so a miniature can
+     reproduce the mat without knowing the viewport. Matted themes also
+     set --drift-scale: 1. */
+  --plate-base:  100vmax;
+  --plate-inset: 0;
+  --plate-fit:   cover;
+
+  --rail-duotone: 0;
+  --duo-dark:     #161b1f;
+  --duo-light:    #c6ced3;
+  --duo-contrast: 1.08;
+
+  /* wide of everything — the margins are the design */
+  --rail-inset-x:   max(5vw, 44px);
+  --rail-inset-y:   max(5vh, 36px);
+  --credit-inset-x: max(5vw, 44px);
+  --credit-inset-y: max(5vh, 38px);
+
+  --thumb-size:    72px;
+  --thumb-size-sm: 52px;
+  --thumb-gap:     16px;
+  --thumb-gap-sm:  10px;
+  --thumb-radius:  0px;
+  --thumb-border:  1px solid rgba(205, 212, 216, 0.2);
+  --thumb-bg:      #1b2024;
+  --thumb-shadow:  0 6px 24px rgba(0, 0, 0, 0.5);
+  --thumb-shadow-hover: 0 8px 28px rgba(0, 0, 0, 0.55);
+  --thumb-filter:       grayscale(0.4) brightness(0.9);
+  --thumb-filter-hover: grayscale(0) brightness(1.04);
+  --thumb-hover-scale:  1.03;
+  --accent:      rgba(205, 212, 216, 0.85);
+  --accent-glow: rgba(150, 170, 182, 0.22);
+  --n-ink:       rgba(205, 212, 216, 0.85);
+
+  --grain:       0.08;
+  --grain-blend: overlay;
+
+  --lit-ground:     #1a1f23;
+  --mount-pad:      0;
+  --mount-bg:       transparent;
+  --mount-border:   0;
+  --enlarge-shadow: 0 26px 80px rgba(0, 0, 0, 0.7);
+  --enlarge-max-w:  84vw;
+  --enlarge-max-h:  82vh;
+  --stage-lit-opacity:  0.06;
+  --stage-lit-saturate: 0.45;
+
+  --burst:       2500ms;
+  --grow:        1800ms;
+  --grow-ease:   cubic-bezier(0.22, 0.68, 0.22, 1);
+  --settle:      1400ms;
+  --settle-ease: cubic-bezier(0.2, 0.8, 0.26, 1);
+  --stagger:     140ms;
+  --fade:        950ms;
+  --plate-start-scale: 0.22;
+  --plate-exit-scale:  1.1;
+  --thumb-start-scale: 0.7;
+  --scatter-radius: 66px;
+  --scatter-spread: 100deg;
+  --thumb-tilt:     3deg;
+  --drift:       84s;
+  --drift-scale: 1.05;
+
+  --cell-size:   158px;
+  --cell-gap:    22px;
+  --grid-stagger: 80ms;
+  --backdrop:    0.18;
+}

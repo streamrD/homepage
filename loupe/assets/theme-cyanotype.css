@@ -1,0 +1,93 @@
+/* cyanotype — near-black blue ground, austere, motion held right back.
+ *
+ * The argument for making motion a token. Same engine, same markup: the
+ * plates cross-fade almost without scaling and the thumbnails arrive nearly
+ * in place. Set --scatter-radius to 0 and --plate-start-scale to 1 and the
+ * choreography disappears entirely without a line of JS changing.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400&display=swap');
+
+:root, .t-cyanotype {
+  /* ground and ink */
+  --ground:      #05080e;
+  --ink:         #cfe0ef;
+  --ink-dim:     #90a6bb;
+  --ink-faint:   #64788c;
+  --scrim-rgb:   2 6 12;
+  --scrim:       0.74;
+  --chrome-shadow: 0 1px 16px rgba(2, 6, 12, 0.95);
+
+  /* type */
+  --font-display:  'IBM Plex Mono', monospace;
+  --font-label:    'IBM Plex Mono', monospace;
+  --title-size:    12px;
+  --title-tracking: 0.46em;
+  --title-case:    uppercase;
+  --label-size:    10px;
+  --label-tracking: 0.24em;
+  --label-case:    lowercase;
+  --sub-size:      9px;
+
+  /* framing. --plate-inset is unitless, in vmin, so a miniature can
+     reproduce the mat without knowing the viewport. Matted themes also
+     set --drift-scale: 1. */
+  --plate-base:  100vmax;
+  --plate-inset: 0;
+  --plate-fit:   cover;
+
+  /* duotone the rail — off, but declared, so the axis can be compared */
+  --rail-duotone: 0;
+  --duo-dark:     #061020;
+  --duo-light:    #cfe4f7;
+  --duo-contrast: 1.12;
+
+  /* the rail — small, tight, hairline */
+  --thumb-size:    64px;
+  --thumb-size-sm: 48px;
+  --thumb-gap:     8px;
+  --thumb-gap-sm:  7px;
+  --thumb-radius:  0px;
+  --thumb-border:  1px solid rgba(150, 190, 225, 0.24);
+  --thumb-bg:      #060a12;
+  --thumb-shadow:  none;
+  --thumb-shadow-hover: none;
+  --thumb-filter:       brightness(0.8) saturate(0.85) contrast(1.05);
+  --thumb-filter-hover: brightness(1.05) saturate(1);
+  --thumb-hover-scale:  1;
+  --accent:      rgba(150, 205, 255, 0.9);
+  --accent-glow: rgba(90, 160, 230, 0.3);
+  --n-ink:       rgba(207, 224, 239, 0.8);
+
+  /* environment — no grain at all */
+  --grain:       0;
+  --grain-blend: overlay;
+
+  /* the enlargement */
+  --lit-ground:     #04070c;
+  --mount-pad:      0;
+  --mount-bg:       transparent;
+  --mount-border:   1px solid rgba(150, 190, 225, 0.16);
+  --enlarge-shadow: none;
+  --enlarge-max-w:  84vw;
+  --enlarge-max-h:  84vh;
+  --stage-lit-opacity:  0.05;
+  --stage-lit-saturate: 0.4;
+
+  /* motion — nearly still */
+  --burst:       2200ms;
+  --grow:        1100ms;
+  --grow-ease:   cubic-bezier(0.3, 0.7, 0.3, 1);
+  --settle:      800ms;
+  --settle-ease: cubic-bezier(0.3, 0.7, 0.3, 1);
+  --stagger:     70ms;
+  --fade:        1100ms;
+  --plate-start-scale: 0.86;
+  --plate-exit-scale:  1.02;
+  --thumb-start-scale: 0.94;
+  --scatter-radius: 14px;
+  --scatter-spread: 40deg;
+  --thumb-tilt:     0deg;
+  --drift:       90s;
+  --drift-scale: 1.02;
+}

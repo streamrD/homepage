@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>loupe — themes</title>
+<script src="assets/config.js"></script>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0a0a0c;
+    color: #c8c0b8;
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    padding: 40px 44px 90px;
+  }
+
+  h1 {
+    font-size: 15px;
+    letter-spacing: 0.34em;
+    text-transform: lowercase;
+    color: #e8dcc9;
+    font-weight: normal;
+  }
+
+  .note {
+    margin-top: 10px;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    line-height: 1.9;
+    color: #7d746c;
+    max-width: 74ch;
+  }
+
+  .theme { margin-top: 46px; }
+
+  .theme > h2 {
+    font-size: 13px;
+    letter-spacing: 0.3em;
+    text-transform: lowercase;
+    color: #e8dcc9;
+    font-weight: normal;
+    padding-bottom: 9px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .theme > h2 em {
+    font-style: normal;
+    color: #6e665f;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    margin-left: 14px;
+  }
+
+  h3 {
+    margin: 18px 0 9px;
+    font-size: 10px;
+    letter-spacing: 0.26em;
+    text-transform: lowercase;
+    color: #857b72;
+    font-weight: normal;
+  }
+
+  .row { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  .row a {
+    display: block;
+    line-height: 0;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 2px;
+    overflow: hidden;
+    transition: border-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  .row a:hover {
+    border-color: rgba(255, 214, 160, 0.8);
+    box-shadow: 0 0 20px rgba(255, 176, 90, 0.25);
+  }
+
+  .row img { display: block; }
+  .t   img { width: 96px;  height: 96px; }
+  .big img { width: 132px; height: 132px; }
+</style>
+</head>
+<body>
+
+<h1>loupe — themes</h1>
+<p class="note">
+  Stand-in tiles for building the gallery pattern, in three palettes. The
+  tiles, labels and geometry are identical across all three, so nothing but
+  the colour changes between them. Each tile states its number, role, level
+  and true pixel size; a thumbnail and its enlargement share a hue and a
+  number. Every theme keeps the three levels ordered dark to light, so depth
+  reads without labels. The L-brackets at opposite corners are the cropping
+  check — a missing bracket means something is covering that should be
+  containing. Click any tile for the full-size file.
+</p>
+
+<div id="themes"></div>
+
+<script>
+  var THEMES = [
+    ['boardwalk',  'evenly spaced round the wheel — seaside carnival, felt pennants, candy store'],
+    ['safelight',  'reds through ambers only — lightness separates ten frames inside 70° of hue'],
+    ['cyanotype',  'one iron-blue band, teal to violet — lightness does the separating'],
+    ['autochrome', 'warm-weighted and desaturated — dusty rose, ochre, sage, mauve'],
+    ['daguerre',   'barely coloured at all — a cool grey ramp with the faintest blue in it'],
+    ['riso',       'spot inks: few hues, pushed hard, no half measures']
+  ];
+
+  var host = document.getElementById('themes');
+
+  THEMES.forEach(function (t) {
+    var name = t[0], blurb = t[1];
+    var html =
+      '<div class="theme"><h2>' + name + '<em>' + blurb + '</em></h2>' +
+      '<h3>opening plates — 1600²</h3><div class="row big">';
+
+    for (var i = 1; i <= 3; i++) {
+      html += '<a href="' + LOUPE_CONFIG.assets + 'tiles/' + name + '/img/plate-' + i + '.jpg">' +
+              '<img src="' + LOUPE_CONFIG.assets + 'tiles/' + name + '/img/plate-' + i + '.jpg" loading="lazy" alt=""></a>';
+    }
+
+    html += '</div><h3>level one, the rail — 400² → 1600²</h3><div class="row t">';
+    for (var i = 1; i <= 10; i++) {
+      var n = (i < 10 ? '0' : '') + i;
+      html += '<a href="' + LOUPE_CONFIG.assets + 'tiles/' + name + '/img/full-' + n + '.jpg">' +
+              '<img src="' + LOUPE_CONFIG.assets + 'tiles/' + name + '/thumbs/thumb-' + n + '.jpg" loading="lazy" alt=""></a>';
+    }
+
+    html += '</div><h3>level two, one section — twenty frames, 400² → 1600²</h3><div class="row t">';
+    for (var i = 1; i <= 20; i++) {
+      var m = (i < 10 ? '0' : '') + i;
+      html += '<a href="' + LOUPE_CONFIG.assets + 'tiles/' + name + '/sub/img/sub-' + m + '.jpg">' +
+              '<img src="' + LOUPE_CONFIG.assets + 'tiles/' + name + '/sub/thumbs/sub-' + m + '.jpg" loading="lazy" alt=""></a>';
+    }
+
+    host.innerHTML += html + '</div></div>';
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,90 @@
+/* boardwalk — dark ground, saturated accent, generous motion.
+ * Seaside carnival: the chrome gets out of the way and the photographs
+ * arrive with some swagger. This is the register jimmy/ is written in.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+:root, .t-boardwalk {
+  /* ground and ink */
+  --ground:      #07060a;
+  --ink:         #e8dcc9;
+  --ink-dim:     #b8ada2;
+  --ink-faint:   #978d82;
+  --scrim-rgb:   0 0 0;
+  --scrim:       0.68;
+  --chrome-shadow: 0 1px 14px rgba(0, 0, 0, 0.9);
+
+  /* type */
+  --font-display:  'Share Tech Mono', 'Courier New', monospace;
+  --font-label:    'Share Tech Mono', 'Courier New', monospace;
+  --title-size:    11px;
+  --title-tracking: 0.34em;
+  --title-case:    lowercase;
+  --label-size:    11px;
+  --label-tracking: 0.2em;
+  --label-case:    lowercase;
+  --sub-size:      10px;
+
+  /* framing. --plate-inset is unitless, in vmin, so a miniature can
+     reproduce the mat without knowing the viewport. Matted themes also
+     set --drift-scale: 1. */
+  --plate-base:  100vmax;
+  --plate-inset: 0;
+  --plate-fit:   cover;
+
+  /* duotone the rail — off, but declared, so the axis can be compared */
+  --rail-duotone: 0;
+  --duo-dark:     #1a0d16;
+  --duo-light:    #ffd9a8;
+  --duo-contrast: 1.1;
+
+  /* the rail */
+  --thumb-size:    78px;
+  --thumb-size-sm: 54px;
+  --thumb-gap:     13px;
+  --thumb-gap-sm:  10px;
+  --thumb-radius:  2px;
+  --thumb-border:  1px solid rgba(255, 255, 255, 0.16);
+  --thumb-bg:      #0a0809;
+  --thumb-shadow:  0 8px 30px rgba(0, 0, 0, 0.65);
+  --thumb-shadow-hover: 0 10px 34px rgba(0, 0, 0, 0.7);
+  --thumb-filter:       brightness(0.86) saturate(0.94);
+  --thumb-filter-hover: brightness(1.12) saturate(1.06);
+  --thumb-hover-scale:  1.07;
+  --accent:      rgba(255, 214, 160, 0.75);
+  --accent-glow: rgba(255, 176, 90, 0.28);
+  --n-ink:       rgba(255, 255, 255, 0.72);
+
+  /* environment */
+  --grain:       0.16;
+  --grain-blend: overlay;
+
+  /* the enlargement — no mat; the photograph sits on the dark */
+  --lit-ground:     #0a090c;
+  --mount-pad:      0;
+  --mount-bg:       transparent;
+  --mount-border:   0;
+  --enlarge-shadow: 0 30px 90px rgba(0, 0, 0, 0.8);
+  --enlarge-max-w:  88vw;
+  --enlarge-max-h:  86vh;
+  --stage-lit-opacity:  0.07;
+  --stage-lit-saturate: 0.5;
+
+  /* motion — the full choreography */
+  --burst:       2000ms;
+  --grow:        1500ms;
+  --grow-ease:   cubic-bezier(0.14, 0.76, 0.18, 1);
+  --settle:      1250ms;
+  --settle-ease: cubic-bezier(0.16, 0.9, 0.22, 1);
+  --stagger:     130ms;
+  --fade:        700ms;
+  --plate-start-scale: 0.13;
+  --plate-exit-scale:  1.16;
+  --thumb-start-scale: 0.42;
+  --scatter-radius: 110px;
+  --scatter-spread: 136deg;
+  --thumb-tilt:     9deg;
+  --drift:       54s;
+  --drift-scale: 1.07;
+}

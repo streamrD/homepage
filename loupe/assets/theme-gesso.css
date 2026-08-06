@@ -1,0 +1,89 @@
+/* gesso — a warm white wall, hung generously.
+ * The most matted theme in the set: the wall is the design, so it gets the
+ * most of it. Refined serif, hairlines, and motion that barely moves.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap');
+
+:root, .t-gesso {
+  --ground:      #efece4;
+  --ink:         #1b1917;
+  --ink-dim:     #4a4640;
+  --ink-faint:   #7d776e;
+  --scrim-rgb:   243 241 235;
+  --scrim:       0.7;
+  --chrome-shadow: none;
+
+  --font-display:  'Cormorant Garamond', Garamond, Georgia, serif;
+  --font-label:    'Cormorant Garamond', Garamond, Georgia, serif;
+  --title-size:    27px;
+  --title-tracking: 0.06em;
+  --title-case:    none;
+  --label-size:    14px;
+  --label-tracking: 0.08em;
+  --label-case:    none;
+  --sub-size:      14px;
+
+  /* framing: matted, and the widest mat of the six */
+  /* framing. --plate-inset is unitless, in vmin, so a miniature can
+     reproduce the mat without knowing the viewport. Matted themes also
+     set --drift-scale: 1. */
+  --plate-base:  100vmin;
+  --plate-inset: 15;
+  --plate-fit:   contain;
+  --drift-scale: 1;
+
+  --rail-duotone: 0;
+  --duo-dark:     #2b2721;
+  --duo-light:    #f3f0e8;
+  --duo-contrast: 1.04;
+
+  --thumb-size:    86px;
+  --thumb-size-sm: 56px;
+  --thumb-gap:     22px;
+  --thumb-gap-sm:  13px;
+  --thumb-radius:  0px;
+  --thumb-border:  1px solid rgba(27, 25, 23, 0.28);
+  --thumb-bg:      #f6f4ee;
+  --thumb-shadow:  none;
+  --thumb-shadow-hover: 0 3px 14px rgba(27, 25, 23, 0.16);
+  --thumb-filter:       saturate(0.85);
+  --thumb-filter-hover: saturate(1);
+  --thumb-hover-scale:  1.02;
+  --accent:      rgba(27, 25, 23, 0.75);
+  --accent-glow: rgba(27, 25, 23, 0.12);
+  --n-ink:       rgba(27, 25, 23, 0.75);
+
+  --grain:       0.05;
+  --grain-blend: multiply;
+
+  --lit-ground:     #e9e6de;
+  --mount-pad:      34px;
+  --mount-bg:       #fbfaf6;
+  --mount-border:   1px solid rgba(27, 25, 23, 0.2);
+  --enlarge-shadow: 0 10px 40px rgba(27, 25, 23, 0.14);
+  --enlarge-max-w:  72vw;
+  --enlarge-max-h:  72vh;
+  --stage-lit-opacity:  0.12;
+  --stage-lit-saturate: 0.7;
+
+  --burst:       2800ms;
+  --grow:        2200ms;
+  --grow-ease:   cubic-bezier(0.25, 0.6, 0.2, 1);
+  --settle:      1700ms;
+  --settle-ease: cubic-bezier(0.22, 0.78, 0.24, 1);
+  --stagger:     200ms;
+  --fade:        1200ms;
+  --plate-start-scale: 0.5;
+  --plate-exit-scale:  1.04;
+  --thumb-start-scale: 0.9;
+  --scatter-radius: 26px;
+  --scatter-spread: 60deg;
+  --thumb-tilt:     0deg;
+  --drift:       100s;
+
+  --cell-size:   168px;
+  --cell-gap:    28px;
+  --grid-stagger: 100ms;
+  --backdrop:    0.12;
+}

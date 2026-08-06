@@ -1,0 +1,5 @@
+# 441 generated test tiles, ~21 MB. Scaffolding, not content: `make-tiles.sh`
+# rebuilds any palette in about two minutes, and staging serves them from the
+# bucket instead. Nothing here should be committed to a repo that is deployed
+# verbatim on every push.
+tiles/

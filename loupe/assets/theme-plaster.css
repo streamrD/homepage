@@ -1,0 +1,89 @@
+/* plaster — cool light grey, tight, flush. The kunsthalle to gesso's wall:
+ * same value range, opposite temperament. Narrow mat, small gaps, a sans
+ * with nothing to say for itself.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
+
+:root, .t-plaster {
+  --ground:      #d7d8d6;
+  --ink:         #16181a;
+  --ink-dim:     #414548;
+  --ink-faint:   #6d7275;
+  --scrim-rgb:   226 227 225;
+  --scrim:       0.74;
+  --chrome-shadow: none;
+
+  --font-display:  'Inter', system-ui, sans-serif;
+  --font-label:    'Inter', system-ui, sans-serif;
+  --title-size:    13px;
+  --title-tracking: 0.2em;
+  --title-case:    uppercase;
+  --label-size:    10px;
+  --label-tracking: 0.06em;
+  --label-case:    none;
+  --sub-size:      10px;
+
+  /* framing: matted, but only just — the picture sits close to the edge */
+  /* framing. --plate-inset is unitless, in vmin, so a miniature can
+     reproduce the mat without knowing the viewport. Matted themes also
+     set --drift-scale: 1. */
+  --plate-base:  100vmin;
+  --plate-inset: 7;
+  --plate-fit:   contain;
+  --drift-scale: 1;
+
+  --rail-duotone: 0;
+  --duo-dark:     #1d2124;
+  --duo-light:    #e6e8e7;
+  --duo-contrast: 1.1;
+
+  --thumb-size:    68px;
+  --thumb-size-sm: 50px;
+  --thumb-gap:     8px;
+  --thumb-gap-sm:  7px;
+  --thumb-radius:  0px;
+  --thumb-border:  1px solid rgba(22, 24, 26, 0.35);
+  --thumb-bg:      #e4e5e3;
+  --thumb-shadow:  none;
+  --thumb-shadow-hover: none;
+  --thumb-filter:       saturate(0.8) contrast(1.02);
+  --thumb-filter-hover: saturate(1) contrast(1.05);
+  --thumb-hover-scale:  1;
+  --accent:      #16181a;
+  --accent-glow: rgba(22, 24, 26, 0.14);
+  --n-ink:       rgba(22, 24, 26, 0.8);
+
+  --grain:       0;
+  --grain-blend: multiply;
+
+  --lit-ground:     #d0d2d0;
+  --mount-pad:      0;
+  --mount-bg:       transparent;
+  --mount-border:   1px solid rgba(22, 24, 26, 0.3);
+  --enlarge-shadow: none;
+  --enlarge-max-w:  84vw;
+  --enlarge-max-h:  82vh;
+  --stage-lit-opacity:  0.1;
+  --stage-lit-saturate: 0.8;
+
+  --burst:       2000ms;
+  --grow:        1200ms;
+  --grow-ease:   cubic-bezier(0.3, 0.7, 0.25, 1);
+  --settle:      900ms;
+  --settle-ease: cubic-bezier(0.3, 0.75, 0.28, 1);
+  --stagger:     90ms;
+  --fade:        700ms;
+  --plate-start-scale: 0.4;
+  --plate-exit-scale:  1.05;
+  --thumb-start-scale: 0.88;
+  --scatter-radius: 30px;
+  --scatter-spread: 66deg;
+  --thumb-tilt:     0deg;
+  --drift:       88s;
+
+  --cell-size:   144px;
+  --cell-gap:    10px;
+  --grid-stagger: 45ms;
+  --backdrop:    0.1;
+}

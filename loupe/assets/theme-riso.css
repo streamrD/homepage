@@ -1,0 +1,99 @@
+/* riso — paper white, hard edges, spot colour, quick.
+ *
+ * The loud one, and the only theme with no soft shadow anywhere: borders do
+ * all the separating, the way ink on paper does. Motion is short and snappy
+ * rather than slow and grand — proof that the motion tokens span both ends,
+ * not just "some" and "less".
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&display=swap');
+
+:root, .t-riso {
+  /* ground and ink */
+  --ground:      #f2efe6;
+  --ink:         #16151a;
+  --ink-dim:     #3d3b45;
+  --ink-faint:   #6b6875;
+  --scrim-rgb:   242 239 230;
+  --scrim:       0.86;
+  --chrome-shadow: none;
+
+  /* type */
+  --font-display:  'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --font-label:    'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --title-size:    26px;
+  --title-tracking: -0.02em;
+  --title-case:    uppercase;
+  --label-size:    10px;
+  --label-tracking: 0.1em;
+  --label-case:    uppercase;
+  --sub-size:      10px;
+
+  /* framing. --plate-inset is unitless, in vmin, so a miniature can
+     reproduce the mat without knowing the viewport. Matted themes also
+     set --drift-scale: 1. */
+  --plate-base:  100vmax;
+  --plate-inset: 0;
+  --plate-fit:   cover;
+
+  /* duotone the rail — off, but declared, so the axis can be compared */
+  --rail-duotone: 0;
+  --duo-dark:     #16151a;
+  --duo-light:    #ff9ec0;
+  --duo-contrast: 1.2;
+
+  /* the rail — thick keylines, no shadow, hard corners */
+  --thumb-size:    76px;
+  --thumb-size-sm: 54px;
+  --thumb-gap:     10px;
+  --thumb-gap-sm:  8px;
+  --thumb-radius:  0px;
+  --thumb-border:  2px solid #16151a;
+  --thumb-bg:      #f2efe6;
+  --thumb-shadow:  none;
+  --thumb-shadow-hover: none;
+  --thumb-filter:       saturate(1.25) contrast(1.1);
+  --thumb-filter-hover: saturate(1.5) contrast(1.15);
+  --thumb-hover-scale:  1.06;
+  --accent:      #ff4a7d;
+  --accent-glow: rgba(255, 74, 125, 0.4);
+  --n-ink:       #16151a;
+
+  /* environment — paper tooth, multiplied */
+  --grain:       0.12;
+  --grain-blend: multiply;
+
+  /* the enlargement — pinned to the page with a keyline */
+  --lit-ground:     #f2efe6;
+  --mount-pad:      14px;
+  --mount-bg:       #f2efe6;
+  --mount-border:   3px solid #16151a;
+  --enlarge-shadow: none;
+  --enlarge-max-w:  82vw;
+  --enlarge-max-h:  80vh;
+  --stage-lit-opacity:  0.12;
+  --stage-lit-saturate: 1;
+
+  /* motion — short and snappy, the opposite end from daguerre */
+  --burst:       1500ms;
+  --grow:        700ms;
+  --grow-ease:   cubic-bezier(0.2, 1.1, 0.3, 1);
+  --settle:      600ms;
+  --settle-ease: cubic-bezier(0.2, 1.25, 0.35, 1);
+  --stagger:     60ms;
+  --fade:        350ms;
+  --plate-start-scale: 0.24;
+  --plate-exit-scale:  1.2;
+  --thumb-start-scale: 0.5;
+  --scatter-radius: 130px;
+  --scatter-spread: 160deg;
+  --thumb-tilt:     14deg;
+  --drift:       40s;
+  --drift-scale: 1.06;
+
+  /* section grid */
+  --cell-size:   150px;
+  --cell-gap:    14px;
+  --grid-stagger: 40ms;
+  --backdrop:    0.22;
+}

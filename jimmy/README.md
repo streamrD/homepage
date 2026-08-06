@@ -4,16 +4,65 @@ Five long exposures on 2¼-inch film by James Vincent Moore (Jimmy),
 Detroit, early to mid 1960s. Served at
 [/jimmy](https://todd.up.railway.app/jimmy).
 
-The page opens with three of the photographs in turn. Each starts as a small
-square in the middle of the screen — the whole frame, the same framing as the
-thumbnails — and rushes out to full bleed over 1.5s; the outgoing frame keeps
-opening past full size as it fades, so the cut carries momentum. Two
-two-second bursts, then the third comes to rest and breathes.
+The page opens with photograph 02 fading up full-bleed and settling at about
+a quarter strength — the room, not the subject. The five light studies then
+drop onto it, left to right, into a row across the middle of the screen at a
+size worth looking at. He holds the bottom-right corner on his own; the
+credit holds the bottom left.
 
-Five thumbnails then fade in around the middle of the screen and fly out to a
-row in the bottom right. Once they settle they are live: clicking one darkens
-the background and shows that photograph whole, uncropped, centred. Clicking
-the enlargement returns.
+Clicking a study darkens the background and shows it whole, uncropped,
+centred. Clicking the enlargement returns.
+
+**This replaced an earlier opening** — three photographs bursting from a
+small square to full bleed in two-second beats, then five thumbnails flying
+in along an arc to a small row in the bottom right. That choreography is not
+lost: it is what `loupe/` still implements, driven by `--scatter-radius`,
+`--scatter-spread` and `--thumb-tilt`, and `loupe/README.md` records both
+entrances and when each one reads better. The short version is that a flight
+suits thumbnails travelling to a corner, and a fall suits thumbnails landing
+in the middle where the eye already is.
+
+The opening plays once per tab. `sessionStorage` sends a returning visitor
+straight to the settled page.
+
+## The entrance
+
+`?entrance=<name>` switches how the five arrive. All seven are kept on file in
+`ENTRANCES` in `settleRail()`; the chosen name is appended to the credit line
+so a screenshot says which one it is. The default is `converge`.
+
+**The settle never changes** — 1250ms on `cubic-bezier(0.16, 0.9, 0.22, 1)`,
+the long slow coming-to-rest from the live version. Only the approach differs.
+
+| name | direction | travel per frame, 1300×800 |
+| --- | --- | --- |
+| `converge` | one point above the middle, fanning out | 445 · 329 · 280 · 329 · 445 |
+| `wave` | above, symmetric sway; middle swings widest | 112 · 180 · 212 · 180 · 112 |
+| `fall` | straight down | 208 × 5 |
+| `sweep` | in from the left | 394 × 5 |
+| `glide` | sweep over a much shorter run | ~160 × 5 |
+| `drift` | a 44px fall, no turn | 44 × 5 |
+| `trail` | progressive trail from the lower left | 286 · 325 · 364 · 403 · 442 |
+
+**The rule the table encodes:** an offset that scales with the index makes the
+last frame do far more travelling than the first, and it reads as the only
+thing moving — see `trail`, which is kept precisely as the counter-example.
+Every other option is flat or symmetric about the centre, so no frame leads.
+
+The other lesson, learned by getting it wrong twice: the movement has to be
+*travel*. A `rotateX` hinge reads as something being stood back upright, and a
+spin in place reads as chaos. What makes it believable is a shared direction
+released in sequence, so the group unfurls behind the leader rather than
+arriving as five separate events.
+
+## `v1/`
+
+The first design, archived complete and still working at `/jimmy/v1`: three
+photographs bursting from a small square to full bleed on two-second beats,
+then five thumbnails flying along an arc into a small row in the bottom right,
+with him above the credit. It carries `<base href="/jimmy/">` deliberately, so
+it shares `img/` and `thumbs/` with the live page instead of duplicating
+3.5 MB, and it is `noindex` so it does not compete with the current page.
 
 ## Layout
 

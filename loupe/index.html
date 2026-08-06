@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>loupe</title>
+
+<!-- The theme is one stylesheet. ?theme=<name> swaps it for comparison;
+     a real gallery would just hardcode the link. Written before the engine
+     stylesheet so a theme cannot be caught half-applied. -->
+<script>
+  (function () {
+    // Which tiles a theme shows. Absent from the map means "its own set".
+    // The monochrome six share one neutral set so that comparing them
+    // compares chrome alone; the colour-forward three borrow the palette of
+    // the theme they push, for the same reason.
+    var TILES = {
+      gesso: 'mono', plaster: 'mono', newsprint: 'mono',
+      graphite: 'mono', slate: 'mono', obsidian: 'mono',
+      midway: 'boardwalk', blueprint: 'cyanotype', duplex: 'riso'
+    };
+    var OK = ['boardwalk', 'safelight', 'cyanotype',
+              'autochrome', 'daguerre', 'riso',
+              'midway', 'blueprint', 'duplex',
+              'gesso', 'plaster', 'newsprint',
+              'graphite', 'slate', 'obsidian'];
+    var t = new URLSearchParams(location.search).get('theme');
+    if (OK.indexOf(t) < 0) t = 'boardwalk';
+    document.write('<link rel="stylesheet" href="assets/theme-' + t + '.css">');
+    window.LOUPE_THEME = t;
+    window.LOUPE_TILES = TILES[t] || t;
+  })();
+</script>
+<link rel="stylesheet" href="assets/loupe.css">
+<script src="assets/config.js"></script>
+</head>
+<body>
+
+<div id="stage" aria-hidden="true"></div>
+<div id="grain" aria-hidden="true"></div>
+<div id="shade" aria-hidden="true"></div>
+<div id="edge" aria-hidden="true"></div>
+
+<div id="plate-text">
+  <div class="t"></div>
+  <div class="s"></div>
+</div>
+
+<nav id="rail" aria-label="Gallery"></nav>
+
+<div id="light" role="dialog" aria-modal="true" aria-label="Enlargement">
+  <div class="mount" id="light-mount"><img id="light-img" alt=""></div>
+  <div class="meta" id="light-meta"></div>
+</div>
+
+<script type="application/json" id="gallery">
+{
+  "title": "loupe",
+  "credit": "five sections · twenty frames each",
+  "base": "tiles/boardwalk/",
+  "intro": ["img/plate-1.jpg", "img/plate-2.jpg", "img/plate-3.jpg"],
+  "items": [
+    { "id": "01", "thumb": "thumbs/thumb-01.jpg", "href": "section.html?s=1", "alt": "Section one — twenty frames" },
+    { "id": "02", "thumb": "thumbs/thumb-02.jpg", "href": "section.html?s=2", "alt": "Section two — twenty frames" },
+    { "id": "03", "thumb": "thumbs/thumb-03.jpg", "href": "section.html?s=3", "alt": "Section three — twenty frames" },
+    { "id": "04", "thumb": "thumbs/thumb-04.jpg", "href": "section.html?s=4", "alt": "Section four — twenty frames" },
+    { "id": "05", "thumb": "thumbs/thumb-05.jpg", "href": "section.html?s=5", "alt": "Section five — twenty frames" }
+  ]
+}
+</script>
+
+<script>
+  // The test tiles come in matching palettes, so switching theme switches
+  // the imagery too and the whole page stays coherent.
+  (function () {
+    var el = document.getElementById('gallery');
+    var g = JSON.parse(el.textContent);
+    g.base = LOUPE_CONFIG.assets + 'tiles/' + window.LOUPE_TILES + '/';
+
+    // ?tiles=photographs swaps the filler for the Moore light studies next
+    // door. Chrome that only looks good against flat colour swatches is not
+    // chrome that works — duotone in particular is meaningless without a
+    // real luminance ramp to remap.
+    if (LOUPE_CONFIG.content === 'photographs') {
+      g.base  = '../jimmy/';
+      g.intro = ['img/lights-02.jpg', 'img/lights-04.jpg', 'img/lights-01.jpg'];
+      g.items = ['01', '02', '03', '04', '05'].map(function (n, i) {
+        return {
+          id: n,
+          thumb: 'thumbs/lights-' + n + '.jpg',
+          href:  'section.html?s=' + (i + 1),
+          alt:   'Light study ' + n
+        };
+      });
+      g.credit = 'james vincent moore · real photographs';
+    }
+
+    g.credit = g.credit + ' · ' + window.LOUPE_THEME;
+    el.textContent = JSON.stringify(g);
+  })();
+</script>
+<script src="assets/loupe.js"></script>
+
+</body>
+</html>

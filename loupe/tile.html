@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>loupe test tile</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; overflow: hidden; }
+
+  #tile {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Share Tech Mono', monospace;
+    color: rgba(255, 255, 255, 0.94);
+  }
+
+  #big {
+    font-size: 34vmin;
+    line-height: 0.9;
+    letter-spacing: 0.04em;
+    text-shadow: 0 0 8vmin rgba(0, 0, 0, 0.3);
+  }
+
+  #small {
+    margin-top: 4vmin;
+    font-size: 5vmin;
+    letter-spacing: 0.34em;
+    text-transform: lowercase;
+    opacity: 0.85;
+  }
+
+  .corner {
+    position: absolute;
+    font-size: 3.4vmin;
+    letter-spacing: 0.2em;
+    text-transform: lowercase;
+    opacity: 0.7;
+  }
+
+  #dim   { left: 5vmin;  bottom: 4vmin; }
+  #label { right: 5vmin; top: 4vmin; }
+
+  /* Ticks at opposite corners. If a tile is being cover-cropped rather than
+     shown whole, one or both of these is the first thing to go missing. */
+  #tile::before, #tile::after {
+    content: '';
+    position: absolute;
+    width: 9vmin;
+    height: 9vmin;
+    border: 0.7vmin solid rgba(255, 255, 255, 0.55);
+  }
+  #tile::before { left: 2.5vmin;  top: 2.5vmin;    border-right: 0; border-bottom: 0; }
+  #tile::after  { right: 2.5vmin; bottom: 2.5vmin; border-left: 0;  border-top: 0; }
+</style>
+</head>
+<body>
+  <div id="tile">
+    <div id="big"></div>
+    <div id="small"></div>
+    <div class="corner" id="dim"></div>
+    <div class="corner" id="label"></div>
+  </div>
+
+<script>
+  // ?h=hue &s=saturation &l=lightness &big=text &small=text &label=text &dim=text
+  // dim is passed in rather than read from the window: these tiles are
+  // rendered large and scaled down, and innerHeight is not yet settled at
+  // capture time, so a measured value would label the file with a size it
+  // never had.
+  var p = new URLSearchParams(location.search);
+  var h = p.get('h') || '0';
+  var s = p.get('s') || '52';
+  var l = p.get('l') || '38';
+  document.getElementById('tile').style.background =
+    'hsl(' + h + ', ' + s + '%, ' + l + '%)';
+  document.getElementById('big').textContent   = p.get('big') || '00';
+  document.getElementById('small').textContent = p.get('small') || '';
+  document.getElementById('label').textContent = p.get('label') || '';
+  document.getElementById('dim').textContent   = p.get('dim') || '';
+</script>
+</body>
+</html>

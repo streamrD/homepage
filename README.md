@@ -25,6 +25,7 @@ apple-touch-icon.png  /
 make-favicon.py       regenerates the three icon files
 jshimron/             a separate site — see below
 jimmy/                a separate site — see below
+loupe/                the gallery pattern jimmy is built on — see below
 ```
 
 The page loads the hero photograph — Detroit, c. 1964, from Moore Archives —
@@ -84,3 +85,29 @@ bucket — `jimmy/img/` and `jimmy/thumbs/`, about 3 MB. The camera originals
 are git-ignored. It also carries its own favicon and share card, cut from one
 of the photographs, so `/jimmy` does not borrow the TS monogram. See
 `jimmy/README.md` for how all of it is regenerated.
+
+The first design is kept intact and working at
+[/jimmy/v1](https://todd.up.railway.app/jimmy/v1) — three photographs bursting
+from a small square to full bleed, then five thumbnails flying to a corner
+rail. It shares `img/` and `thumbs/` with the live page rather than
+duplicating them, and is marked `noindex`.
+
+## `loupe/`
+
+The gallery pattern extracted from `jimmy/` and generalised: one engine,
+fifteen themes, an entry page and a section page, no build step and no
+dependencies. Served at [/loupe](https://todd.up.railway.app/loupe) —
+`themes.html` is the way in.
+
+A theme is a block of CSS custom properties and nothing else; the engine
+contains no appearance decisions. The gallery itself is a JSON manifest whose
+`base` is the only thing that knows where the pictures live, which is the seam
+a storage backend plugs into.
+
+The 441 generated test tiles are **git-ignored** — about 21 MB of scaffolding
+that `loupe/make-tiles.sh` rebuilds in a couple of minutes. Until a bucket
+exists the deployed pages therefore show the Moore photographs from `/jimmy/`;
+`loupe/assets/config.js` holds that switch.
+
+`loupe/ARCHITECTURE.md` is the write-up: the decisions, the seams a hosted
+platform would plug into, and the traps worth not re-treading.

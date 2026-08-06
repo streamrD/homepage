@@ -1,0 +1,89 @@
+/* obsidian — true black, and almost nothing else. No border, no shadow, no
+ * grain, no mat, no rounding. The extreme end of the restraint axis: if a
+ * theme can be carried by value and tracking alone, it is this one.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&display=swap');
+
+:root, .t-obsidian {
+  --ground:      #000000;
+  --ink:         #f4f4f4;
+  --ink-dim:     #a8a8a8;
+  --ink-faint:   #6f6f6f;
+  --scrim-rgb:   0 0 0;
+  --scrim:       0.72;
+  --chrome-shadow: 0 1px 18px rgba(0, 0, 0, 0.95);
+
+  --font-display:  'Inter', system-ui, sans-serif;
+  --font-label:    'Inter', system-ui, sans-serif;
+  --title-size:    11px;
+  --title-tracking: 0.56em;
+  --title-case:    uppercase;
+  --label-size:    10px;
+  --label-tracking: 0.2em;
+  --label-case:    uppercase;
+  --sub-size:      9px;
+
+  /* framing: bleed, and nothing between the photograph and the edge */
+  /* framing. --plate-inset is unitless, in vmin, so a miniature can
+     reproduce the mat without knowing the viewport. Matted themes also
+     set --drift-scale: 1. */
+  --plate-base:  100vmax;
+  --plate-inset: 0;
+  --plate-fit:   cover;
+
+  --rail-duotone: 0;
+  --duo-dark:     #000000;
+  --duo-light:    #ededed;
+  --duo-contrast: 1.18;
+
+  --thumb-size:    70px;
+  --thumb-size-sm: 50px;
+  --thumb-gap:     12px;
+  --thumb-gap-sm:  9px;
+  --thumb-radius:  0px;
+  --thumb-border:  0;
+  --thumb-bg:      #000000;
+  --thumb-shadow:  none;
+  --thumb-shadow-hover: none;
+  --thumb-filter:       brightness(0.62) grayscale(0.3);
+  --thumb-filter-hover: brightness(1) grayscale(0);
+  --thumb-hover-scale:  1;
+  --accent:      #ffffff;
+  --accent-glow: rgba(255, 255, 255, 0.16);
+  --n-ink:       rgba(244, 244, 244, 0.9);
+
+  --grain:       0;
+  --grain-blend: overlay;
+
+  --lit-ground:     #000000;
+  --mount-pad:      0;
+  --mount-bg:       transparent;
+  --mount-border:   0;
+  --enlarge-shadow: none;
+  --enlarge-max-w:  88vw;
+  --enlarge-max-h:  86vh;
+  --stage-lit-opacity:  0;
+  --stage-lit-saturate: 1;
+
+  --burst:       2600ms;
+  --grow:        1900ms;
+  --grow-ease:   cubic-bezier(0.24, 0.66, 0.2, 1);
+  --settle:      1300ms;
+  --settle-ease: cubic-bezier(0.22, 0.8, 0.26, 1);
+  --stagger:     120ms;
+  --fade:        1100ms;
+  --plate-start-scale: 0.18;
+  --plate-exit-scale:  1.08;
+  --thumb-start-scale: 0.72;
+  --scatter-radius: 54px;
+  --scatter-spread: 88deg;
+  --thumb-tilt:     0deg;
+  --drift:       104s;
+  --drift-scale: 1.04;
+
+  --cell-size:   152px;
+  --cell-gap:    14px;
+  --grid-stagger: 70ms;
+  --backdrop:    0.2;
+}

@@ -3,8 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- Deliberately /jimmy/, not /jimmy/v1/: this archive shares img/ and
+     thumbs/ with the live page rather than duplicating 3.5 MB. -->
 <base href="/jimmy/">
-<title>Light Studies — James Vincent Moore, Detroit, early to mid 1960s</title>
+<title>Light Studies — first version (archived)</title>
 
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -16,7 +18,8 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="A long exposure of coloured lights, beside the words light studies, james vincent moore (jimmy).">
-<meta property="og:url" content="https://todd.up.railway.app/jimmy/">
+<meta property="og:url" content="https://todd.up.railway.app/jimmy/v1/">
+<meta name="robots" content="noindex">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://todd.up.railway.app/jimmy/og.jpg">
@@ -49,21 +52,15 @@
     position: absolute;
     inset: 0;
     opacity: 0;
-    transition: opacity 1100ms ease;
+    transition: opacity 700ms ease;
   }
 
-  /* Full strength while the opening runs — three photographs at full size,
-     fading one into the next, no growing. */
   .plate.on  { opacity: 1; }
   .plate.out { opacity: 0; }
 
-  /* Then the last one steps back to be the room rather than the subject.
-     body.ready is added at the same instant the row is released, so the dim
-     and the glide are one gesture rather than two events. */
-  body.ready .plate.on { opacity: var(--rest, 0.26); }
-
-  /* A square the size of the viewport's long edge — at scale 1 it covers the
-     screen exactly. No burst any more: it simply fades up. */
+  /* A square the size of the viewport's long edge: at scale 1 it covers the
+     screen exactly, and small it shows the whole square frame — the same
+     framing as the thumbnails. */
   .plate img {
     position: absolute;
     top: 50%;
@@ -73,7 +70,14 @@
     margin: -50vmax 0 0 -50vmax;
     object-fit: cover;
     display: block;
+    transform: scale(0.13);
+    transition: transform 1500ms cubic-bezier(0.14, 0.76, 0.18, 1);
   }
+
+  .plate.on img { transform: scale(1); }
+
+  /* the outgoing frame keeps opening as it fades, so the cut carries through */
+  .plate.out img { transform: scale(1.16); }
 
   /* the plate that comes to rest breathes, very slowly */
   .plate.resting img {
@@ -119,15 +123,12 @@
 
   /* ---------- the thumbnail row ---------- */
 
-  /* The five sit in the middle of the screen now, at a size worth looking
-     at, rather than filed in a corner. */
   #rail {
     position: fixed;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    right: max(3vw, 22px);
+    bottom: max(3vh, 20px);
     display: flex;
-    gap: clamp(9px, 1.9vw, 30px);
+    gap: 13px;
     z-index: 3;
     transition: opacity 500ms ease;
   }
@@ -136,8 +137,8 @@
 
   .thumb {
     position: relative;
-    width:  clamp(54px, 11.4vw, 176px);
-    height: clamp(54px, 11.4vw, 176px);
+    width: 78px;
+    height: 78px;
     padding: 0;
     border: 1px solid rgba(255, 255, 255, 0.16);
     border-radius: 2px;
@@ -147,15 +148,10 @@
     opacity: 0;
     overflow: hidden;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.65);
-    /* The original's start state, unchanged: carried out to a point, turned,
-       and shrunk. What makes it read as one motion rather than five is that
-       they all travel — a spin in place has nothing to be believable about. */
-    transform: translate(var(--dx, 0px), var(--dy, 0px))
-               scale(0.42) rotate(var(--rot, 0deg));
+    transform: translate(var(--dx, 0px), var(--dy, 0px)) scale(0.42) rotate(var(--rot, 0deg));
   }
 
   .thumb.animate {
-    /* a little past 1 on the curve, so each one settles rather than arrives */
     transition:
       transform 1250ms cubic-bezier(0.16, 0.9, 0.22, 1),
       opacity 700ms ease,
@@ -223,8 +219,8 @@
     transform: translateY(8px);
     transition: opacity 1.5s ease 0.5s, transform 1.5s ease 0.5s;
     pointer-events: none;
-    /* only has to clear him in the far corner now */
-    max-width: calc(100vw - 260px);
+    /* stop short of the row: five 78px thumbs, their gaps, and the margin */
+    max-width: calc(100vw - 500px);
   }
 
   body.ready #plate-text { opacity: 1; transform: none; }
@@ -240,19 +236,15 @@
     font-size: 1.15em;
   }
 
-  /* Him, in the corner the row used to occupy — the same treatment, still in
-     the slide's own 5:4 landscape rather than cropped square. */
+  /* him, above his own work — same treatment as the row, but left in the
+     slide's own 5:4 landscape rather than cropped square */
   #portrait {
     display: block;
-    position: fixed;
-    right: max(3vw, 22px);
-    bottom: max(3vh, 20px);
-    z-index: 3;
-    width: clamp(48px, 5vw, 75px);
-    aspect-ratio: 1.25;
-    height: auto;
+    position: relative;
+    width: 78px;
+    height: 62px;
+    margin-bottom: 15px;
     padding: 0;
-    opacity: 0;
     border: 1px solid rgba(255, 255, 255, 0.16);
     border-radius: 2px;
     background: #0a0809;
@@ -261,11 +253,8 @@
     touch-action: manipulation;
     pointer-events: auto;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.65);
-    transition: opacity 1.2s ease 0.4s, border-color 260ms ease, box-shadow 260ms ease;
+    transition: border-color 260ms ease, box-shadow 260ms ease;
   }
-
-  body.ready #portrait { opacity: 1; }
-  body.lit   #portrait { opacity: 0; pointer-events: none; transition-delay: 0s; }
 
   #portrait img {
     width: 100%;
@@ -335,28 +324,49 @@
 
   /* ---------- small screens ---------- */
 
-  /* The centred row needs no rearranging: five thumbnails at the clamp's
-     54px floor with 9px gaps come to 306px, which fits a 390px phone. The
-     old rules turned it into a column down the right edge — correct when it
-     was a corner rail, wrong now that it is the subject and already centred.
-     What does need moving is everything that used to share the corners. */
+  /* Too narrow to sit beside the row — the credit moves above it instead. */
+  @media (max-width: 900px) {
+    #plate-text { bottom: 112px; max-width: 92vw; }
+  }
+
   @media (max-width: 720px) {
+    .thumb { width: 54px; height: 54px; }
+    #portrait { width: 54px; height: 43px; margin-bottom: 11px; }
+    #rail { gap: 9px; right: 16px; bottom: 16px; }
+    #plate-text { font-size: 10px; letter-spacing: 0.16em; bottom: 94px; max-width: 88vw; }
+    #light img { max-width: 94vw; max-height: 78vh; }
+  }
+
+  /* A phone held upright. The row turns on its side and runs down the right
+     edge, which leaves the whole bottom for the credit and keeps the tall
+     middle of the screen clear for the photograph. */
+  @media (max-width: 720px) and (orientation: portrait) {
+    #rail {
+      flex-direction: column;
+      top: 50%;
+      bottom: auto;
+      right: calc(13px + env(safe-area-inset-right, 0px));
+      transform: translateY(-50%);
+      gap: 10px;
+    }
+
+    /* the column needs the right edge dark, not the bottom-right corner */
+    #shade {
+      top: 0;
+      height: auto;
+      background:
+        linear-gradient(to left, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0) 32%),
+        linear-gradient(to top, rgba(0,0,0,0.74) 0%, rgba(0,0,0,0) 27%);
+    }
+
+    /* nothing sits beside it down there any more — it can have the width */
     #plate-text {
-      font-size: 10px;
-      letter-spacing: 0.16em;
-      left: calc(18px + env(safe-area-inset-left, 0px));
-      bottom: calc(18px + env(safe-area-inset-bottom, 0px));
-      /* he is above it now rather than beside it, so it can have the width */
-      max-width: calc(100vw - 36px);
+      left: calc(20px + env(safe-area-inset-left, 0px));
+      bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+      max-width: calc(100vw - 42px);
     }
 
-    #portrait {
-      right: calc(16px + env(safe-area-inset-right, 0px));
-      bottom: calc(74px + env(safe-area-inset-bottom, 0px));
-      width: 43px;
-    }
-
-    #light img  { max-width: 94vw; max-height: 78vh; }
+    #light img { max-width: 92vw; max-height: 76vh; }
     #light .meta { bottom: calc(18px + env(safe-area-inset-bottom, 0px)); }
   }
 
@@ -375,11 +385,10 @@
 <div id="grain" aria-hidden="true"></div>
 <div id="shade" aria-hidden="true"></div>
 
-<button id="portrait" type="button" aria-label="Portrait of James Vincent Moore — enlarge">
-  <img src="thumbs/jimmy.jpg" alt="" decoding="async">
-</button>
-
 <div id="plate-text">
+  <button id="portrait" type="button" aria-label="Portrait of James Vincent Moore — enlarge">
+    <img src="thumbs/jimmy.jpg" alt="" decoding="async">
+  </button>
   <div class="t">light studies</div>
   <div class="s">james vincent moore (jimmy) · 2<span class="frac">¼</span>-inch film · detroit, mi · early–mid 1960s</div>
 </div>
@@ -403,32 +412,21 @@
     { id: '05', alt: 'Long exposure — soft amber glow scattered with sparks' }
   ];
 
-  // Him, from the same years. Not part of the numbered five — he holds the
-  // bottom-right corner alone and carries his own label in the enlargement.
+  // Him, from the same years. Not part of the numbered five — it hangs above
+  // the credit and carries its own label in the enlargement.
   var PORTRAIT = {
     id: 'jimmy',
     alt: 'James Vincent Moore seated in a living room, early to mid 1960s',
     label: 'james vincent moore · early–mid 1960s'
   };
 
-  // The opening: three photographs at full size and full strength, each
-  // fading into the next. No burst and no growing — the movement is saved
-  // for the row.
+  // The opening: each frame rushes out from a small square to full bleed.
+  // Two short bursts, then the third comes to rest.
   var INTRO = ['01', '05', '02'];
-  var REST  = '02';   // the one left standing, dimmed, behind the thumbnails
-  var BEAT  = 2000;   // image to image
-  var DWELL = 1200;   // 02 alone at full strength before the row is released
+  var BURST = 2000;   // beat to beat
+  var GROW  = 1500;   // small to full bleed, matches the CSS transition
 
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // Seen once per tab is enough; coming back from an enlargement or a reload
-  // should land on the settled page.
-  function seenIntro(set) {
-    try {
-      if (set) { sessionStorage.setItem('jimmy:intro', '1'); return true; }
-      return sessionStorage.getItem('jimmy:intro') === '1';
-    } catch (e) { return false; }
-  }
   var stage = document.getElementById('stage');
   var rail = document.getElementById('rail');
   var light = document.getElementById('light');
@@ -491,10 +489,10 @@
     current = id;
   }
 
-  // The row arriving is also the moment the photograph steps back.
+  // Once the last frame has finished opening, let it breathe and bring in the row.
   function land() {
-    plates[REST].classList.add('resting');
-    settleRail();
+    at(function () { plates[INTRO[2]].classList.add('resting'); }, reduced ? 0 : GROW);
+    at(settleRail, reduced ? 0 : GROW + 300);
   }
 
   // ---- the opening sequence ----
@@ -502,82 +500,22 @@
   function settleRail() {
     document.body.classList.add('ready');
 
-    // They drop straight onto the photograph, left to right. The scatter the
-    // old corner rail flew in from made sense when it was travelling across
-    // the screen; landing in the middle, a fall reads better than a flight.
-    // Where each frame starts, as a delta from where it comes to rest.
-    // glide is the one. ?entrance=<name> switches to any of the others,
-    // which are kept for comparison; the settle itself — 1250ms on a long
-    // ease-out — is the same for all, since that slow coming-to-rest is the
-    // part that already works.
-    //
-    // The failure to avoid is letting the offsets scale with the index: the
-    // last frame then does far more travelling than the first and reads as
-    // the only thing moving. Every option below is either identical for all
-    // five, or symmetric about the middle.
-    var ENTRANCES = {
-      // one point above the middle. Ends travel furthest, centre least, and
-      // the fan is symmetric, so no single frame dominates.
-      converge: function (i, n, f, r, vw, vh) {
-        return { x: vw * 0.5 - (r.left + r.width / 2),
-                 y: vh * 0.15 - (r.top + r.height / 2),
-                 rot: (i % 2 ? 1 : -1) * 8 };
-      },
-      // straight down, the same distance for every frame. Only the stagger
-      // separates them, which is the purest form of the lash.
-      fall: function (i, n, f, r, vw, vh) {
-        return { x: 0, y: -vh * 0.26, rot: (i % 2 ? 1 : -1) * 6 };
-      },
-      // from above with a symmetric sway — the middle swings widest, the
-      // ends barely at all, like a rope shaken at both ends.
-      wave: function (i, n, f, r, vw, vh) {
-        var m = Math.sin(f * Math.PI);
-        return { x: (i % 2 ? 1 : -1) * m * vw * 0.07,
-                 y: -vh * (0.14 + m * 0.10),
-                 rot: (i % 2 ? 1 : -1) * (4 + m * 9) };
-      },
-      // in from the left, identical distance for each. The whip is entirely
-      // in the release, not in the geometry.
-      sweep: function (i, n, f, r, vw, vh) {
-        return { x: -vw * 0.30, y: vh * 0.07, rot: -9 };
-      },
-      // sweep's move over a much shorter run — in from just off the row
-      // rather than a third of the screen away, with the turn eased back to
-      // match. Same flat distribution, so no frame leads.
-      glide: function (i, n, f, r, vw, vh) {
-        return { x: -vw * 0.12, y: vh * 0.035, rot: -6 };
-      },
-      // the quiet one: a short fall, no turn, and the long settle alone.
-      drift: function (i, n, f, r, vw, vh) {
-        return { x: 0, y: -44, rot: 0 };
-      },
-      // the progressive trail, kept so it can be compared against the rest.
-      // This is the one where the last frame does too much of the work.
-      trail: function (i, n, f, r, vw, vh) {
-        return { x: -vw * (0.22 + f * 0.12), y: vh * (0.15 + f * 0.07),
-                 rot: (i % 2 ? 1 : -1) * (7 + i * 4) };
-      }
-    };
-
-    var pick = new URLSearchParams(location.search).get('entrance');
-    var enter = ENTRANCES[pick] || ENTRANCES.glide;
-    if (pick && ENTRANCES[pick]) {
-      var sub = document.querySelector('#plate-text .s');
-      sub.textContent = sub.textContent + ' · entrance: ' + pick;
-    }
-
-    var vw = window.innerWidth, vh = window.innerHeight;
-    var n = thumbs.length;
+    var cx = window.innerWidth / 2;
+    var cy = window.innerHeight / 2;
 
     thumbs.forEach(function (t, i) {
-      var f = n > 1 ? i / (n - 1) : 0;
-      var o = enter(i, n, f, t.getBoundingClientRect(), vw, vh);
-      t.style.setProperty('--dx', o.x.toFixed(1) + 'px');
-      t.style.setProperty('--dy', o.y.toFixed(1) + 'px');
-      t.style.setProperty('--rot', o.rot.toFixed(1) + 'deg');
+      var r = t.getBoundingClientRect();
+      // A loose arc around the middle of the screen to fly in from.
+      var ang = (-148 + i * 34) * Math.PI / 180;
+      var rad = 96 + i * 30;
+      var sx = cx + Math.cos(ang) * rad;
+      var sy = cy + Math.sin(ang) * rad * 0.78;
+      t.style.setProperty('--dx', (sx - (r.left + r.width / 2)).toFixed(1) + 'px');
+      t.style.setProperty('--dy', (sy - (r.top + r.height / 2)).toFixed(1) + 'px');
+      t.style.setProperty('--rot', ((i % 2 ? 1 : -1) * (7 + i * 4)) + 'deg');
     });
 
-    void rail.offsetWidth;   // lock in the start before animating
+    void rail.offsetWidth; // lock in the scattered start before animating
 
     thumbs.forEach(function (t, i) {
       t.classList.add('animate');
@@ -592,24 +530,18 @@
     }, reduced ? 0 : (thumbs.length - 1) * 130 + 1250);
   }
 
-  // Skipped, deep-linked, or seen already: straight to the settled page.
   function finish() {
     clearTimers();
-    seenIntro(true);
-    showPlate(REST);
+    showPlate(INTRO[2]);
     land();
   }
 
   function run() {
-    if (reduced || seenIntro()) { finish(); return; }
-    seenIntro(true);
+    if (reduced) { finish(); return; }
     showPlate(INTRO[0]);
-    at(function () { showPlate(INTRO[1]); }, BEAT);
-    at(function () { showPlate(INTRO[2]); }, BEAT * 2);
-    at(land, BEAT * 2 + DWELL);
+    at(function () { showPlate(INTRO[1]); }, BURST);
+    at(finish, BURST * 2);
   }
-
-
 
   // ---- enlargement ----
 
@@ -666,9 +598,9 @@
     }
   });
 
-  // A click during the opening skips straight to the settled page.
+  // A click during the opening skips straight to the menu.
   function skip(e) {
-    if (railLive || openItem || current === REST) return;
+    if (railLive || openItem || current === INTRO[2]) return;
     if (e.target.closest && e.target.closest('#rail, #plate-text')) return;
     finish();
   }

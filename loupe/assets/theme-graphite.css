@@ -1,0 +1,89 @@
+/* graphite — mid grey, technical. Drawing-office rather than gallery:
+ * monospace throughout, a tight mat, small frames set close together, and
+ * the only mid-value ground in either family — neither wall nor darkness.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+
+:root, .t-graphite {
+  --ground:      #4b4e51;
+  --ink:         #e2e5e6;
+  --ink-dim:     #b3b8bb;
+  --ink-faint:   #8b9195;
+  --scrim-rgb:   28 31 33;
+  --scrim:       0.6;
+  --chrome-shadow: 0 1px 10px rgba(20, 22, 24, 0.6);
+
+  --font-display:  'Space Mono', 'IBM Plex Mono', monospace;
+  --font-label:    'Space Mono', 'IBM Plex Mono', monospace;
+  --title-size:    12px;
+  --title-tracking: 0.3em;
+  --title-case:    uppercase;
+  --label-size:    10px;
+  --label-tracking: 0.12em;
+  --label-case:    lowercase;
+  --sub-size:      10px;
+
+  /* framing: a tight mat — a drawing pinned to a board, not hung on a wall */
+  /* framing. --plate-inset is unitless, in vmin, so a miniature can
+     reproduce the mat without knowing the viewport. Matted themes also
+     set --drift-scale: 1. */
+  --plate-base:  100vmin;
+  --plate-inset: 5;
+  --plate-fit:   contain;
+  --drift-scale: 1;
+
+  --rail-duotone: 0;
+  --duo-dark:     #24272a;
+  --duo-light:    #d8dcde;
+  --duo-contrast: 1.14;
+
+  --thumb-size:    62px;
+  --thumb-size-sm: 48px;
+  --thumb-gap:     6px;
+  --thumb-gap-sm:  6px;
+  --thumb-radius:  0px;
+  --thumb-border:  1px solid rgba(226, 229, 230, 0.4);
+  --thumb-bg:      #3f4245;
+  --thumb-shadow:  none;
+  --thumb-shadow-hover: none;
+  --thumb-filter:       grayscale(0.55) contrast(1.08);
+  --thumb-filter-hover: grayscale(0) contrast(1);
+  --thumb-hover-scale:  1;
+  --accent:      #e2e5e6;
+  --accent-glow: rgba(226, 229, 230, 0.22);
+  --n-ink:       rgba(226, 229, 230, 0.85);
+
+  --grain:       0;
+  --grain-blend: overlay;
+
+  --lit-ground:     #3a3d40;
+  --mount-pad:      0;
+  --mount-bg:       transparent;
+  --mount-border:   1px solid rgba(226, 229, 230, 0.35);
+  --enlarge-shadow: none;
+  --enlarge-max-w:  86vw;
+  --enlarge-max-h:  84vh;
+  --stage-lit-opacity:  0.08;
+  --stage-lit-saturate: 0.5;
+
+  --burst:       2100ms;
+  --grow:        1300ms;
+  --grow-ease:   cubic-bezier(0.3, 0.7, 0.3, 1);
+  --settle:      950ms;
+  --settle-ease: cubic-bezier(0.3, 0.75, 0.3, 1);
+  --stagger:     80ms;
+  --fade:        800ms;
+  --plate-start-scale: 0.38;
+  --plate-exit-scale:  1.04;
+  --thumb-start-scale: 0.9;
+  --scatter-radius: 22px;
+  --scatter-spread: 50deg;
+  --thumb-tilt:     0deg;
+  --drift:       92s;
+
+  --cell-size:   132px;
+  --cell-gap:    8px;
+  --grid-stagger: 40ms;
+  --backdrop:    0.14;
+}

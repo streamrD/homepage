@@ -1,0 +1,95 @@
+/* duplex — riso's two-ink logic applied to the room instead of the pictures.
+ *
+ * riso keeps white paper and puts its spot colour in the thumbnails. This
+ * runs a duplex job: coloured stock, one spot ink, and both used everywhere
+ * the chrome touches — a band across the top, keylines, the mat, the viewing
+ * field. Loud without laying a single wash over a photograph.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&display=swap');
+
+:root, .t-duplex {
+  /* the stock is not white */
+  --ground:      #dce7ec;
+  --ink:         #14161c;
+  --ink-dim:     #3d4450;
+  --ink-faint:   #6b7482;
+  --scrim-rgb:   220 231 236;
+  --scrim:       0.86;
+  --chrome-shadow: none;
+
+  --font-display:  'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --font-label:    'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --title-size:    27px;
+  --title-tracking: -0.02em;
+  --title-case:    uppercase;
+  --label-size:    10px;
+  --label-tracking: 0.1em;
+  --label-case:    uppercase;
+  --sub-size:      10px;
+
+  --plate-base:  100vmin;
+  --plate-inset: 9;
+  --plate-fit:   contain;
+  --drift-scale: 1;
+
+  /* a solid band of the spot ink across the top, flush to the edge */
+  --edge-width: 14px 0 0 0;
+  --edge-color: #ff2f6d;
+  --edge-inset: 0;
+
+  --rail-duotone: 0;
+  --duo-dark:     #14161c;
+  --duo-light:    #ff8fb4;
+  --duo-contrast: 1.22;
+
+  --thumb-size:    74px;
+  --thumb-size-sm: 54px;
+  --thumb-gap:     10px;
+  --thumb-gap-sm:  8px;
+  --thumb-radius:  0px;
+  --thumb-border:  2px solid #ff2f6d;
+  --thumb-bg:      #dce7ec;
+  --thumb-shadow:  none;
+  --thumb-shadow-hover: none;
+  --thumb-filter:       saturate(1.2) contrast(1.08);
+  --thumb-filter-hover: saturate(1.45) contrast(1.14);
+  --thumb-hover-scale:  1.06;
+  --accent:      #14161c;
+  --accent-glow: rgba(255, 47, 109, 0.4);
+  --n-ink:       #14161c;
+
+  --grain:       0.14;
+  --grain-blend: multiply;
+
+  /* the mat is the second ink */
+  --lit-ground:     #d3e0e6;
+  --mount-pad:      16px;
+  --mount-bg:       #ff2f6d;
+  --mount-border:   3px solid #14161c;
+  --enlarge-shadow: none;
+  --enlarge-max-w:  80vw;
+  --enlarge-max-h:  76vh;
+  --stage-lit-opacity:  0.12;
+  --stage-lit-saturate: 1;
+
+  --burst:       1600ms;
+  --grow:        750ms;
+  --grow-ease:   cubic-bezier(0.2, 1.1, 0.3, 1);
+  --settle:      620ms;
+  --settle-ease: cubic-bezier(0.2, 1.25, 0.35, 1);
+  --stagger:     60ms;
+  --fade:        360ms;
+  --plate-start-scale: 0.26;
+  --plate-exit-scale:  1.18;
+  --thumb-start-scale: 0.5;
+  --scatter-radius: 124px;
+  --scatter-spread: 156deg;
+  --thumb-tilt:     12deg;
+  --drift:       44s;
+
+  --cell-size:   148px;
+  --cell-gap:    12px;
+  --grid-stagger: 40ms;
+  --backdrop:    0.2;
+}

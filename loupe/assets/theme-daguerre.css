@@ -1,0 +1,99 @@
+/* daguerre — silver plate on a gallery wall, viewed in a dark room.
+ *
+ * The theme that proves --ground and --lit-ground are independent: pale cool
+ * silver chrome, but the enlargement opens onto near-black, the way a plate
+ * is taken out of the light to be read. High-contrast serif, hairlines, and
+ * motion held to a stately minimum.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap');
+
+:root, .t-daguerre {
+  /* ground and ink */
+  --ground:      #c9cdcd;
+  --ink:         #14171a;
+  --ink-dim:     #3b4247;
+  --ink-faint:   #626b71;
+  --scrim-rgb:   232 235 235;
+  --scrim:       0.78;
+  --chrome-shadow: 0 1px 10px rgba(232, 235, 235, 0.95);
+
+  /* type */
+  --font-display:  'Playfair Display', Didot, Georgia, serif;
+  --font-label:    'Playfair Display', Didot, Georgia, serif;
+  --title-size:    22px;
+  --title-tracking: 0.1em;
+  --title-case:    none;
+  --label-size:    11px;
+  --label-tracking: 0.1em;
+  --label-case:    none;
+  --sub-size:      11px;
+
+  /* framing. --plate-inset is unitless, in vmin, so a miniature can
+     reproduce the mat without knowing the viewport. Matted themes also
+     set --drift-scale: 1. */
+  --plate-base:  100vmax;
+  --plate-inset: 0;
+  --plate-fit:   cover;
+
+  /* duotone the rail — off, but declared, so the axis can be compared */
+  --rail-duotone: 0;
+  --duo-dark:     #0f1418;
+  --duo-light:    #e8ecec;
+  --duo-contrast: 1.16;
+
+  /* the rail — hairline frames, wide apart, no rounding */
+  --thumb-size:    88px;
+  --thumb-size-sm: 58px;
+  --thumb-gap:     20px;
+  --thumb-gap-sm:  12px;
+  --thumb-radius:  0px;
+  --thumb-border:  1px solid rgba(20, 23, 26, 0.5);
+  --thumb-bg:      #dfe2e2;
+  --thumb-shadow:  0 2px 10px rgba(20, 23, 26, 0.22);
+  --thumb-shadow-hover: 0 4px 16px rgba(20, 23, 26, 0.3);
+  --thumb-filter:       saturate(0.55) contrast(1.06) brightness(1.02);
+  --thumb-filter-hover: saturate(0.85) contrast(1.1) brightness(1.05);
+  --thumb-hover-scale:  1.02;
+  --accent:      rgba(20, 23, 26, 0.9);
+  --accent-glow: rgba(120, 132, 140, 0.35);
+  --n-ink:       rgba(20, 23, 26, 0.85);
+
+  /* environment — no grain; a plate is a mirror, not a print */
+  --grain:       0;
+  --grain-blend: multiply;
+
+  /* the enlargement — taken out of the light */
+  --lit-ground:     #0c0e10;
+  --mount-pad:      0;
+  --mount-bg:       transparent;
+  --mount-border:   1px solid rgba(196, 204, 208, 0.45);
+  --enlarge-shadow: 0 0 90px rgba(150, 165, 175, 0.14);
+  --enlarge-max-w:  80vw;
+  --enlarge-max-h:  80vh;
+  --stage-lit-opacity:  0.04;
+  --stage-lit-saturate: 0.3;
+
+  /* motion — stately */
+  --burst:       2800ms;
+  --grow:        2200ms;
+  --grow-ease:   cubic-bezier(0.25, 0.6, 0.2, 1);
+  --settle:      1700ms;
+  --settle-ease: cubic-bezier(0.22, 0.75, 0.25, 1);
+  --stagger:     190ms;
+  --fade:        1200ms;
+  --plate-start-scale: 0.42;
+  --plate-exit-scale:  1.05;
+  --thumb-start-scale: 0.86;
+  --scatter-radius: 34px;
+  --scatter-spread: 70deg;
+  --thumb-tilt:     0deg;
+  --drift:       96s;
+  --drift-scale: 1.03;
+
+  /* section grid */
+  --cell-size:   162px;
+  --cell-gap:    24px;
+  --grid-stagger: 90ms;
+  --backdrop:    0.14;
+}

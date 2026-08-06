@@ -1,0 +1,97 @@
+/* midway — boardwalk's palette moved out of the thumbnails and into the room.
+ *
+ * Everywhere boardwalk chose near-black, this chooses oxblood. Ground, scrim,
+ * viewing field, mat and keylines all carry the colour, so the identity
+ * survives having every photograph replaced. Matted, because a saturated
+ * ground is only worth having if you can see it.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+:root, .t-midway {
+  /* the room is the colour */
+  --ground:      #330f1e;
+  --ink:         #ffe6c2;
+  --ink-dim:     #e0a98a;
+  --ink-faint:   #b3766a;
+  --scrim-rgb:   26 5 14;
+  --scrim:       0.6;
+  --chrome-shadow: 0 1px 14px rgba(20, 4, 11, 0.85);
+
+  --font-display:  'Share Tech Mono', 'Courier New', monospace;
+  --font-label:    'Share Tech Mono', 'Courier New', monospace;
+  --title-size:    13px;
+  --title-tracking: 0.36em;
+  --title-case:    lowercase;
+  --label-size:    10px;
+  --label-tracking: 0.2em;
+  --label-case:    lowercase;
+  --sub-size:      10px;
+
+  /* framing: matted, so the oxblood is a wall and not a letterbox */
+  --plate-base:  100vmin;
+  --plate-inset: 11;
+  --plate-fit:   contain;
+  --drift-scale: 1;
+
+  /* a gold band down the left — colour at rest, never over the picture */
+  --edge-width: 0 0 0 9px;
+  --edge-color: #e2a53f;
+  --edge-inset: 0;
+
+  --rail-duotone: 0;
+  --duo-dark:     #330f1e;
+  --duo-light:    #ffcf8a;
+  --duo-contrast: 1.12;
+
+  /* saturated keylines rather than a hairline of white at 16% */
+  --thumb-size:    76px;
+  --thumb-size-sm: 54px;
+  --thumb-gap:     12px;
+  --thumb-gap-sm:  9px;
+  --thumb-radius:  0px;
+  --thumb-border:  2px solid #e2a53f;
+  --thumb-bg:      #240a15;
+  --thumb-shadow:  0 6px 26px rgba(20, 4, 11, 0.6);
+  --thumb-shadow-hover: 0 8px 30px rgba(20, 4, 11, 0.7);
+  --thumb-filter:       saturate(0.95) brightness(0.92);
+  --thumb-filter-hover: saturate(1.1) brightness(1.05);
+  --thumb-hover-scale:  1.05;
+  --accent:      #ff5c8a;
+  --accent-glow: rgba(255, 92, 138, 0.4);
+  --n-ink:       #ffe6c2;
+
+  --grain:       0.14;
+  --grain-blend: overlay;
+
+  /* the viewing field is oxblood too, and the mat is gold */
+  --lit-ground:     #2a0c19;
+  --mount-pad:      18px;
+  --mount-bg:       #3d1425;
+  --mount-border:   2px solid #e2a53f;
+  --enlarge-shadow: 0 24px 70px rgba(15, 3, 8, 0.75);
+  --enlarge-max-w:  80vw;
+  --enlarge-max-h:  78vh;
+  --stage-lit-opacity:  0.1;
+  --stage-lit-saturate: 0.7;
+
+  --burst:       2200ms;
+  --grow:        1500ms;
+  --grow-ease:   cubic-bezier(0.16, 0.8, 0.2, 1);
+  --settle:      1150ms;
+  --settle-ease: cubic-bezier(0.18, 0.95, 0.25, 1);
+  --stagger:     110ms;
+  --fade:        750ms;
+  --plate-start-scale: 0.28;
+  --plate-exit-scale:  1.12;
+  --thumb-start-scale: 0.5;
+  --scatter-radius: 100px;
+  --scatter-spread: 130deg;
+  --thumb-tilt:     7deg;
+  --drift:       60s;
+
+  --cell-size:   152px;
+  --cell-gap:    16px;
+  --grid-stagger: 60ms;
+  --backdrop:    0.16;
+}

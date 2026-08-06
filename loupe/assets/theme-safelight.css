@@ -1,0 +1,98 @@
+/* safelight — the darkroom lamp. Warm-cast dark, slow, deliberate.
+ *
+ * Fills the gap boardwalk leaves: boardwalk is dark and neutral, this is dark
+ * and warm all the way through — ground, scrim, grain and accent all carry
+ * red. Nothing here is bright, because in a darkroom nothing is.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+:root, .t-safelight {
+  /* ground and ink */
+  --ground:      #0d0605;
+  --ink:         #f0cba4;
+  --ink-dim:     #c09272;
+  --ink-faint:   #8e6a53;
+  --scrim-rgb:   14 4 3;
+  --scrim:       0.76;
+  --chrome-shadow: 0 1px 16px rgba(14, 4, 3, 0.95);
+
+  /* type */
+  --font-display:  'Share Tech Mono', 'Courier New', monospace;
+  --font-label:    'Share Tech Mono', 'Courier New', monospace;
+  --title-size:    12px;
+  --title-tracking: 0.4em;
+  --title-case:    lowercase;
+  --label-size:    10px;
+  --label-tracking: 0.22em;
+  --label-case:    lowercase;
+  --sub-size:      10px;
+
+  /* framing. --plate-inset is unitless, in vmin, so a miniature can
+     reproduce the mat without knowing the viewport. Matted themes also
+     set --drift-scale: 1. */
+  --plate-base:  100vmax;
+  --plate-inset: 0;
+  --plate-fit:   cover;
+
+  /* duotone the rail — off, but declared, so the axis can be compared */
+  --rail-duotone: 0;
+  --duo-dark:     #180604;
+  --duo-light:    #ffc78a;
+  --duo-contrast: 1.14;
+
+  /* the rail */
+  --thumb-size:    72px;
+  --thumb-size-sm: 52px;
+  --thumb-gap:     11px;
+  --thumb-gap-sm:  9px;
+  --thumb-radius:  1px;
+  --thumb-border:  1px solid rgba(240, 178, 120, 0.22);
+  --thumb-bg:      #120807;
+  --thumb-shadow:  0 6px 26px rgba(0, 0, 0, 0.7);
+  --thumb-shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.75);
+  --thumb-filter:       brightness(0.78) saturate(0.9) sepia(0.12);
+  --thumb-filter-hover: brightness(1.05) saturate(1) sepia(0);
+  --thumb-hover-scale:  1.04;
+  --accent:      rgba(255, 150, 90, 0.85);
+  --accent-glow: rgba(255, 110, 50, 0.32);
+  --n-ink:       rgba(240, 203, 164, 0.85);
+
+  /* environment */
+  --grain:       0.2;
+  --grain-blend: overlay;
+
+  /* the enlargement */
+  --lit-ground:     #0a0403;
+  --mount-pad:      0;
+  --mount-bg:       transparent;
+  --mount-border:   0;
+  --enlarge-shadow: 0 24px 80px rgba(0, 0, 0, 0.85);
+  --enlarge-max-w:  86vw;
+  --enlarge-max-h:  84vh;
+  --stage-lit-opacity:  0.09;
+  --stage-lit-saturate: 0.55;
+
+  /* motion — everything a beat slower than boardwalk, and less thrown */
+  --burst:       2600ms;
+  --grow:        2000ms;
+  --grow-ease:   cubic-bezier(0.2, 0.7, 0.2, 1);
+  --settle:      1500ms;
+  --settle-ease: cubic-bezier(0.2, 0.85, 0.25, 1);
+  --stagger:     150ms;
+  --fade:        1000ms;
+  --plate-start-scale: 0.2;
+  --plate-exit-scale:  1.1;
+  --thumb-start-scale: 0.55;
+  --scatter-radius: 72px;
+  --scatter-spread: 110deg;
+  --thumb-tilt:     4deg;
+  --drift:       80s;
+  --drift-scale: 1.05;
+
+  /* section grid */
+  --cell-size:   154px;
+  --cell-gap:    16px;
+  --grid-stagger: 70ms;
+  --backdrop:    0.16;
+}

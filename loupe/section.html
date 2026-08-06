@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>loupe — section</title>
+
+<script>
+  (function () {
+    // Which tiles a theme shows. Absent from the map means "its own set".
+    // The monochrome six share one neutral set so that comparing them
+    // compares chrome alone; the colour-forward three borrow the palette of
+    // the theme they push, for the same reason.
+    var TILES = {
+      gesso: 'mono', plaster: 'mono', newsprint: 'mono',
+      graphite: 'mono', slate: 'mono', obsidian: 'mono',
+      midway: 'boardwalk', blueprint: 'cyanotype', duplex: 'riso'
+    };
+    var OK = ['boardwalk', 'safelight', 'cyanotype',
+              'autochrome', 'daguerre', 'riso',
+              'midway', 'blueprint', 'duplex',
+              'gesso', 'plaster', 'newsprint',
+              'graphite', 'slate', 'obsidian'];
+    var t = new URLSearchParams(location.search).get('theme');
+    if (OK.indexOf(t) < 0) t = 'boardwalk';
+    document.write('<link rel="stylesheet" href="assets/theme-' + t + '.css">');
+    window.LOUPE_THEME = t;
+    window.LOUPE_TILES = TILES[t] || t;
+  })();
+</script>
+<link rel="stylesheet" href="assets/loupe.css">
+<script src="assets/config.js"></script>
+</head>
+<body class="section">
+
+<div id="grid"></div>
+<div id="shade" aria-hidden="true"></div>
+<div id="edge" aria-hidden="true"></div>
+
+<nav id="rail" aria-label="Sections"></nav>
+
+<div id="plate-text">
+  <div class="t"></div>
+  <div class="s"></div>
+</div>
+
+<div id="light" role="dialog" aria-modal="true" aria-label="Enlargement">
+  <div class="mount" id="light-mount"><img id="light-img" alt=""></div>
+  <div class="meta" id="light-meta"></div>
+</div>
+
+<script type="application/json" id="gallery">
+{
+  "credit": "twenty frames · fade only, no motion",
+  "base": "tiles/boardwalk/",
+  "max": 40,
+  "items": []
+}
+</script>
+
+<script>
+  // Mockup scaffolding, not part of the pattern: one file standing in for the
+  // five section pages a real gallery would have as five static files. All
+  // five share one set of twenty tiles and show them 01–20 in order — an
+  // earlier version rotated the order per section to tell the pages apart,
+  // which only made the numbering confusing.
+  (function () {
+    var WORDS = ['one', 'two', 'three', 'four', 'five'];
+    var s = parseInt(new URLSearchParams(location.search).get('s') || '1', 10);
+    if (!(s >= 1 && s <= 5)) s = 1;
+
+    var el = document.getElementById('gallery');
+    var g = JSON.parse(el.textContent);
+
+    g.base  = LOUPE_CONFIG.assets + 'tiles/' + window.LOUPE_TILES + '/';
+    g.title = 'section ' + WORDS[s - 1];
+    g.plate = 'img/plate-' + (((s - 1) % 3) + 1) + '.jpg';
+    g.trail = [{ label: 'loupe', href: 'index.html' }, { label: g.title }];
+    g.credit = g.credit + ' · ' + window.LOUPE_THEME;
+    g.max = 40;
+
+    // ?tiles=photographs has to be honoured here too, not only on the entry
+    // page — otherwise descending lands on the filler and the trail carries
+    // you back to a gallery you were not in.
+    var photos = LOUPE_CONFIG.content === 'photographs';
+
+    if (photos) {
+      g.base   = '../jimmy/';
+      g.plate  = 'img/lights-0' + (((s - 1) % 5) + 1) + '.jpg';
+      g.credit = 'six photographs — the filler set has twenty · ' + window.LOUPE_THEME;
+      // Six real frames rather than the same five repeated four times to
+      // reach twenty: a grid of visible duplicates reads as a fault.
+      g.items = [
+        ['01', 'lights-01'], ['02', 'lights-02'], ['03', 'lights-03'],
+        ['04', 'lights-04'], ['05', 'lights-05'], ['06', 'jimmy']
+      ].map(function (p) {
+        return {
+          id:    p[0],
+          thumb: 'thumbs/' + p[1] + '.jpg',
+          full:  'img/' + p[1] + '.jpg',
+          alt:   'Moore photograph ' + p[0]
+        };
+      });
+    } else {
+      for (var i = 0; i < 20; i++) {
+        var n = ('0' + (i + 1)).slice(-2);
+        g.items.push({
+          id: n,
+          thumb: 'sub/thumbs/sub-' + n + '.jpg',
+          full:  'sub/img/sub-' + n + '.jpg',
+          alt:   'Section ' + WORDS[s - 1] + ', frame ' + n
+        });
+      }
+    }
+
+    // The top level travels with you: the same five thumbnails, in the same
+    // corner, so any section is one click from any other.
+    g.rail = WORDS.map(function (w, k) {
+      return {
+        id:      '0' + (k + 1),
+        thumb:   photos ? 'thumbs/lights-0' + (k + 1) + '.jpg'
+                        : 'thumbs/thumb-0' + (k + 1) + '.jpg',
+        href:    'section.html?s=' + (k + 1),
+        alt:     'Section ' + w,
+        current: k + 1 === s
+      };
+    });
+
+    el.textContent = JSON.stringify(g);
+  })();
+</script>
+<script src="assets/loupe.js"></script>
+
+</body>
+</html>

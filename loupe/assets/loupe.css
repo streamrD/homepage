@@ -1,0 +1,589 @@
+/* loupe — the engine.
+ *
+ * No appearance decisions live here. Every colour, size, easing and duration
+ * is a custom property supplied by a theme file. The fallbacks after each
+ * var() are only there so the page is not invisible if a theme fails to load;
+ * they are not a house style.
+ *
+ * Timings and the fly-in geometry are read back out of these same properties
+ * by loupe.js, so a theme stays the single source of truth for motion as
+ * well as colour.
+ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* The ground goes on html alone, never on body. A section page's backdrop is
+   a negative-z-index child of body, and the painting order puts such a child
+   above the root background but below body's own background box — so an
+   opaque body background would hide it completely. */
+html {
+  height: 100%;
+  background: var(--ground, #07060a);
+}
+
+body {
+  height: 100%;
+  overflow: hidden;
+  color: var(--ink, #cfc6bd);
+  font-family: var(--font-label, monospace);
+}
+
+/* ---------- the full-bleed plates ---------- */
+
+#stage {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  transition: opacity var(--fade, 700ms) ease, filter var(--fade, 700ms) ease;
+}
+
+body.lit #stage {
+  opacity: var(--stage-lit-opacity, 0.07);
+  filter: saturate(var(--stage-lit-saturate, 0.5));
+}
+
+.plate {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity var(--fade, 700ms) ease;
+}
+
+.plate.on  { opacity: 1; }
+.plate.out { opacity: 0; }
+
+/* Bleed or mat — the biggest single decision a theme makes, and two tokens.
+ *
+ *   bleed  --plate-base: 100vmax; --plate-inset: 0;  --plate-fit: cover;
+ *          a square the size of the viewport's long edge; at scale 1 it
+ *          covers the screen exactly.
+ *
+ *   mat    --plate-base: 100vmin; --plate-inset: 9;  --plate-fit: contain;
+ *          a square inset from the shorter edge, the photograph shown whole
+ *          inside it, --ground visible all the way round as a wall.
+ *
+ * --plate-inset is unitless and read as vmin, so a miniature elsewhere can
+ * reproduce the same mat as a percentage without knowing the viewport.
+ *
+ * Matted themes should also set --drift-scale: 1. The resting drift scales
+ * the image, which on a bleed is invisible and on a mat pushes the picture
+ * out past its own margin. */
+.plate img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width:  calc(var(--plate-base, 100vmax) - 2 * var(--plate-inset, 0) * 1vmin);
+  height: calc(var(--plate-base, 100vmax) - 2 * var(--plate-inset, 0) * 1vmin);
+  margin: calc((var(--plate-base, 100vmax) - 2 * var(--plate-inset, 0) * 1vmin) / -2)
+          0 0
+          calc((var(--plate-base, 100vmax) - 2 * var(--plate-inset, 0) * 1vmin) / -2);
+  object-fit: var(--plate-fit, cover);
+  display: block;
+  transform: scale(var(--plate-start-scale, 0.13));
+  transition: transform var(--grow, 1500ms) var(--grow-ease, ease-out);
+}
+
+.plate.on img  { transform: scale(1); }
+.plate.out img { transform: scale(var(--plate-exit-scale, 1.16)); }
+
+.plate.resting img {
+  transition: none;
+  animation: drift var(--drift, 54s) ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  from { transform: scale(1) translate3d(0, 0, 0); }
+  to   { transform: scale(var(--drift-scale, 1.07)) translate3d(-1.2%, 1%, 0); }
+}
+
+/* ---------- environment ---------- */
+
+#grain {
+  position: fixed;
+  inset: -50%;
+  pointer-events: none;
+  opacity: 0;
+  mix-blend-mode: var(--grain-blend, overlay);
+  transition: opacity 1.4s ease;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='0.5'/></svg>");
+}
+
+body.ready #grain { opacity: var(--grain, 0.16); }
+body.lit   #grain { opacity: 0; }
+
+/* Shading that keeps the chrome legible over any photograph. The colour is a
+   token because a light theme has to lighten here, not darken. */
+#shade {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  height: 46vh;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+  background:
+    radial-gradient(ellipse 44% 62% at 92% 90%,
+      rgba(var(--scrim-rgb, 0 0 0) / var(--scrim, 0.68)), transparent 100%),
+    radial-gradient(ellipse 40% 52% at 4% 94%,
+      rgba(var(--scrim-rgb, 0 0 0) / calc(var(--scrim, 0.68) * 0.9)), transparent 100%);
+}
+
+body.ready #shade { opacity: 1; }
+body.lit   #shade { opacity: 0; }
+
+/* A frame, band or spine at the edge of the viewport. The one chrome surface
+ * with nowhere else to live: it is always visible, never covers the middle
+ * of a photograph, and carries colour at rest rather than only on hover.
+ *
+ *   --edge-width  any border-width, so 12px 0 0 0 is a band along the top,
+ *                 0 0 0 10px a spine down the left, 1px a full frame
+ *   --edge-inset  pulls it in off the edge — a hairline at 18px reads as a
+ *                 plate mark, flush at 0 reads as a bound edge
+ *
+ * Sits above the enlargement deliberately: a frame that vanished when you
+ * opened a photograph would be a viewer, not a frame.
+ */
+#edge {
+  position: fixed;
+  inset: var(--edge-inset, 0);
+  z-index: 6;
+  pointer-events: none;
+  border-style: solid;
+  border-width: var(--edge-width, 0);
+  border-color: var(--edge-color, transparent);
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+body.ready #edge { opacity: 1; }
+
+/* ---------- the rail ---------- */
+
+#rail {
+  position: fixed;
+  right: var(--rail-inset-x, max(3vw, 22px));
+  bottom: var(--rail-inset-y, max(3vh, 20px));
+  display: flex;
+  gap: var(--thumb-gap, 13px);
+  z-index: 3;
+  transition: opacity 500ms ease;
+}
+
+body.lit #rail { opacity: 0; pointer-events: none; }
+
+.thumb {
+  position: relative;
+  width: var(--thumb-size, 78px);
+  height: var(--thumb-size, 78px);
+  padding: 0;
+  border: var(--thumb-border, 1px solid rgba(255, 255, 255, 0.16));
+  border-radius: var(--thumb-radius, 2px);
+  background: var(--thumb-bg, #0a0809);
+  cursor: pointer;
+  touch-action: manipulation;
+  opacity: 0;
+  overflow: hidden;
+  box-shadow: var(--thumb-shadow, 0 8px 30px rgba(0, 0, 0, 0.65));
+  transform: translate(var(--dx, 0px), var(--dy, 0px))
+             scale(var(--thumb-start-scale, 0.42))
+             rotate(var(--rot, 0deg));
+}
+
+.thumb.animate {
+  transition:
+    transform var(--settle, 1250ms) var(--settle-ease, ease-out),
+    opacity 700ms ease,
+    border-color 260ms ease,
+    box-shadow 260ms ease;
+}
+
+.thumb.settled {
+  opacity: 1;
+  transform: translate(0, 0) scale(1) rotate(0deg);
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: var(--thumb-filter, brightness(0.86) saturate(0.94));
+  transition: filter 260ms ease, transform 400ms ease;
+}
+
+#rail.live .thumb:hover img,
+#rail.live .thumb:focus-visible img {
+  filter: var(--thumb-filter-hover, brightness(1.12) saturate(1.06));
+  transform: scale(var(--thumb-hover-scale, 1.07));
+}
+
+#rail.live .thumb:hover,
+#rail.live .thumb:focus-visible {
+  border-color: var(--accent, rgba(255, 214, 160, 0.75));
+  box-shadow: var(--thumb-shadow-hover, 0 10px 34px rgba(0, 0, 0, 0.7)),
+              0 0 22px var(--accent-glow, rgba(255, 176, 90, 0.28));
+  outline: none;
+}
+
+/* ---------- duotone: chrome applied to the content itself ----------
+ *
+ * The answer to identity vanishing when the filler images are replaced. The
+ * rail is mapped into two theme colours — shadows to --duo-dark, highlights
+ * to --duo-light — so a stranger's photographs still arrive looking like the
+ * theme. Enlargements are never touched; the work is shown as it is.
+ *
+ * Grayscale, screened over the dark colour, then multiplied by the light one.
+ * A hue-rotate would only tint; this actually remaps the ends of the ramp.
+ * A theme opts in with --rail-duotone: 1, which loupe.js turns into a class,
+ * because blend modes cannot be switched off by a custom property alone. */
+.duotone .thumb,
+.duotone .cell {
+  background: var(--duo-dark, #101014);
+  isolation: isolate;
+}
+
+.duotone .thumb img,
+.duotone .cell img {
+  filter: grayscale(1) contrast(var(--duo-contrast, 1.08));
+  mix-blend-mode: screen;
+}
+
+.duotone .thumb::after,
+.duotone .cell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: var(--duo-light, #f4efe6);
+  mix-blend-mode: multiply;
+}
+
+/* hover lifts back toward the real photograph */
+#rail.live .duotone-off:hover img { filter: none; }
+
+.duotone #rail.live .thumb:hover img,
+.duotone #rail.live .thumb:focus-visible img,
+.duotone #grid.live .cell:hover img,
+.duotone #grid.live .cell:focus-visible img {
+  filter: grayscale(0) contrast(1);
+  mix-blend-mode: normal;
+}
+
+.duotone #rail.live .thumb:hover::after,
+.duotone #rail.live .thumb:focus-visible::after,
+.duotone #grid.live .cell:hover::after,
+.duotone #grid.live .cell:focus-visible::after { opacity: 0; }
+
+.thumb .n {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 2;
+  font-size: var(--n-size, 9px);
+  letter-spacing: 0.16em;
+  color: var(--n-ink, rgba(255, 255, 255, 0.72));
+  background: linear-gradient(transparent,
+    rgba(var(--scrim-rgb, 0 0 0) / 0.72));
+  padding: 10px 0 2px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+#rail.live .thumb:hover .n,
+#rail.live .thumb:focus-visible .n { opacity: 1; }
+
+/* ---------- the standing credit ---------- */
+
+#plate-text {
+  position: fixed;
+  left: var(--credit-inset-x, max(3vw, 22px));
+  bottom: var(--credit-inset-y, max(3vh, 22px));
+  z-index: 3;
+  font-size: var(--label-size, 11px);
+  letter-spacing: var(--label-tracking, 0.2em);
+  line-height: 1.9;
+  text-transform: var(--label-case, lowercase);
+  color: var(--ink-dim, #b8ada2);
+  text-shadow: var(--chrome-shadow, 0 1px 14px rgba(0, 0, 0, 0.9));
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 1.5s ease 0.5s, transform 1.5s ease 0.5s;
+  pointer-events: none;
+  max-width: var(--credit-max, calc(100vw - 500px));
+}
+
+body.ready #plate-text { opacity: 1; transform: none; }
+body.lit   #plate-text { opacity: 0; transition-delay: 0s; transition-duration: 400ms; }
+
+#plate-text .t {
+  font-family: var(--font-display, monospace);
+  font-size: var(--title-size, 11px);
+  letter-spacing: var(--title-tracking, 0.34em);
+  text-transform: var(--title-case, lowercase);
+  color: var(--ink, #e8dcc9);
+}
+
+#plate-text .s {
+  color: var(--ink-faint, #978d82);
+  font-size: var(--sub-size, 10px);
+}
+
+/* The title line doubles as the breadcrumb on a section page — the only way
+   up, put where the eye already goes rather than behind new chrome. */
+#plate-text .t a {
+  color: var(--ink-dim, #b8ada2);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 200ms ease, border-color 200ms ease;
+}
+
+#plate-text .t a:hover { color: var(--accent, #e8dcc9); border-bottom-color: currentColor; }
+#plate-text .t i { font-style: normal; opacity: 0.4; margin: 0 0.55em; }
+#plate-text { pointer-events: none; }
+#plate-text .t a { pointer-events: auto; }
+
+/* ---------- section pages: fade only, no motion ---------- */
+
+body.section { overflow: auto; }
+
+/* A section taller than the viewport scrolls its cells underneath the fixed
+   credit, so it needs the same shading the entry page gets. The cells are
+   position: relative, so they paint in the same layer as a fixed element
+   with z-index auto and would win on DOM order — hence the explicit 2, above
+   the grid and below #plate-text's 3. */
+body.section #shade {
+  top: auto;
+  bottom: 0;
+  height: 30vh;
+  z-index: 2;
+  background:
+    radial-gradient(ellipse 62% 100% at 2% 98%,
+      rgba(var(--scrim-rgb, 0 0 0) / var(--scrim, 0.68)) 0%,
+      rgba(var(--scrim-rgb, 0 0 0) / var(--scrim, 0.68)) 26%,
+      rgba(var(--scrim-rgb, 0 0 0) / 0) 78%),
+    radial-gradient(ellipse 52% 100% at 99% 98%,
+      rgba(var(--scrim-rgb, 0 0 0) / var(--scrim, 0.68)) 0%,
+      rgba(var(--scrim-rgb, 0 0 0) / var(--scrim, 0.68)) 30%,
+      rgba(var(--scrim-rgb, 0 0 0) / 0) 80%);
+}
+
+/* The rail persists on section pages so you can cross to another section
+   rather than only back up. It fades in place — no fly-in, because motion
+   belongs to the entry page. */
+body.section #rail .thumb {
+  transform: none;
+  transition: opacity var(--fade, 700ms) ease,
+              border-color 260ms ease,
+              box-shadow 260ms ease;
+}
+
+body.section #rail .thumb.settled { opacity: 1; }
+
+/* Where you already are, so the rail reads as position and not just links. */
+#rail .thumb.current {
+  border-color: var(--accent, rgba(255, 214, 160, 0.75));
+  box-shadow: var(--thumb-shadow, 0 8px 30px rgba(0, 0, 0, 0.65)),
+              0 0 18px var(--accent-glow, rgba(255, 176, 90, 0.28));
+}
+
+#rail .thumb.current img { filter: var(--thumb-filter-hover, brightness(1.12) saturate(1.06)); }
+
+/* ...but not at the cost of the duotone. That rule wins on specificity and
+   left the current thumbnail as the only colour frame in a two-tone rail,
+   which reads as a fault rather than as a marker. The border, glow and
+   number already say where you are. */
+.duotone #rail .thumb.current img {
+  filter: grayscale(1) contrast(var(--duo-contrast, 1.08));
+}
+#rail .thumb.current .n   { opacity: 1; }
+
+body.section #backdrop {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  z-index: -1;
+  transition: opacity var(--fade, 700ms) ease;
+}
+
+body.section.ready #backdrop { opacity: var(--backdrop, 0.2); }
+body.section.lit   #backdrop { opacity: 0; }
+
+#grid {
+  min-height: 100vh;
+  display: grid;
+  align-content: center;
+  justify-content: center;
+  grid-template-columns: repeat(auto-fit, var(--cell-size, 154px));
+  gap: var(--cell-gap, 18px);
+  padding: 14vh var(--credit-inset-x, 5vw) 22vh;
+}
+
+.cell {
+  position: relative;
+  width: var(--cell-size, 154px);
+  height: var(--cell-size, 154px);
+  padding: 0;
+  border: var(--thumb-border, 1px solid rgba(255, 255, 255, 0.16));
+  border-radius: var(--thumb-radius, 2px);
+  background: var(--thumb-bg, #0a0809);
+  cursor: pointer;
+  touch-action: manipulation;
+  overflow: hidden;
+  box-shadow: var(--thumb-shadow, 0 8px 30px rgba(0, 0, 0, 0.65));
+  display: block;
+  opacity: 0;
+  /* Fade only. Nothing here moves — that is what makes a real page load
+     between levels viable instead of an in-page router. */
+  transition: opacity var(--fade, 700ms) ease,
+              border-color 260ms ease,
+              box-shadow 260ms ease;
+}
+
+.cell.in { opacity: 1; }
+
+.cell img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: var(--thumb-filter, brightness(0.86) saturate(0.94));
+  transition: filter 260ms ease;
+}
+
+#grid.live .cell:hover img,
+#grid.live .cell:focus-visible img {
+  filter: var(--thumb-filter-hover, brightness(1.12) saturate(1.06));
+}
+
+#grid.live .cell:hover,
+#grid.live .cell:focus-visible {
+  border-color: var(--accent, rgba(255, 214, 160, 0.75));
+  box-shadow: var(--thumb-shadow-hover, 0 10px 34px rgba(0, 0, 0, 0.7)),
+              0 0 22px var(--accent-glow, rgba(255, 176, 90, 0.28));
+  outline: none;
+}
+
+.cell .n {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 2;
+  font-size: var(--n-size, 9px);
+  letter-spacing: 0.16em;
+  color: var(--n-ink, rgba(255, 255, 255, 0.72));
+  background: linear-gradient(transparent, rgba(var(--scrim-rgb, 0 0 0) / 0.72));
+  padding: 12px 0 3px;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+#grid.live .cell:hover .n,
+#grid.live .cell:focus-visible .n { opacity: 1; }
+
+/* ---------- the enlargement ---------- */
+
+#light {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  background: var(--lit-ground, #0a090c);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--fade, 700ms) ease;
+  cursor: zoom-out;
+}
+
+body.lit #light { opacity: 1; pointer-events: auto; }
+
+/* The mount is a theme's chance to frame the work — a white mat, a thin
+   line, or nothing at all. */
+#light .mount {
+  padding: var(--mount-pad, 0);
+  background: var(--mount-bg, transparent);
+  border: var(--mount-border, 0);
+  box-shadow: var(--enlarge-shadow, 0 30px 90px rgba(0, 0, 0, 0.8));
+  opacity: 0;
+  transform: scale(0.965);
+  transition: opacity 800ms ease, transform var(--settle, 1100ms) var(--settle-ease, ease-out);
+  line-height: 0;
+}
+
+#light .mount.shown { opacity: 1; transform: scale(1); }
+
+#light img {
+  max-width: var(--enlarge-max-w, 88vw);
+  max-height: var(--enlarge-max-h, 86vh);
+  object-fit: contain;
+  display: block;
+}
+
+#light .meta {
+  position: fixed;
+  left: 0; right: 0;
+  bottom: var(--meta-bottom, max(2.4vh, 18px));
+  text-align: center;
+  font-size: var(--sub-size, 10px);
+  letter-spacing: 0.32em;
+  text-transform: var(--label-case, lowercase);
+  color: var(--ink-faint, #6e6660);
+  opacity: 0;
+  transition: opacity 700ms ease 400ms;
+}
+
+body.lit #light .meta { opacity: 1; }
+
+/* ---------- phones held upright: the rail turns on its side ---------- */
+
+@media (max-width: 720px) {
+  #plate-text { max-width: 88vw; }
+}
+
+@media (max-width: 720px) and (orientation: portrait) {
+  #rail {
+    flex-direction: column;
+    top: 50%;
+    bottom: auto;
+    right: calc(var(--rail-inset-x-sm, 13px) + env(safe-area-inset-right, 0px));
+    transform: translateY(-50%);
+    gap: var(--thumb-gap-sm, 10px);
+  }
+
+  .thumb { width: var(--thumb-size-sm, 54px); height: var(--thumb-size-sm, 54px); }
+
+  #shade {
+    top: 0;
+    height: auto;
+    background:
+      linear-gradient(to left, rgba(var(--scrim-rgb, 0 0 0) / var(--scrim, 0.62)), transparent 32%),
+      linear-gradient(to top,  rgba(var(--scrim-rgb, 0 0 0) / var(--scrim, 0.74)), transparent 27%);
+  }
+
+  #plate-text {
+    left: calc(20px + env(safe-area-inset-left, 0px));
+    bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+    max-width: calc(100vw - 42px);
+  }
+
+  #light img { max-width: 92vw; max-height: 76vh; }
+
+  /* the rail is a column down the right here, so the grid has to clear it */
+  body.section #grid {
+    padding-right: calc(var(--thumb-size-sm, 54px) + 38px);
+    padding-left: 20px;
+  }
+}
+
+/* Motion is a theme's to spend. This only removes what the reader has
+   already asked not to see. */
+@media (prefers-reduced-motion: reduce) {
+  .plate img { transform: none !important; transition: none !important; }
+  .plate.resting img { animation: none; }
+  .thumb { transform: none !important; }
+  .thumb.animate { transition: opacity 500ms ease; }
+  #light .mount { transition: opacity 400ms ease; transform: none !important; }
+}
