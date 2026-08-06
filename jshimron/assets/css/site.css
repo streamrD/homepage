@@ -1,0 +1,222 @@
+/* ------------------------------------------------------------------
+   Joseph Shimron — Photographs, 1962-1968
+   Recreation of the original Flash site (shimron.swf, 2005).
+
+   Every coordinate below was measured out of the original SWF, so the
+   1000x714 stage is reproduced pixel-for-pixel. Timings come from the
+   original tweens at 20fps; opacities from its colour transforms
+   (0.988 at rest, 0.301 dimmed).
+   ------------------------------------------------------------------ */
+
+:root {
+  --stage-w: 1000px;
+  --stage-h: 714px;
+  --rest: 0.988;          /* SWF alpha multiplier at full strength */
+  --dim: 0.301;           /* SWF alpha multiplier when faded back   */
+  --fade: 0.5s;           /* 10 frames @ 20fps                      */
+  --fade-quick: 0.4s;     /*  8 frames @ 20fps                      */
+  --grow: 0.4s;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #CCCCCC;
+  font: 12px/1.45 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #000;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow: hidden;
+}
+
+/* --- the stage -----------------------------------------------------
+   Fixed 1000x714, exactly as the Flash movie. JS scales it down to fit
+   smaller viewports; the layout itself never reflows. --------------- */
+
+.stage {
+  position: relative;
+  flex: none;
+  width: var(--stage-w);
+  height: var(--stage-h);
+  overflow: hidden;
+  transform-origin: 50% 0;
+  transform: scale(var(--scale, 1));
+}
+
+.stage__bg {
+  position: absolute;
+  inset: 0;
+  width: var(--stage-w);
+  height: var(--stage-h);
+  display: block;
+}
+
+/* --- typography (vector outlines lifted from the SWF's embedded
+       Akzidenz Grotesk BE) ---------------------------------------- */
+
+.type {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w);
+  height: var(--h);
+  margin: 0;
+  display: block;
+  pointer-events: none;
+  user-select: none;
+}
+.type img { width: 100%; height: 100%; display: block; }
+
+/* Landing page headline + subhead */
+.type--title    { --x: 524.71px; --y: 528.00px; --w: 416.06px; --h: 40.85px; }
+.type--subtitle { --x: 596.07px; --y: 576.43px; --w: 346.18px; --h: 29.00px; }
+
+/* "joseph shimron photographs" — a button back to the landing page.
+   Hit area matches the original's invisible 402x55 hit shape.
+
+   Two-tone: the name takes a per-page accent, "photographs" stays black.
+   Hover lightens both very slightly, as the original's Over state did. */
+.wordmark {
+  position: absolute;
+  left: 598.5px;
+  top: 657.4px;
+  width: 402px;
+  height: 55px;
+  display: block;
+  opacity: var(--rest);
+}
+.wordmark svg {
+  position: absolute;
+  left: 6.82px;   /* 605.32 - 598.5 */
+  top: 13.42px;   /* 670.82 - 657.4 */
+  width: 388.57px;
+  height: 34.80px;
+  display: block;
+  overflow: visible;
+}
+.wordmark .wm-name,
+.wordmark .wm-word { transition: fill 0.2s ease-out; }
+
+.wordmark--1:hover .wm-name { fill: #b86c21; }
+.wordmark--2:hover .wm-name { fill: #bf0b06; }
+.wordmark--1:hover .wm-word { fill: #242424; }
+.wordmark--2:hover .wm-word { fill: #1a1a1a; }
+
+.wordmark:focus-visible { outline: 1px solid rgba(255, 255, 255, 0.7); outline-offset: 2px; }
+
+/* --- navigation squares --------------------------------------------
+   Anchored by their BOTTOM-RIGHT corner, at rest 0.68 scale, growing
+   to 1.0 on hover — so they expand up and to the left, as in the
+   original. -------------------------------------------------------- */
+
+.nav__sq {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 100px;
+  height: 100px;
+  margin-left: -100px;
+  margin-top: -100px;
+  transform-origin: 100% 100%;
+  transform: scale(0.68);
+  opacity: var(--rest);
+  transition: transform var(--grow) ease-out, opacity var(--fade-quick) ease-out;
+  display: block;
+}
+.nav__sq img {
+  width: 100px;
+  height: 100px;
+  display: block;
+}
+.nav__sq:hover,
+.nav__sq:focus-visible { transform: scale(1); }
+.nav__sq:focus-visible { outline: 1px solid rgba(255, 255, 255, 0.7); outline-offset: 2px; }
+
+/* --- thumbnail grid ------------------------------------------------ */
+
+.thumbs { position: absolute; inset: 0; }
+
+.thumb {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 100px;
+  height: 100px;
+  display: block;
+  opacity: var(--rest);
+  transition: opacity var(--fade-quick) ease-out;
+}
+.thumb img { width: 100px; height: 100px; display: block; }
+
+/* Hovering one thumb fades the other eleven back — the original's
+   "firstout" tween. */
+.thumbs:hover .thumb { opacity: var(--dim); }
+.thumbs .thumb:hover,
+.thumbs .thumb:focus-visible { opacity: var(--rest); }
+.thumb:focus-visible { outline: 1px solid rgba(255, 255, 255, 0.7); outline-offset: 2px; }
+
+/* While an enlargement is open the whole grid is out of the way. */
+.thumbs.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--fade) ease-out;
+}
+.thumbs.is-hidden .thumb { opacity: 0; }
+
+/* --- enlargements --------------------------------------------------
+   Each photo has its own hand-placed position; captions sit beside
+   portraits and beneath landscapes. ------------------------------- */
+
+.full {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--fade) ease-out;
+}
+.full.is-open {
+  opacity: var(--rest);
+  pointer-events: auto;
+}
+
+.full__img {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w);
+  height: var(--h);
+  display: block;
+  cursor: pointer;
+}
+
+.full__cap {
+  position: absolute;
+  left: var(--cx);
+  top: var(--cy);
+  width: var(--cw);
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #000;
+}
+.full__cap b {
+  display: block;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.full__cap:empty { display: none; }
+
+/* --- no-JS fallback ------------------------------------------------
+   Without JS the thumbs are plain links straight to the full images,
+   and the enlargement layer never appears. ------------------------- */
+
+.no-js .full { display: none; }
