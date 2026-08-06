@@ -1,6 +1,6 @@
 # `jimmy/` — Light Studies
 
-Five long exposures on 2 1/4-inch film by James Vincent Moore (Jimmy),
+Five long exposures on 2¼-inch film by James Vincent Moore (Jimmy),
 Detroit, early to mid 1960s. Served at
 [/jimmy](https://todd.up.railway.app/jimmy).
 
@@ -139,8 +139,10 @@ but the card.
 - Clicking anywhere during the opening skips to the menu.
 - Under `prefers-reduced-motion` the bursts and the fly-in are dropped; the
   resting photograph and the row appear directly.
-- `1/4` in the credit is deliberately spelled out rather than set as `¼` —
-  Share Tech Mono has no `¼`, and the fallback face breaks the line's rhythm.
+- The `¼` in the credit is wrapped in `<span class="frac">`. Share Tech Mono
+  has no such glyph, so that span names monospace fallbacks that do — set it
+  bare and it drops into a proportional face and breaks the line's even
+  advance. `og-card.html` carries the same rule for the same reason.
 - The credit sits beside the row above 900px and moves above it below that,
   where there is no longer room for both. Lengthening it means rechecking
   those two widths.

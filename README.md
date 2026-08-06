@@ -74,7 +74,7 @@ trailing slash. They do not affect this page's own favicon.
 
 ## `jimmy/`
 
-Five long exposures on 2 1/4-inch film by James Vincent Moore, Detroit, early
+Five long exposures on 2¼-inch film by James Vincent Moore, Detroit, early
 to mid 1960s — a full-bleed gallery at
 [/jimmy](https://todd.up.railway.app/jimmy). Hand-written here, unlike
 `jshimron/`, so it is safe to edit in place.

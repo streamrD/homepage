@@ -9,9 +9,9 @@
 <link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
-<meta name="description" content="Five long exposures on 2 1/4-inch film by James Vincent Moore — abstract light play, Detroit, shot in the early to mid 1960s.">
+<meta name="description" content="Five long exposures on 2¼-inch film by James Vincent Moore — abstract light play, Detroit, shot in the early to mid 1960s.">
 <meta property="og:title" content="Light Studies">
-<meta property="og:description" content="Five long exposures on 2 1/4-inch film by James Vincent Moore — abstract light play, Detroit, early to mid 1960s.">
+<meta property="og:description" content="Five long exposures on 2¼-inch film by James Vincent Moore — abstract light play, Detroit, early to mid 1960s.">
 <meta property="og:image" content="https://todd.up.railway.app/jimmy/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -226,6 +226,13 @@
   #plate-text .t { color: #e8dcc9; letter-spacing: 0.34em; }
   #plate-text .s { color: #978d82; font-size: 10px; }
 
+  /* Share Tech Mono has no ¼. Name monospace fallbacks that do, so the one
+     borrowed glyph still keeps the line's even advance. */
+  .frac {
+    font-family: Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+    font-size: 1.15em;
+  }
+
   /* him, above his own work — same treatment as the row, but left in the
      slide's own 5:4 landscape rather than cropped square */
   #portrait {
@@ -380,7 +387,7 @@
     <img src="thumbs/jimmy.jpg" alt="" decoding="async">
   </button>
   <div class="t">light studies</div>
-  <div class="s">james vincent moore (jimmy) · 2 1/4-inch film · detroit, mi · early–mid 1960s</div>
+  <div class="s">james vincent moore (jimmy) · 2<span class="frac">¼</span>-inch film · detroit, mi · early–mid 1960s</div>
 </div>
 
 <nav id="rail" aria-label="Photographs"></nav>
