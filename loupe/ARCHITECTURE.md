@@ -185,10 +185,12 @@ resolves.
 - **Section pages are hand-written.** `loupe/section.html` fakes five of them
   with `?s=1…5`. A real gallery has static section files, or generates them.
 - **No auth, no upload, no server.** Everything here is static files.
-- **`tiles/` is git-ignored** — 441 generated test images, ~21 MB — so the
-  deployed loupe defaults to the Moore photographs from `/jimmy/`. The filler
-  set is local-only until a bucket exists. `assets/config.js` holds that
-  switch.
+- **`tiles/` is git-ignored and lives in the bucket** — 441 generated test
+  images, ~20 MB, under `loupe/tiles/` in `stabley-homepage`. This is the
+  first thing to actually exercise the storage seam described in §2.1, and it
+  needed no engine change: one string in `assets/config.js`. The Moore
+  photographs remain the default content and are still served from `/jimmy/`
+  on the site itself.
 - **Adaptive chrome** — deriving accent and scrim from the photographs
   themselves — is designed but unbuilt. It is the strongest idea for making
   canned themes feel bespoke, and it is the one thing that needs CORS.

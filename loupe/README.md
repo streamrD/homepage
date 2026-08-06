@@ -103,12 +103,19 @@ so the axis can be compared without inventing colours per test.
 Blend modes cannot be switched by a custom property, so `loupe.js` turns
 `--rail-duotone: 1` into a class and themes stay pure token blocks.
 
-**The filler tiles are git-ignored, so on a deployed site they are absent.**
-`assets/config.js` carries `FILLER_PRESENT`, and when it is false the pages
-refuse a request for them rather than serving a screen of 404s: the content
-mode falls back to photographs, the picker's switch is disabled and says why,
-and the contact sheet explains itself instead of drawing broken images. Run
-`make-tiles.sh` and add `?filler=1` to use them locally.
+**The filler tiles live in the bucket, not the repo.** All 441 of them, about
+20 MB, under `loupe/tiles/` in `stabley-homepage` beside the `jshimron/`
+prefix — so they are git-ignored here and still available everywhere.
+`assets/config.js` points `DEFAULT_ASSETS` at that prefix.
+
+`FILLER_PRESENT` stays even though it is now true, because the failure it
+guards is the kind that returns: a switch that asks for pictures nobody
+deployed. When false, the content mode falls back to photographs, the
+picker's switch is disabled and says why, and the contact sheet explains
+itself instead of drawing 400 broken images.
+
+To work against local tiles instead, `?assets=` with `?filler=1` after
+running `make-tiles.sh`.
 
 **Judge these against photographs, not tiles.** `?tiles=photographs` swaps in
 the Moore light studies from `../jimmy/`, on both page types. A section shows

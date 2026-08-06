@@ -17,23 +17,22 @@
  * stay put wherever the tiles go.
  */
 window.LOUPE_CONFIG = (function () {
-  var DEFAULT_ASSETS = '';
+  var DEFAULT_ASSETS =
+    'https://stabley-homepage.s3.us-east-005.backblazeb2.com/loupe/';
 
   // Which pictures a page shows when nothing overrides it.
   //
-  //   'photographs'  the Moore light studies from /jimmy/ — what ships,
-  //                  because tiles/ is git-ignored and there is no bucket yet
-  //   'filler'       the generated test tiles — local only, after
-  //                  make-tiles.sh has been run
+  //   'photographs'  the Moore light studies from /jimmy/
+  //   'filler'       the generated test tiles, now served from the bucket
   //
   // ?tiles=photographs | filler overrides for one request.
   var DEFAULT_CONTENT = 'photographs';
 
-  // Are the generated filler tiles actually present? They are git-ignored,
-  // so on the deployed site they are not, and asking for them yields a page
-  // of 404s rather than a gallery. Run loupe/make-tiles.sh and add ?filler=1
-  // to use them locally; flip this to true once a bucket holds them.
-  var FILLER_PRESENT = false;
+  // Are the filler tiles reachable? They live in the bucket now rather than
+  // the repo, so yes — but the flag stays, because the failure it guards
+  // against (a switch that asks for pictures nobody deployed) is the kind
+  // that comes back. ?assets= '' with ?filler=1 serves them locally instead.
+  var FILLER_PRESENT = true;
 
   var q = new URLSearchParams(location.search).get('assets');
   var assets = q === null ? DEFAULT_ASSETS : q;
