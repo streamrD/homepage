@@ -1,5 +1,11 @@
 # moore archives — 2004 Flash site, rebuilt for the web
 
+> **Picking this up cold?** Start with [`../CLAUDE.md`](../CLAUDE.md) — it
+> covers how the project evolved, the traps in the type and the image
+> pipeline, and how to do the editing and image-replacement jobs that keep
+> coming up. This file is the narrower question of what the 2004 original
+> contained versus what was added, and why.
+
 A faithful recreation of the Flash site in this directory's parent
 (`shell.swf` and `kodachromes/kodachromes.swf`, authored November 2004,
 Flash Player 7 / ActionScript 2) as a static HTML/CSS/JS site.
