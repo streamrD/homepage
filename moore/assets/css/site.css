@@ -211,8 +211,9 @@ a.nav-item:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
 .thumb[data-verso] .shot::after {
   content: "";
   position: absolute;
-  right: 0;
-  bottom: 0;
+  --a: calc(var(--ar));                 /* --ar is w/h, so this is a number */
+  right: max(0px, calc((100% - 100% * var(--a)) / 2));
+  bottom: max(0px, calc((100% - 100% / var(--a)) / 2));
   width: var(--fold, 11px);
   height: var(--fold, 11px);
   background: linear-gradient(315deg, var(--fold-face) 0 50%, transparent 50%);
@@ -251,14 +252,11 @@ a.nav-item:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
 /* The box has to be the picture, not the cell — the turned corner hangs off
    its bottom right, and a letterboxed box leaves the fold below the artwork.
    Width leads, aspect-ratio sets the height, max-height reins in portraits. */
-.grid--auto .shot {
-  width: 100%;
-  height: auto;
-  aspect-ratio: var(--ar);
-  max-width: 100%;
-  max-height: 100%;
-  align-self: center;
-}
+/* The box stays the square cell; the picture letterboxes inside it. Sizing
+   the box to the picture cannot work for both orientations at once — fixing
+   width strands portraits, fixing height strands landscapes — so the turned
+   corner is inset by however much letterbox there is on each axis instead. */
+.grid--auto .shot { width: 100%; height: 100%; }
 .grid--auto .shot img { object-fit: contain; }
 
 /* An empty cell, waiting on a photograph. Square unless the sheet has a
