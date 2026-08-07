@@ -149,15 +149,28 @@ sips -Z 500  -s format jpeg -s formatOptions 80 jimmy1corr.jpg --out thumbs/jimm
 
 ## The share card and the icon
 
-Both come from photograph 01. The icon is a square cut from its left-centre,
-where a green, a blue and a red fall against dark — at 32 px the whole frame
-turns to mush, and that corner still reads as a mark:
+Both come from photograph 01. The icon is the whole frame, corners rounded
+to 14% — the radius `make-favicon.py` gives the site-wide "TS" monogram, so
+the two sit together in a bookmark list without one looking rounder:
 
 ```sh
-sips -c 2000 2000 --cropOffset 870 535 lights0113x13b.jpg --out /tmp/fav.jpg
-sips -Z 32  -s format png /tmp/fav.jpg --out favicon-32.png
-sips -Z 180 -s format png /tmp/fav.jpg --out apple-touch-icon.png
+python3 design-comps/bake-icons.py     # needs Pillow and the original scan
 ```
+
+That writes `favicon-16.png`, `favicon-32.png`, `favicon-48.png` and
+`apple-touch-icon.png`. The three favicons carry real transparency outside
+the corner arc; the touch icon stays square and opaque, because iOS masks it
+into its own squircle and composites alpha onto black, so rounding it here
+would only punch black notches inside that mask. The 16 px file exists
+because browsers downscale a 32 badly, and this photograph — bokeh, soft to
+start with — is exactly the kind that goes muddy when they do. For the same
+reason the small sizes get a light unsharp mask after the reduction.
+
+**This replaced a tighter crop** — a square from the frame's left-centre,
+where a green, a blue and a red fall against dark. It read well as a mark
+but no longer looked like the photograph on the page.
+`design-comps/favicon-croppings.html` is the comp that settled it: six
+croppings at every size that matters, with a live radius control.
 
 `og.jpg` is a screenshot of `og-card.html`, the same trick `make-favicon.py`
 uses at the site root: type set in a real browser rather than drawn by hand.

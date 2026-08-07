@@ -1,0 +1,268 @@
+<meta charset="utf-8">
+<title>Favicon croppings &mdash; Light Studies</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body, figure, h1, h2, p { margin: 0; }
+
+  :root {
+    --ground: #07060a;
+    --panel: #100c14;
+    --panel-2: #16111b;
+    --line: #272030;
+    --ink: #cfc6bd;
+    --ink-dim: #7d7269;
+    --gold: #e0a53c;
+    --radius: 14%;
+    --mono: ui-monospace, "SF Mono", Menlo, "DejaVu Sans Mono", monospace;
+    --text: Optima, "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --ground: #edeae3; --panel: #fbfaf7; --panel-2: #f2efe8;
+      --line: #d8d2c7; --ink: #241f1b; --ink-dim: #7a6f62; --gold: #9c6a12;
+    }
+  }
+  :root[data-theme="light"] {
+    --ground: #edeae3; --panel: #fbfaf7; --panel-2: #f2efe8;
+    --line: #d8d2c7; --ink: #241f1b; --ink-dim: #7a6f62; --gold: #9c6a12;
+  }
+  :root[data-theme="dark"] {
+    --ground: #07060a; --panel: #100c14; --panel-2: #16111b;
+    --line: #272030; --ink: #cfc6bd; --ink-dim: #7d7269; --gold: #e0a53c;
+  }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--text);
+    line-height: 1.55;
+    padding: clamp(20px, 4vw, 56px);
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px; }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+  h1 {
+    font-family: var(--mono);
+    font-size: clamp(22px, 3.4vw, 32px);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    margin-top: 6px;
+  }
+  h1 em { font-style: normal; color: var(--gold); }
+  .lede { max-width: 62ch; color: var(--ink-dim); margin-top: 12px; }
+
+  /* ---------- controls ---------- */
+  .controls {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 14px 28px;
+    padding: 16px 20px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    position: sticky; top: 0; z-index: 5;
+    backdrop-filter: blur(6px);
+  }
+  .controls label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-dim); }
+  input[type="range"] { accent-color: var(--gold); width: 200px; }
+  .readout { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--gold); font-size: 13px; }
+  .presets { display: flex; gap: 8px; }
+  .presets button {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+    background: var(--panel-2); color: var(--ink); border: 1px solid var(--line);
+    padding: 5px 10px; cursor: pointer;
+  }
+  .presets button:hover, .presets button:focus-visible { border-color: var(--gold); color: var(--gold); }
+  button:focus-visible, input:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  /* ---------- source map ---------- */
+  .map { display: grid; grid-template-columns: minmax(0, 320px) minmax(0, 1fr); gap: 32px; align-items: start; }
+  @media (max-width: 720px) { .map { grid-template-columns: minmax(0, 1fr); } }
+  .plate { position: relative; line-height: 0; border: 1px solid var(--line); }
+  .plate img { width: 100%; height: auto; }
+  .box {
+    position: absolute; border: 1px solid rgba(255,255,255,0.55);
+    box-shadow: 0 0 0 1px rgba(0,0,0,0.45);
+    transition: border-color 120ms ease, box-shadow 120ms ease;
+  }
+  .box b {
+    position: absolute; top: -1px; left: -1px;
+    font-family: var(--mono); font-size: 10px; line-height: 1.4; font-weight: 400;
+    padding: 1px 4px; background: rgba(0,0,0,0.7); color: #fff;
+  }
+  .box.on { border-color: var(--gold); box-shadow: 0 0 0 1px rgba(0,0,0,0.6), 0 0 14px rgba(224,165,60,0.5); z-index: 2; }
+  .box.on b { background: var(--gold); color: #14100a; }
+  .map-note { font-size: 14px; color: var(--ink-dim); max-width: 52ch; }
+  .map-note p + p { margin-top: 12px; }
+  .map-note strong, .lede strong { color: var(--ink); font-weight: 600; }
+
+  /* ---------- candidates ---------- */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--line);
+    padding: 20px; display: flex; flex-direction: column; gap: 16px;
+  }
+  .card.on { border-color: var(--gold); }
+  .card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+  .card-head h2 { font-family: var(--mono); font-size: 14px; font-weight: 400; letter-spacing: 0.04em; }
+  .card-head .key {
+    font-family: var(--mono); font-size: 11px; color: var(--gold); letter-spacing: 0.18em;
+    display: inline-flex; align-items: center; gap: 8px; flex: none;
+  }
+  .chosen-tag {
+    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: #14100a; background: var(--gold); padding: 2px 7px;
+  }
+  .card p.why { font-size: 13px; color: var(--ink-dim); margin-top: -4px; }
+
+  .sizes { display: flex; align-items: flex-end; gap: 16px; }
+  .ico { border-radius: var(--radius); display: block; image-rendering: auto; }
+  .ico.big { width: 112px; height: 112px; }
+  .sizes figure { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .sizes figcaption { font-family: var(--mono); font-size: 10px; color: var(--ink-dim); letter-spacing: 0.08em; }
+
+  /* fake browser tabs */
+  .tabs { display: flex; flex-direction: column; gap: 8px; }
+  .chrome { padding: 7px 8px 0; border-radius: 4px 4px 0 0; }
+  .chrome.dark { background: #2b2a2e; }
+  .chrome.light { background: #dfdedb; }
+  .tab {
+    display: flex; align-items: center; gap: 7px;
+    padding: 6px 12px; border-radius: 7px 7px 0 0;
+    font-family: var(--mono); font-size: 11px; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  .chrome.dark .tab { background: #1c1b1f; color: #ddd8d2; }
+  .chrome.light .tab { background: #fbfaf9; color: #2b2925; }
+  .tab img { width: 16px; height: 16px; border-radius: var(--radius); flex: none; }
+  .tab span { overflow: hidden; text-overflow: ellipsis; }
+
+  /* home screen */
+  .home { display: flex; align-items: center; gap: 12px; padding: 12px; background: linear-gradient(150deg, #1a1520, #322030 60%, #10131f); border-radius: 6px; }
+  .home img { width: 52px; height: 52px; border-radius: 22.5%; box-shadow: 0 3px 10px rgba(0,0,0,0.5); }
+  .home figcaption { font-family: var(--text); font-size: 11px; color: #e9e5e0; }
+
+  footer { border-top: 1px solid var(--line); padding-top: 20px; font-size: 13px; color: var(--ink-dim); max-width: 66ch; }
+  footer code { font-family: var(--mono); font-size: 12px; color: var(--ink); }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Favicon study &middot; lights-01 &middot; August 2026</div>
+    <h1>Six croppings, <em>rounded</em></h1>
+    <p class="lede">All six come out of one negative &mdash; James Vincent Moore's first light study, the same frame the icon has always been cut from. <strong>A shipped:</strong> the full frame, at the 14% radius the site-wide monogram already uses. Drag the radius to see the alternatives; every tile, tab and home-screen sample follows it live.</p>
+  </header>
+
+  <section class="controls">
+    <label for="r">Corner radius</label>
+    <input type="range" id="r" min="0" max="50" step="0.5" value="14" aria-describedby="rout">
+    <span class="readout" id="rout">14%</span>
+    <div class="presets">
+      <button data-r="0">square</button>
+      <button data-r="14">14% &middot; site</button>
+      <button data-r="22.5">22.5% &middot; iOS</button>
+      <button data-r="50">circle</button>
+    </div>
+  </section>
+
+  <section class="map">
+    <div class="plate" id="plate"></div>
+    <div class="map-note">
+      <p class="eyebrow">Where each one comes from</p>
+      <p>Hover a card to light up its frame on the negative. Every crop is taken from the full-resolution scan, then squared without distorting, so nothing is stretched.</p>
+      <p><strong>One caveat worth knowing:</strong> iOS ignores your corners on the home-screen icon &mdash; it masks <code>apple-touch-icon.png</code> into its own squircle regardless. The radius you pick here is what shows in the browser tab, the bookmark bar and the history list, so it's worth judging at 16px more than at 112.</p>
+    </div>
+  </section>
+
+  <section class="grid" id="grid"></section>
+
+  <footer>
+    A is what shipped. <code>design-comps/bake-icons.py</code> cuts it into <code>favicon-16.png</code>, <code>favicon-32.png</code>, <code>favicon-48.png</code> and <code>apple-touch-icon.png</code> &mdash; the three favicons rounded with real transparency in the corners, the touch icon left square because iOS masks it into its own squircle anyway. To ship a different letter, change <code>CROP</code> in that script to the box printed on the negative above.
+  </footer>
+</div>
+
+<script>
+  const A = __ASSETS__;
+  const NOTES = {
+    a: "The whole negative, vignette and all. Most faithful to the photograph, softest at 16px.",
+    b: "Chartreuse against gold with dark corners \u2014 the widest colour spread of the six.",
+    c: "Yellow, rose and white on red. Brightest of the set; carries furthest in a crowded tab strip.",
+    d: "The blue centre with red pressing in. Moodiest, and closest to the site's own dark ground.",
+    e: "One gold lamp, almost centred. Reads as a single shape at 16px, which is the hard size.",
+    f: "The red bokeh heart. Nearly monochrome, so it works like a colour chip rather than a picture.",
+    z: "The icon the site carried before this study, shown at the same radius for comparison."
+  };
+  const ORDER = ["a", "b", "c", "d", "e", "f", "z"];
+  const CHOSEN = "a";
+
+  const plate = document.getElementById("plate");
+  const img = document.createElement("img");
+  img.src = A._source;
+  img.alt = "Light Studies negative 01 \u2014 coloured bokeh on a dark ground";
+  plate.append(img);
+
+  const grid = document.getElementById("grid");
+  const boxes = {};
+
+  for (const k of ORDER) {
+    const d = A[k];
+    if (d.rect) {
+      const [x0, y0, x1, y1] = d.rect;
+      const b = document.createElement("div");
+      b.className = "box";
+      b.style.left = x0 * 100 + "%";
+      b.style.top = y0 * 100 + "%";
+      b.style.width = (x1 - x0) * 100 + "%";
+      b.style.height = (y1 - y0) * 100 + "%";
+      b.innerHTML = "<b>" + k.toUpperCase() + "</b>";
+      plate.append(b);
+      boxes[k] = b;
+    }
+
+    const card = document.createElement("section");
+    card.className = "card";
+    card.innerHTML = `
+      <div class="card-head">
+        <h2>${d.label}</h2>
+        <span class="key">${k === CHOSEN ? '<span class="chosen-tag">shipped</span> ' : ""}${k.toUpperCase()}</span>
+      </div>
+      <p class="why">${NOTES[k]}</p>
+      <div class="sizes">
+        <figure><img class="ico big" src="${d.big}" alt="${d.label} at 112 pixels"><figcaption>112</figcaption></figure>
+        <figure><img class="ico" style="width:32px;height:32px" src="${d.s32}" alt=""><figcaption>32</figcaption></figure>
+        <figure><img class="ico" style="width:16px;height:16px" src="${d.s16}" alt=""><figcaption>16</figcaption></figure>
+      </div>
+      <div class="tabs">
+        <div class="chrome dark"><div class="tab"><img src="${d.s16}" alt=""><span>Light Studies \u2014 James Vincent Moore</span></div></div>
+        <div class="chrome light"><div class="tab"><img src="${d.s16}" alt=""><span>Light Studies \u2014 James Vincent Moore</span></div></div>
+      </div>
+      <figure class="home"><img src="${d.big}" alt=""><figcaption>Home screen, 60pt</figcaption></figure>
+    `;
+    card.addEventListener("mouseenter", () => setActive(k, true));
+    card.addEventListener("mouseleave", () => setActive(k, false));
+    card.addEventListener("focusin", () => setActive(k, true));
+    grid.append(card);
+    card._key = k;
+  }
+
+  function setActive(k, on) {
+    if (boxes[k]) boxes[k].classList.toggle("on", on);
+    [...grid.children].forEach(c => c.classList.toggle("on", on && c._key === k));
+  }
+
+  const slider = document.getElementById("r");
+  const out = document.getElementById("rout");
+  function apply(v) {
+    document.documentElement.style.setProperty("--radius", v + "%");
+    out.textContent = v + "%";
+  }
+  slider.addEventListener("input", () => apply(slider.value));
+  document.querySelectorAll(".presets button").forEach(b => {
+    b.addEventListener("click", () => { slider.value = b.dataset.r; apply(b.dataset.r); });
+  });
+</script>
