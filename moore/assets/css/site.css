@@ -306,6 +306,8 @@ a.nav-item:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
 }
 .viewer-photo:focus-visible { outline: none; }
 .viewer-photo:focus-visible .flip { outline: 2px solid var(--ink); outline-offset: 3px; }
+/* ...but not when we moved the focus there ourselves */
+.viewer[data-quiet] .viewer-photo:focus-visible .flip { outline: none; }
 
 /* ------------------------------------------------------------- the flip
    Seventeen prints in the archive were scanned on both sides, because

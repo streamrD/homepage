@@ -34,6 +34,19 @@ let lastFocused = null;
 
 const entryFor = n => document.getElementById(`slide-${n}`);
 
+/* Focus we move ourselves — on opening, and on every arrow-key step — should
+   not draw a ring. The reader already knows where they are; the ring reads as
+   a stray black box round the photograph. Focus the user *tabs* to still
+   shows, which is the case the indicator exists for. */
+function focusQuietly(el) {
+  viewer.dataset.quiet = '1';
+  el.focus({ preventScroll: true });
+}
+addEventListener('keydown', e => {
+  if (e.key === 'Tab') delete viewer.dataset.quiet;
+}, true);
+addEventListener('pointerdown', () => { delete viewer.dataset.quiet; }, true);
+
 /* --------------------------------------------------------- image priming
    The enlargements are only referenced from the thumbnails, so without this
    the fetch starts on click and the fade runs over an empty frame. Prime on
@@ -127,7 +140,7 @@ function open(n, { push = true } = {}) {
   grid.dataset.state = 'out';
   viewer.dataset.open = '1';
   viewer.setAttribute('aria-hidden', 'false');
-  photo.focus({ preventScroll: true });
+  focusQuietly(photo);
 
   if (push) setHash(`#${n}`);
 }
