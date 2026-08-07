@@ -16,6 +16,7 @@
   --fade: 0.5s;           /* 10 frames @ 20fps                      */
   --fade-quick: 0.4s;     /*  8 frames @ 20fps                      */
   --grow: 0.4s;
+  --grid-pad: 30px;       /* hover field around the grid; see .thumbs */
 }
 
 * { box-sizing: border-box; }
@@ -141,14 +142,35 @@ body {
 .nav__sq:focus-visible { transform: scale(1); }
 .nav__sq:focus-visible { outline: 1px solid rgba(255, 255, 255, 0.7); outline-offset: 2px; }
 
-/* --- thumbnail grid ------------------------------------------------ */
+/* --- thumbnail grid ------------------------------------------------
 
-.thumbs { position: absolute; inset: 0; }
+   The grid is a box, not the whole stage. That box is where the fade
+   below lives: it is the twelve thumbs' bounding square, grown by
+   --grid-pad on every side, and it is what :hover is tested against.
+
+   Sizing it this way is the whole reason the fade lets go. When .thumbs
+   spanned the stage, :hover stayed true anywhere on the page — over the
+   wordmark, over the background, over nothing — so the eleven dimmed
+   thumbs had no reason to come back until the pointer left the window.
+   Now the field ends 30px out from the grid, and crossing that edge is
+   what restores them.
+
+   --grid-x/-y/-w/-h come from photos.json via build.py, per page.
+   Thumbs are placed by --px/--py, their offset inside the grid, plus
+   the padding the box was grown by. ------------------------------- */
+
+.thumbs {
+  position: absolute;
+  left: calc(var(--grid-x) - var(--grid-pad));
+  top: calc(var(--grid-y) - var(--grid-pad));
+  width: calc(var(--grid-w) + 2 * var(--grid-pad));
+  height: calc(var(--grid-h) + 2 * var(--grid-pad));
+}
 
 .thumb {
   position: absolute;
-  left: var(--x);
-  top: var(--y);
+  left: calc(var(--px) + var(--grid-pad));
+  top: calc(var(--py) + var(--grid-pad));
   width: 100px;
   height: 100px;
   display: block;
@@ -158,7 +180,9 @@ body {
 .thumb img { width: 100px; height: 100px; display: block; }
 
 /* Hovering one thumb fades the other eleven back — the original's
-   "firstout" tween.
+   "firstout" tween. The dim holds across the gaps between thumbs, so
+   crossing the grid from one photograph to the next is one continuous
+   move rather than twelve flickers; it lifts at the edge of the field.
 
    Scoped to pointers that can actually hover: on a touchscreen :hover
    sticks after a tap, which would leave eleven thumbs dimmed with nothing
@@ -283,15 +307,19 @@ body {
 
   /* The grid box, positioned and scaled as a unit. --gscale is set by
      site.js so the grid can never collide with the wordmark on a short
-     screen; transform-origin pins the scaling to the bottom edge. */
+     screen; transform-origin pins the scaling to the bottom edge.
+
+     No hover field here — a phone has no pointer to be near with, and
+     the padding would only push the grid off its measured anchor. With
+     it at zero the thumbs' left/top calc collapses to --px/--py. */
   .thumbs {
+    --grid-pad: 0px;
     inset: auto auto var(--grid-bottom) 50%;
     width: var(--grid-w);
     height: var(--grid-h);
     transform: translateX(-50%) scale(var(--gscale, 0.85));
     transform-origin: 50% 100%;
   }
-  .thumb { left: var(--px); top: var(--py); }
 
   /* Nav tiles: a row over the photograph, top-left. They sit at rest
      size here rather than at 0.68 — there is no room for a tile to
