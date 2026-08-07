@@ -141,10 +141,13 @@ copied:
   and out of search results — nothing more. The markup is still in the page
   source. Before anything sensitive goes on these pages, move the check to the
   host (HTTP basic auth) or encrypt the content at build time.
-* **A favicon and a share image.** The favicon is the M from Caslon 224 Black
-  Italic, the face the wordmark sets "moore" in, lifted out of the rebuilt
-  font as an SVG path — so it needs no font at runtime and stays sharp at any
-  size. The share image sets the wordmark on the paper beside Paul Moore and
+* **A favicon and a share image.** The favicon is the lower-case m from
+  Caslon 224 Black Italic, exactly as the wordmark sets "moore", lifted out of
+  the rebuilt font as an SVG path — so it needs no font at runtime and stays
+  sharp at any size. It is fitted on its own ink rather than a nominal point
+  size, since an x-height letter is wide and short, and each `.ico` size is
+  rendered separately: downsampling one large icon smears an m's three stems
+  together by 16px. The share image sets the wordmark on the paper beside Paul Moore and
   the Buick Century. Both are built by `tools/brand.py`.
 
   `og:image` is emitted relative. Set `SITE_URL` at the top of
