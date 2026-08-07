@@ -30,11 +30,20 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* The stage is centred in the viewport, horizontally and vertically.
+
+   Its layout box stays 1000x714 whatever the scale — a transform does not
+   reflow anything — so on a short screen the box is taller than the body
+   and overflows it, top and bottom equally. Scaling about the centre
+   (.stage's transform-origin) puts the visible artwork back inside. A
+   definite height rather than min-height is what makes that symmetrical;
+   with min-height the body would simply grow to the box and the stage
+   would sit high. */
 body {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   overflow: hidden;
 }
 
@@ -48,7 +57,7 @@ body {
   width: var(--stage-w);
   height: var(--stage-h);
   overflow: hidden;
-  transform-origin: 50% 0;
+  transform-origin: 50% 50%;
   transform: scale(var(--scale, 1));
 }
 
@@ -287,7 +296,10 @@ body {
 
 @media (orientation: portrait) and (max-width: 540px) {
 
-  body { display: block; overflow: hidden; }
+  /* Nothing to centre here — the stage is the viewport. Height goes back
+     to auto so that a 100dvh stage is not clipped by a 100vh body when
+     Safari's toolbars collapse. */
+  body { display: block; height: auto; min-height: 100vh; overflow: hidden; }
 
   /* The stage stops being a fixed box and becomes the viewport. dvh so
      that Safari's collapsing toolbars do not leave a strip of #CCCCCC

@@ -63,16 +63,15 @@
     }
 
     stage.style.removeProperty('--scale');
-    document.body.style.height = '';
   }
 
   function fit() {
     if (PORTRAIT.matches) return fitPortrait();
-    var scale = Math.min(1, window.innerWidth / STAGE_W, window.innerHeight / STAGE_H);
-    stage.style.setProperty('--scale', scale);
-    // Keep the page from scrolling: the stage is transform-scaled, so its
-    // layout box stays 1000x714 and would otherwise overflow.
-    document.body.style.height = (STAGE_H * scale) + 'px';
+    // Scale only. Where the stage sits is CSS's business: the body is a
+    // viewport-height flex centre, and the stage scales about its own
+    // middle, so the artwork stays centred at every scale.
+    stage.style.setProperty('--scale',
+      Math.min(1, window.innerWidth / STAGE_W, window.innerHeight / STAGE_H));
   }
 
   fit();
