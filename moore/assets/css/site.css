@@ -245,6 +245,15 @@ a.home-link:hover, a.home-link:focus-visible { opacity: 1; }
 }
 .grid--auto .shot img { object-fit: contain; }
 
+/* an empty cell, waiting on a photograph */
+.grid--auto .slot {
+  width: calc(var(--cell) * 1px);
+  height: calc(var(--cell) * 1px);
+  opacity: 1;
+  transition: opacity var(--t-dim) linear;
+}
+.grid[data-hover] .slot { opacity: var(--dim-alpha); }
+
 /* the grid fades out as a whole while an enlargement fades in */
 .grid { opacity: 1; transition: opacity var(--t-thumbs-out) linear; }
 .grid[data-state="out"] { opacity: 0; pointer-events: none; }
@@ -595,6 +604,7 @@ html:not(.js) .viewer { display: none; }
   }
   .grid--auto .thumb { width: auto; height: auto; aspect-ratio: 1; }
   .grid--auto .shot { height: auto; max-height: 100%; }
+  .grid--auto .slot { width: auto; height: auto; aspect-ratio: 1; }
   .grid[data-state="out"] { opacity: 1; pointer-events: auto; }
   .grid[data-hover] .thumb:not([data-hovered]) { opacity: 1; }
   .thumb img { width: 100%; height: auto; }
