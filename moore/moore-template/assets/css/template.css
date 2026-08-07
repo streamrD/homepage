@@ -47,7 +47,9 @@
 .tpl-name span { display: block; font-style: italic; font-size: 12px; }
 
 .tpl-nav { display: flex; justify-content: center; gap: 0; font: 11.6px/1 var(--tpl-sans); }
-.tpl-nav a, .tpl-nav span[aria-disabled] {
+/* every label needs the padding, including the current page's — without it
+   its dividers crowd in on both sides */
+.tpl-nav a, .tpl-nav span {
   color: var(--ink); text-decoration: none; opacity: .55;
   transition: opacity var(--t-dim) linear; padding: 0 7px;
 }
@@ -63,7 +65,7 @@
 .masthead .tpl { width: max-content; }        /* the masthead sets its own */
 .tpl-mast1 { font: italic 13px/1.2 var(--tpl-serif); }
 .tpl-mast1 b { font-weight: 700; }
-.tpl-mast2 { font: 5.5px/1.2 var(--tpl-serif); letter-spacing: .02em; }
+.tpl-mast2 { font: 6.3px/1.2 var(--tpl-serif); letter-spacing: .02em; }
 
 @media (max-width: 859px) {
   .tpl { position: static; width: auto; }
