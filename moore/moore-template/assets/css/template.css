@@ -1,0 +1,73 @@
+/* moore archives — TEMPLATE overrides.
+   Loaded after site.css. Everything structural comes from there; this file
+   only changes the type.
+
+   The archive's own faces are 40-glyph subsets extracted from the 2004 SWF —
+   they contain just the characters that site used, so they cannot set
+   arbitrary words. A template has to. So the replaceable text here is set in
+   a substitute stack and flows normally instead of being positioned run by
+   run, which also means it can be edited without recomputing coordinates.
+
+   TO SWAP IN LICENSED FONTS: add the @font-face rules and change the two
+   custom properties below. Nothing else needs to move. */
+:root {
+  /* Libre Caslon (SIL OFL, free to self-host) is the closest analogue to
+     ITC Caslon 224. Drop LibreCaslonText-Regular/Italic/Bold.woff2 into
+     assets/fonts/ and uncomment the @font-face block below; until then the
+     stack falls through to Georgia, which is metrically close enough that
+     nothing shifts. */
+  --tpl-serif: "Libre Caslon Text", "Libre Caslon Display", Georgia,
+               "Times New Roman", serif;
+  --tpl-sans:  "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* a block of ordinary flowed text, anchored where the SWF put its baseline */
+/*
+@font-face { font-family:"Libre Caslon Text"; src:url("../fonts/LibreCaslonText-Regular.woff2") format("woff2"); font-weight:400; font-display:swap; }
+@font-face { font-family:"Libre Caslon Text"; src:url("../fonts/LibreCaslonText-Italic.woff2")  format("woff2"); font-weight:400; font-style:italic; font-display:swap; }
+@font-face { font-family:"Libre Caslon Text"; src:url("../fonts/LibreCaslonText-Bold.woff2")    format("woff2"); font-weight:700; font-display:swap; }
+*/
+
+.tpl {
+  position: absolute;
+  left: calc(var(--x) * 1px);
+  top: calc(var(--y) * 1px);
+  width: calc(var(--w, 0) * 1px);
+  margin: 0;
+  line-height: 1.15;
+  color: var(--ink);
+}
+.tpl-center { text-align: center; }
+
+.tpl-title  { font: italic 60px/1 var(--tpl-serif); letter-spacing: -.01em; }
+.tpl-title b { font-weight: 700; }
+.tpl-title i { font-weight: 400; font-style: italic; }
+.tpl-sub    { font: 300 14px/1.2 var(--tpl-sans); letter-spacing: .04em; }
+.tpl-name   { font: 15px/1.35 var(--tpl-serif); }
+.tpl-name span { display: block; font-style: italic; font-size: 12px; }
+
+.tpl-nav { display: flex; justify-content: center; gap: 0; font: 11.6px/1 var(--tpl-sans); }
+.tpl-nav a, .tpl-nav span[aria-disabled] {
+  color: var(--ink); text-decoration: none; opacity: .55;
+  transition: opacity var(--t-dim) linear; padding: 0 7px;
+}
+.tpl-nav a:hover, .tpl-nav a:focus-visible { opacity: 1; }
+.tpl-nav [aria-current="page"] { opacity: 1; }
+.tpl-nav [aria-disabled="true"] { opacity: .28; }
+.tpl-nav li { list-style: none; }
+.tpl-nav ul { display: flex; margin: 0; padding: 0; }
+.tpl-nav li + li { border-left: 1px solid var(--rule); }
+
+/* the masthead, flowed rather than positioned */
+.masthead .mast-line { display: block; }
+.masthead .tpl { width: max-content; }        /* the masthead sets its own */
+.tpl-mast1 { font: italic 13px/1.2 var(--tpl-serif); }
+.tpl-mast1 b { font-weight: 700; }
+.tpl-mast2 { font: 5.5px/1.2 var(--tpl-serif); letter-spacing: .02em; }
+
+@media (max-width: 859px) {
+  .tpl { position: static; width: auto; }
+  .tpl-title { font-size: clamp(30px, 9.5vw, 60px); }
+  .tpl-nav { flex-wrap: wrap; justify-content: flex-start; }
+  .tpl-mast2 { font-size: 11px; }
+}
