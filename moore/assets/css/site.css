@@ -174,8 +174,15 @@ a.nav-item:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
 #grid[data-state="out"] ~ .sheets ~ .tick { opacity: 0; pointer-events: none; }
 .sheets .sheet-item { transition: opacity var(--t-dim) linear; }
 
-.home-link { opacity: .7; }
-a.home-link:hover, a.home-link:focus-visible { opacity: 1; }
+/* the wordmark, reduced to nav size, linking home */
+.masthead {
+  opacity: .62;
+  transition: opacity var(--t-dim) linear;
+  text-decoration: none;
+  color: var(--ink);
+}
+.masthead:hover, .masthead:focus-visible { opacity: 1; }
+.masthead:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
 
 /* ------------------------------------------------------------ gallery */
 .gallery-title { margin: 0; font-weight: normal; }
@@ -569,6 +576,15 @@ html:not(.js) .viewer { display: none; }
 
   /* The runs are separate elements, so keep the parent's font-size real —
      the whitespace between them is what supplies the word space. */
+  /* the masthead flows as two lines, as it does on the stage */
+  .masthead { order: 0; display: block; margin-bottom: 4px; }
+  /* the spans are butted together because the stage positions each one, so
+     reflowing them needs the word spaces putting back */
+  .masthead .t { display: inline; font-size: 15px; }
+  .masthead .t + .t { margin-left: .28em; }
+  .masthead .mast-line { display: block; }
+  .masthead .mast-line + .mast-line { margin-top: 2px; }
+
   .home-title { order: 1; font-size: clamp(30px, 9.5vw, 65px); }
   .home-title .t { display: inline; font-size: inherit; }
 
