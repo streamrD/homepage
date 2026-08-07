@@ -40,6 +40,7 @@
   --t-flip: 560ms;           /* turning a print over to read its back */
   --dim-alpha: 0.2;
   --fold-face: #ded3b7;      /* the back of a print, turned up at the corner */
+  --fold-large: 26px;        /* that corner, on the enlargement */
 }
 
 * { box-sizing: border-box; }
@@ -206,19 +207,9 @@ a.nav-item:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
 .shot { position: relative; display: block; width: 100%; height: 100%; }
 .shot img { display: block; width: 100%; height: 100%; }
 
-/* Seventeen prints in the archive have something written on the back. A
-   turned-up corner says so without putting a label on the contact sheet. */
-.thumb[data-verso] .shot::after {
-  content: "";
-  position: absolute;
-  --a: calc(var(--ar));                 /* --ar is w/h, so this is a number */
-  right: max(0px, calc((100% - 100% * var(--a)) / 2));
-  bottom: max(0px, calc((100% - 100% / var(--a)) / 2));
-  width: var(--fold, 11px);
-  height: var(--fold, 11px);
-  background: linear-gradient(315deg, var(--fold-face) 0 50%, transparent 50%);
-  filter: drop-shadow(-1px -1px 1px rgb(0 0 0 / .5));
-}
+/* The turned corner that marks a two-sided print lives on the enlargement
+   only — see `.flip::after`. On a contact sheet it read as damage to the
+   photograph rather than as a note about the object. */
 
 /* rolling over one thumbnail fades every other one down to 20% */
 .grid[data-hover] .thumb:not([data-hovered]) { opacity: var(--dim-alpha); }
@@ -347,6 +338,27 @@ a.nav-item:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
 }
 .face-verso { transform: rotateY(180deg); }
 .face-verso:not([src]), .face-verso[src=""] { display: none; }
+
+/* Seventeen prints have something written on the back. A turned-up corner
+   says so without putting a label on the photograph.
+
+   On the thumbnails this had to be inset by however much letterbox each axis
+   carried, because the box there is always the square cell. Here it needs no
+   correction at all: `.flip` is given the print's own aspect ratio, so its
+   bottom right corner *is* the picture's. `backface-visibility` takes the
+   fold away as the card turns — once you are reading the back, the corner
+   has served its purpose. */
+.viewer[data-verso] .flip::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: var(--fold-large);
+  height: var(--fold-large);
+  background: linear-gradient(315deg, var(--fold-face) 0 50%, transparent 50%);
+  filter: drop-shadow(-1px -1px 1px rgb(0 0 0 / .5));
+  backface-visibility: hidden;
+}
 
 .viewer-controls { position: static; margin: 0; }
 

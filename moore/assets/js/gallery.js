@@ -191,6 +191,9 @@ function open(n, { push = true } = {}) {
   delete viewer.dataset.face;
   turn.hidden = !back;
   turn.textContent = 'Turn over';
+  // the turned corner is drawn off this, so it has to be set before the
+  // enlargement fades in rather than when the reverse finishes decoding
+  if (back) viewer.dataset.verso = '1'; else delete viewer.dataset.verso;
   if (back) {
     prime(back).then(() => {
       if (current !== n) return;
