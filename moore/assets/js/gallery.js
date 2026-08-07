@@ -119,6 +119,11 @@ function open(n, { push = true } = {}) {
   viewer.style.setProperty('--cy', entry.dataset.cy);
   viewer.style.setProperty('--cw', entry.dataset.cw);
 
+  // drop the roll-over state before the sheet goes, so the dimmed siblings
+  // aren't animating back up while the whole layer fades away
+  delete grid.dataset.hover;
+  for (const t of thumbs) delete t.dataset.hovered;
+
   grid.dataset.state = 'out';
   viewer.dataset.open = '1';
   viewer.setAttribute('aria-hidden', 'false');

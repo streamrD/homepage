@@ -30,7 +30,10 @@
   --baseline-offset: 0.753906em;
   /* frame counts from the SWF timelines, at its 20 fps */
   --t-thumbs-in: 700ms;
-  --t-thumbs-out: 650ms;
+  /* The SWF took 13 frames (650ms) to clear the sheet while the enlargement
+     arrived in 9 (450ms), so thumbnails were still dissolving behind a
+     photograph that had already landed — it reads as lag. Clear first. */
+  --t-thumbs-out: 280ms;
   --t-enlarge: 450ms;
   --t-dim: 350ms;
   --t-caption: 200ms;        /* the annotation rides in with the photograph */
@@ -265,6 +268,13 @@ a.home-link:hover, a.home-link:focus-visible { opacity: 1; }
 .grid { opacity: 1; transition: opacity var(--t-thumbs-out) linear; }
 .grid[data-state="out"] { opacity: 0; pointer-events: none; }
 .grid[data-state="in"]  { transition-duration: var(--t-thumbs-in); }
+
+/* On the way out the sheet is one fading layer and nothing more. Without
+   this, the 60-odd dimmed siblings each animate back to full opacity as the
+   container disappears — brightening while they vanish, and a pile of
+   concurrent transitions for something nobody can see. */
+.grid[data-state="out"] .thumb,
+.grid[data-state="out"] .slot { transition: none; }
 
 .viewer {
   position: absolute;
