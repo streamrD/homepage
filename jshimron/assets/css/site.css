@@ -16,7 +16,7 @@
   --fade: 0.5s;           /* 10 frames @ 20fps                      */
   --fade-quick: 0.4s;     /*  8 frames @ 20fps                      */
   --grow: 0.4s;
-  --grid-pad: 30px;       /* hover field around the grid; see .thumbs */
+  --grid-pad: 15px;       /* hover field around the grid; see .thumbs */
 }
 
 * { box-sizing: border-box; }
@@ -161,8 +161,10 @@ body {
    spanned the stage, :hover stayed true anywhere on the page — over the
    wordmark, over the background, over nothing — so the eleven dimmed
    thumbs had no reason to come back until the pointer left the window.
-   Now the field ends 30px out from the grid, and crossing that edge is
-   what restores them.
+   Now the field ends 15px out from the grid, and crossing that edge is
+   what restores them. Half a thumbnail's gap: near enough that stepping
+   off the edge reads as leaving, far enough that the corner thumbs keep
+   a little room to be pointed at.
 
    --grid-x/-y/-w/-h come from photos.json via build.py, per page.
    Thumbs are placed by --px/--py, their offset inside the grid, plus
