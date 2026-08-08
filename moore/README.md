@@ -28,6 +28,7 @@ web/
   negatives.html         |
   1965-2004.html        |
   1965-2004-2.html      /  (this one runs to two contact sheets)
+  moore-template/       the same design with the family removed
   assets/
     css/site.css
     js/stage.js         stage scaling + the original preloader
@@ -36,12 +37,14 @@ web/
     favicon.svg         the wordmark's M, straight from the rebuilt font
     og.jpg              share image
     fonts/*.woff2       eight subsetted faces, rebuilt from the SWFs
-    img/                paper texture, cover, and 237 photographs
+    img/                paper texture, cover, and 206 photographs
   tools/                the SWF decompiler and the build scripts
   Makefile              `make deps` then `make all` rebuilds everything
 ```
 
-The deployable site is about 8 MB. `tools/` is build-time only.
+The deployable site is about 12 MB, of which the template edition is 3 MB.
+`tools/` is build-time only, and must be left out of the deployed folder —
+it would otherwise be publicly fetchable.
 
 Open `index.html` directly — the scripts are deliberately classic rather than
 ES modules so the archive works from a `file://` URL, off a USB stick or a
@@ -54,9 +57,14 @@ python3 -m http.server -d web 8000
 (Over `file://` the deep links still open slides, but the address bar doesn't
 update: `pushState` is not permitted from an opaque origin.)
 
-There is no build step for deployment — copy `index.html`,
-`kodachromes.html` and `assets/` to any static host. `tools/` is only needed
-if you want to re-derive things from the SWFs.
+There is no build step for deployment — copy the HTML, `assets/` and
+`moore-template/` to any static host. `tools/` is only needed if you want to
+re-derive things from the SWFs.
+
+A curation that shortens a sheet strands the derivatives past its new end, and
+they are indistinguishable from live ones by name, so `sections.build()` prunes
+them. Deploy with a delete pass (`rsync --delete` or the equivalent) rather
+than a plain copy, or the stranded files stay on the host.
 
 ## What was in the original
 
@@ -101,15 +109,20 @@ copied:
   at all. But the folders beside the SWFs hold finished, web-sized
   derivatives for seven of the nine sections, so those are now real pages:
 
-  | page | source folder | frames |
+  | page | source folder | frames published |
   | --- | --- | --- |
-  | `early.html` | `early/` | 19 |
-  | `beforethewar.html` | `beforethewar/` | 18 |
-  | `wwii.html` | `wwII/` | 29 |
-  | `afterthewar.html` | `afterthewar/` | 64 |
-  | `landscapes.html` | `landscapes/` | 13 |
+  | `early.html` | `early/` | 16 |
+  | `beforethewar.html` | `beforethewar/` | 14 |
+  | `wwii.html` | `wwII/` | 22 |
+  | `afterthewar.html` | `afterthewar/` | 61 |
+  | `landscapes.html` | `landscapes/` | 12 |
   | `negatives.html` | `6x9cmNegs/` | 15 |
-  | `1965-2004.html` | `1965-2004/` | 15 |
+  | `1965-2004.html` | `../momSent10-2002/` + selects | 34 |
+  | `1965-2004-2.html` | `1965-2004/` | 12 |
+
+  The counts are what each sheet publishes, not what the folder holds — the
+  curation in `sections.SECTIONS` drops frames, and a dropped frame leaves a
+  placeholder rather than reflowing the page.
 
   They use the same chrome, the same hover-dim, and the same enlargement
   behaviour as the Kodachromes gallery. **They have no annotations** — none
@@ -120,11 +133,12 @@ copied:
   Those are one object, not two, so the contact sheet shows the recto and the
   viewer turns it over: 3 in Early photos, 4 in Before the war, 7 in WWII, 3
   in After the war. The control sits beside "Back to the contact sheet"; `f`
-  or the up/down arrows do the same thing. On the sheet those prints carry a
-  small turned-up corner, so you can see which have something on the back
-  without opening them. Clicking the print itself still closes the viewer, as
-  the SWF did. Some of the best material in the archive is on those backs — a
-  V-Mail note, a censor stamp.
+  or the up/down arrows do the same thing. The enlargement carries a small
+  turned-up corner to say there is something on the back; it was on the
+  contact sheet at first, where it read as damage to the photograph rather
+  than as a note about the object. Clicking the print itself still closes the
+  viewer, as the SWF did. Some of the best material in the archive is on those
+  backs — a V-Mail note, a censor stamp.
 
   Pairing is by filename (`<n>verso`), which is the only evidence there is:
   every one of the 17 is named that way, no folder uses any other convention,
@@ -137,6 +151,15 @@ copied:
   `tools/sections.py` groups by the name before the working suffix and keeps
   the plain corrected version. `SHEET 1 | SHEET 2` under the grid moves
   between them; each is its own page and its own URL.
+
+  The 2002 group leads, and has taken in all 24 of the newer
+  high-resolution scans in `../replacements-additions/selects/` plus three
+  frames from the other sheet — 34 in a 7 × 5, with the wedding series
+  following on 12. Two of those selects are the same photograph as a frame
+  already on the sheet, scanned better, so they replaced it rather than
+  joining it. The selects are ~4000px originals but publish at 450, so their
+  resolution is not yet doing anything: see the higher-resolution note in
+  `../CLAUDE.md`.
 * **About and Bios.** Named in 2004 and never written, so these are empty
   canvases: a header, placeholder text, and for Bios a grid of 15 square
   placeholders waiting on portrait crops. Their colours are sampled from the
@@ -178,6 +201,13 @@ copied:
   it divides, measured against where the text actually sets rather than
   against the SWF's BOUNDS, which carry a few pixels of Flash's own text-field
   padding on the right.
+* **A sticky roll-over.** The SWF restored the dimmed thumbnails the moment
+  the pointer left one. Its own sheet was hand-placed and tight; the new
+  sections set a gutter around a third of the cell, so crossing between frames
+  spends most of the journey over no frame at all, and the whole sheet flared
+  back and dimmed again at every crossing. The lit frame now stays lit until
+  another takes over or the pointer leaves the sheet — one cross-fade per
+  landing.
 * **No underlines.** The site's entire interaction language is the SWF's:
   things fade, nothing is decorated. So the nav carries no rules or
   underlines — the section you are in is simply the one at full strength, the
@@ -207,8 +237,8 @@ Two typos in the 2004 captions ("cancer inthe late 1960's", "lived from
 ## Fonts
 
 The typefaces are commercial (ITC Caslon 224, Akzidenz-Grotesk BE,
-Helvetica Neue). No font files were obtained from anywhere — the SWFs embed
-`DefineFont2` glyph outlines for exactly the characters they use, and those
+Helvetica Neue). All but six characters came out of the SWFs, which embed
+`DefineFont2` glyph outlines for exactly the characters they use; those
 outlines are converted straight to WOFF2:
 
 SWF glyph shapes are quadratic Béziers on a 1024-unit em with y pointing
@@ -217,13 +247,19 @@ down, which is TrueType's own curve format with the y axis flipped, so
 and takes the advance widths from the `DefineText` glyph records (the tags
 have no layout block). The result is the same subset the SWF already carried
 — ten characters for Caslon 224 Medium Italic, sixty-four for Caslon 224
-Book — totalling 40 KB for all eight faces.
+Book — totalling 30 KB for all eight faces.
+
+The six exceptions are `0 1 2 4 5` and the hyphen in Akzidenz-Grotesk BE,
+grafted from an installed copy of the real font so the splash nav can set
+"1965-2004" in the same face as the nine labels beside it. Without that font
+on the machine the build skips the graft and the label falls back to the
+condensed cut, which is what `kodachromes.swf`'s own nav did with it.
 
 Those subsets are the reason the section titles are set the way they are:
 `tools/typemetrics.py` measures each title against the faces that actually
-have its glyphs. Caslon 224 Book covers six of the seven; "1965-2004" needs a
-numeral 2, which only Akzidenz Grotesk BE Cn carried, so that one title is set
-in the condensed sans.
+have its glyphs. Caslon 224 Book covers six of the seven; the "1965-2004"
+watermark needs a numeral 2, which only Akzidenz Grotesk BE Cn carried, so
+that one title is still set in the condensed sans.
 
 Because a family can appear in the SWFs in both roman and italic (Caslon 224
 Book is italic in the splash title and roman in the captions), faces are
@@ -317,6 +353,8 @@ A small SWF reader written for this job, since no decompiler was available:
 | `brand.py` | favicon and share image |
 | `chrome.py` | stage geometry for both screens → `data/chrome.json` |
 | `gen_site.py` | the two HTML files |
+| `template_images.py` | blanks the template's photographs to palette swatches |
+| `template_text.py` | rewords the template and swaps its typography |
 
 `make all` runs the build scripts in order. The two JSON files under `tools/data/` are
 build inputs, not runtime data — the pages are fully static.
