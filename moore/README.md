@@ -237,8 +237,8 @@ Two typos in the 2004 captions ("cancer inthe late 1960's", "lived from
 ## Fonts
 
 The typefaces are commercial (ITC Caslon 224, Akzidenz-Grotesk BE,
-Helvetica Neue). All but six characters came out of the SWFs, which embed
-`DefineFont2` glyph outlines for exactly the characters they use; those
+Helvetica Neue). All but twenty-one characters came out of the SWFs, which
+embed `DefineFont2` glyph outlines for exactly the characters they use; those
 outlines are converted straight to WOFF2:
 
 SWF glyph shapes are quadratic Béziers on a 1024-unit em with y pointing
@@ -247,13 +247,16 @@ down, which is TrueType's own curve format with the y axis flipped, so
 and takes the advance widths from the `DefineText` glyph records (the tags
 have no layout block). The result is the same subset the SWF already carried
 — ten characters for Caslon 224 Medium Italic, sixty-four for Caslon 224
-Book — totalling 30 KB for all eight faces.
+Book — totalling 32 KB for all eight faces.
 
-The six exceptions are `0 1 2 4 5` and the hyphen in Akzidenz-Grotesk BE,
-grafted from an installed copy of the real font so the splash nav can set
-"1965-2004" in the same face as the nine labels beside it. Without that font
-on the machine the build skips the graft and the label falls back to the
-condensed cut, which is what `kodachromes.swf`'s own nav did with it.
+Twenty-one characters are grafted from installed copies of the real fonts,
+because the site was painting them in a face that had no glyph for them — and
+a missing glyph is not visibly missing, it is quietly served from Georgia, so
+one letter in a word changes weight and slope. `f` was the worst of them:
+Caslon 224 Black Italic had none, and every generated caption headline reads
+"N of M". `tools/audit_faces.py` checks for this and should be run after any
+change to copy. Without the real fonts installed the build skips the grafts
+and says which characters keep falling back.
 
 Those subsets are the reason the section titles are set the way they are:
 `tools/typemetrics.py` measures each title against the faces that actually
@@ -355,6 +358,7 @@ A small SWF reader written for this job, since no decompiler was available:
 | `gen_site.py` | the two HTML files |
 | `template_images.py` | blanks the template's photographs to palette swatches |
 | `template_text.py` | rewords the template and swaps its typography |
+| `audit_faces.py` | what the site paints vs what each face can set |
 
 `make all` runs the build scripts in order. The two JSON files under `tools/data/` are
 build inputs, not runtime data — the pages are fully static.
