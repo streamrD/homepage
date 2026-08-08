@@ -25,8 +25,12 @@ apple-touch-icon.png  /
 make-favicon.py       regenerates the three icon files
 jshimron/             a separate site — see below
 jimmy/                a separate site — see below
+moore/                a separate site — see moore/README.md
 loupe/                the gallery pattern jimmy is built on — see below
 ```
+
+`jshimron/` and `moore/` are copies of sources that live outside this repo;
+`CLAUDE.md` has the table of which folders are safe to edit in place.
 
 The page loads the hero photograph — Detroit, c. 1964, from Moore Archives —
 from Backblaze, at `stabley-homepage.s3.us-east-005.backblazeb2.com/detroit750.jpg`.
@@ -60,14 +64,17 @@ A rebuild of a 2005 Flash photography site, served at
 ourheroes.app can host bespoke designs.
 
 > **Generated output — do not edit these files here.** They are built from a
-> separate repo at `~/Yonat` and overwritten wholesale on each release:
+> separate repo at `~/AgenticAI/yonat` and overwritten wholesale on each
+> release — `package.py` deletes the destination before writing it:
 >
 > ```sh
-> cd ~/Yonat/2026/src && python3 tools/package.py --target deploy
+> cd ~/AgenticAI/yonat/2026/src && python3 tools/package.py --target deploy
 > ```
 >
-> Then commit and push here. Edits made directly in `jshimron/` are lost the
-> next time that runs. See `~/Yonat/2026/README.md`.
+> Then commit and push here, and commit in `~/AgenticAI/yonat` too — it has
+> no remote, so that commit is the only copy. Edits made directly in
+> `jshimron/` are lost the next time that runs. See
+> `~/AgenticAI/yonat/2026/README.md`.
 
 Those pages carry `<base href="/jshimron/">`, so their relative links and
 icons resolve within that folder and the URL works with or without a
