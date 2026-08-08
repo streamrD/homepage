@@ -310,6 +310,9 @@ html[data-quiet] .thumb:focus-visible { outline: none; }
    because the thumbnails already animate on transform as an enlargement
    opens, and because the roll-over measures their rects. */
 .grid--auto > .row-centred { position: relative; left: calc(var(--nudge, 0) * 1px); }
+/* when the short row leads, the frame after it starts a row of its own —
+   otherwise auto-placement fills the gap the short row left */
+.grid--auto > .row-break { grid-column-start: 1; }
 
 .grid--auto .thumb {
   position: static;
@@ -850,6 +853,7 @@ html:not(.js) .viewer { display: none; }
   }
   /* the column count is fluid down here, so there is no known short row */
   .grid--auto > .row-centred { left: 0; }
+  .grid--auto > .row-break { grid-column-start: auto; }
   .grid--auto .thumb { width: auto; height: auto; aspect-ratio: 1; }
   .grid--auto .shot { height: auto; max-height: 100%; }
   .grid--auto .slot { width: auto; height: auto; aspect-ratio: var(--slot-ar, 1); }
