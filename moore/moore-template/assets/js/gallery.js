@@ -89,6 +89,9 @@ for (const button of thumbs) {
   button.addEventListener('click', () => open(Number(button.dataset.n)));
 }
 
+// the nav at the foot of the page rolls over the same way the sheet does
+window.mooreStage.stickyNav(document.querySelector('.nav-gallery'));
+
 /* -------------------------------------------------------------- viewer */
 function open(n, { push = true } = {}) {
   const entry  = entryFor(n);

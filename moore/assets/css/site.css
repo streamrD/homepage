@@ -28,15 +28,24 @@
   /* line-height:1 puts the baseline at half-leading + ascent from the top:
      (1 - 1000/1024)/2 + 760/1024 = 0.753906em */
   --baseline-offset: 0.753906em;
-  /* frame counts from the SWF timelines, at its 20 fps */
-  --t-thumbs-in: 700ms;
-  /* The SWF took 13 frames (650ms) to clear the sheet while the enlargement
-     arrived in 9 (450ms), so thumbnails were still dissolving behind a
-     photograph that had already landed — it reads as lag. Clear first. */
-  --t-thumbs-out: 280ms;
-  --t-enlarge: 450ms;
+  /* Frame counts from the SWF timelines, at its 20 fps — but taken down by
+     about a third. The 2004 timings were authored for a file that had to
+     stream over a modem, where a slow dissolve covered the wait; with the
+     enlargements primed on hover there is nothing left to cover, and the
+     original 700ms sheet return in particular reads as lag rather than as
+     grace. The proportions between them are kept.
+       thumbs in   14 frames  700 -> 420
+       thumbs out  13 frames  650 -> 200   (see below)
+       enlarge      9 frames  450 -> 300
+       caption                200 -> 150 */
+  --t-thumbs-in: 420ms;
+  /* The SWF took 13 frames to clear the sheet while the enlargement arrived
+     in 9, so thumbnails were still dissolving behind a photograph that had
+     already landed — it reads as lag. Clear first, and quickly. */
+  --t-thumbs-out: 200ms;
+  --t-enlarge: 300ms;
   --t-dim: 350ms;
-  --t-caption: 200ms;        /* the annotation rides in with the photograph */
+  --t-caption: 150ms;        /* the annotation rides in with the photograph */
   --t-flip: 560ms;           /* turning a print over to read its back */
   --dim-alpha: 0.2;
   --fold-face: #ded3b7;      /* the back of a print, turned up at the corner */
@@ -173,24 +182,27 @@ a.nav-item:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
 
 /* The splash has no current section, so nothing there is holding the eye and
    there is no reason to hold the rest back: the whole list stands at full
-   strength until you reach for it, and then it behaves like the gallery nav —
-   the one under the pointer keeps its weight and takes its section's colour,
-   the rest drop away.
-
-   And it is *sticky*, like the contact sheets: roll off a label and it stays
-   lit until you reach the next one. The labels are far enough apart that
-   releasing on the way past made the whole row flare between every pair.
-   mooreStage.stickyNav drives the two data attributes below.
-
-   Without scripting there is no sticky to be had, so the plain hover stands
-   in: the same states, released the moment the pointer leaves a label. */
+   strength until you reach for it. */
 .nav-home .nav-item { opacity: 1; }
-.nav-home[data-lit] .nav-item { opacity: var(--nav-off); }
-.nav-home .nav-item[data-lit],
-.nav-home .nav-item:focus-visible { opacity: 1; color: var(--on, var(--ink)); }
 
-html:not(.js) .nav-home:hover .nav-item { opacity: var(--nav-off); }
-html:not(.js) .nav-home .nav-item:hover { opacity: 1; color: var(--on, var(--ink)); }
+/* Both navs roll over *stickily*, like the contact sheets: the label under
+   the pointer keeps its weight and takes its section's colour, the rest drop
+   away — and rolling off does nothing. It stays lit until another label takes
+   over or the pointer leaves the row. The labels are far enough apart that
+   releasing on the way past made the whole row flare between every pair.
+   mooreStage.stickyNav drives the two data attributes.
+
+   These come after the aria-current rule on purpose: while you are pointing
+   at one label, the section you are actually in steps back with the others.
+
+   Without scripting there is no sticky to be had, so plain hover stands in —
+   the same states, released the moment the pointer leaves a label. */
+.nav[data-lit] .nav-item { opacity: var(--nav-off); }
+.nav .nav-item[data-lit],
+.nav .nav-item:focus-visible { opacity: 1; color: var(--on, var(--ink)); }
+
+html:not(.js) .nav:hover .nav-item { opacity: var(--nav-off); }
+html:not(.js) .nav .nav-item:hover { opacity: 1; color: var(--on, var(--ink)); }
 
 /* categories the 2004 original named but never published */
 .nav-item[aria-disabled="true"] { opacity: .24; cursor: default; }

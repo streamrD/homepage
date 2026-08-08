@@ -70,3 +70,25 @@
   .tpl-title { font-size: clamp(30px, 9.5vw, 60px); }
   .tpl-nav { flex-wrap: wrap; justify-content: flex-start; }
 }
+
+/* ---------------------------------------------------------- the watermark
+   The archive's Caslon subsets carry only what the 2004 site set, and the
+   decade labels want an apostrophe and a 6, 7 and 8 that it never used. So
+   the template ships its own cut of ITC Caslon 224 Book Italic, subset from
+   the licensed original to a full ASCII range — a template exists to be
+   reworded, and a twenty-glyph face cannot be reworded.
+   template_text.build_font() writes it; if the original is not installed the
+   rule below simply falls through to the substitute stack. */
+@font-face {
+  font-family: "Caslon 224 Tpl";
+  src: url("../fonts/caslon224-book-italic-tpl.woff2") format("woff2");
+  font-style: italic;
+  font-display: block;
+}
+/* --baseline-offset comes in on the element: this is the real face, whose
+   metrics are its own rather than the 1024/760 the rebuilt subsets share. */
+.tpl-mark { font-family: "Caslon 224 Tpl", var(--tpl-serif); font-style: italic; }
+
+/* The preloader names the decade too, and that wants the same characters the
+   archive's sans has never had. */
+.loader p { font-family: var(--tpl-sans); }
