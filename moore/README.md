@@ -247,7 +247,7 @@ down, which is TrueType's own curve format with the y axis flipped, so
 and takes the advance widths from the `DefineText` glyph records (the tags
 have no layout block). The result is the same subset the SWF already carried
 — ten characters for Caslon 224 Medium Italic, sixty-four for Caslon 224
-Book — totalling 32 KB for all eight faces.
+Book — totalling 34 KB for all eight faces.
 
 Twenty-one characters are grafted from installed copies of the real fonts,
 because the site was painting them in a face that had no glyph for them — and
