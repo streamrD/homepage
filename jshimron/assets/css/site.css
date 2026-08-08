@@ -16,7 +16,7 @@
   --fade: 0.5s;           /* 10 frames @ 20fps                      */
   --fade-quick: 0.4s;     /*  8 frames @ 20fps                      */
   --grow: 0.4s;
-  --grid-pad: 15px;       /* hover field around the grid; see .thumbs */
+  --grid-pad: 0px;        /* hover field around the grid; see .thumbs */
 }
 
 * { box-sizing: border-box; }
@@ -161,10 +161,13 @@ body {
    spanned the stage, :hover stayed true anywhere on the page — over the
    wordmark, over the background, over nothing — so the eleven dimmed
    thumbs had no reason to come back until the pointer left the window.
-   Now the field ends 15px out from the grid, and crossing that edge is
-   what restores them. Half a thumbnail's gap: near enough that stepping
-   off the edge reads as leaving, far enough that the corner thumbs keep
-   a little room to be pointed at.
+   Now the field is the grid's own bounds and crossing them restores it.
+
+   --grid-pad is 0, so the field ends exactly at the outer edges of the
+   corner thumbnails: the grid comes back the instant the pointer is off
+   it, with no buffer to travel first. The variable stays because the
+   geometry reads from it either way — raise it and the box grows around
+   a grid that doesn't move.
 
    --grid-x/-y/-w/-h come from photos.json via build.py, per page.
    Thumbs are placed by --px/--py, their offset inside the grid, plus
@@ -333,7 +336,11 @@ body {
 
      No hover field here — a phone has no pointer to be near with, and
      the padding would only push the grid off its measured anchor. With
-     it at zero the thumbs' left/top calc collapses to --px/--py. */
+     it at zero the thumbs' left/top calc collapses to --px/--py.
+
+     This matches the base value at the moment, and is kept anyway: it
+     is a guard, not a restatement. Portrait must stay at zero even if
+     the desktop field is ever given room again. */
   .thumbs {
     --grid-pad: 0px;
     inset: auto auto var(--grid-bottom) 50%;
