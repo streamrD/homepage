@@ -156,8 +156,12 @@ a { color: inherit; }
    simply the one at full strength, the rest sit back, and hovering brings one
    forward on the same 350ms linear ramp the thumbnails use. */
 .nav-item {
-  opacity: .55;
-  transition: opacity var(--t-dim) linear;
+  /* Faded well back, so the section you are in reads first. The active label
+     is coloured rather than merely full-strength (gen_site.SECTION_COLOUR),
+     and colour alone is a weak signal at 12px, so the gap either side of it
+     does the rest of the work. */
+  opacity: .38;
+  transition: opacity var(--t-dim) linear, color var(--t-dim) linear;
 }
 a.nav-item { cursor: pointer; }
 a.nav-item:hover,
@@ -167,7 +171,7 @@ a.nav-item:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
 .nav-item[aria-current="page"] { opacity: 1; }
 
 /* categories the 2004 original named but never published */
-.nav-item[aria-disabled="true"] { opacity: .28; cursor: default; }
+.nav-item[aria-disabled="true"] { opacity: .24; cursor: default; }
 
 /* a section that runs to more than one contact sheet */
 .sheets { margin: 0; }
