@@ -69,94 +69,23 @@ const idle = window.requestIdleCallback || (fn => setTimeout(fn, 400));
 const setHash = url => { try { history.pushState({}, '', url); } catch { /* file:// */ } };
 
 /* ------------------------------------------------------------- dimming
-   Rolling over one frame fades the rest back, as the SWF did. What the SWF
-   never had to cope with is a sheet with gaps in it: the section sheets set
-   a gap around a third of the cell, so a reader crossing from one frame to
-   the next spends most of the journey over no frame at all. Releasing the
-   dim on pointerleave — the obvious reading of the original — makes the
-   whole sheet flare back up between every pair of thumbnails, and reading
-   across a row becomes a strobe.
+   Rolling over one frame fades the rest back, as the SWF did — but stickily:
+   leaving a frame does nothing, and the lit one stays lit until another takes
+   over or the pointer leaves the sheet. The section sheets set a gutter around
+   a third of the cell, so releasing on pointerleave made the whole sheet flare
+   back up between every pair of thumbnails.
 
-   So the roll-over is *sticky*: leaving a frame does nothing, and the lit
-   frame stays lit until either another one takes over or the pointer leaves
-   the sheet altogether. Moving from frame to frame is then one cross-fade
-   per landing, which is what the reader is actually asking for.
-
-   "Leaves the sheet" can't be a pointerleave either. The Kodachrome grid
-   places its thumbnails absolutely, so its <ul> collapses to a zero-height
-   box that the pointer is never inside — and so do the <li> wrappers, which
-   is why the bound below is measured over the thumbnails and placeholders
-   themselves rather than over the grid's own children. */
-let lit = null;                      // the frame currently at full strength
-let sheet = null;                    // its bounding box, viewport coordinates
-let watching = false;
-
-const SLACK = 24;                    // px of forgiveness around the sheet edge
-
-function measure() {
-  let l = Infinity, t = Infinity, r = -Infinity, b = -Infinity;
-  for (const cell of grid.querySelectorAll('.thumb, .slot')) {
-    const k = cell.getBoundingClientRect();
-    if (!k.width && !k.height) continue;
-    l = Math.min(l, k.left);  t = Math.min(t, k.top);
-    r = Math.max(r, k.right); b = Math.max(b, k.bottom);
-  }
-  sheet = r > l ? { l: l - SLACK, t: t - SLACK, r: r + SLACK, b: b + SLACK } : null;
-}
-
-function onMove(event) {
-  if (!sheet) return;
-  const { clientX: x, clientY: y } = event;
-  if (x < sheet.l || x > sheet.r || y < sheet.t || y > sheet.b) release();
-}
-
-const restale = () => { if (watching) measure(); };
-
-function watch() {
-  if (watching) return;
-  watching = true;
-  measure();
-  document.addEventListener('pointermove', onMove, { passive: true });
-  // the pointer can also leave without a further move — out of the window
-  // entirely, or into another tab
-  document.documentElement.addEventListener('pointerleave', release);
-  window.addEventListener('blur', release);
-  window.addEventListener('resize', restale);
-  window.addEventListener('scroll', restale, { passive: true });
-}
-
-function unwatch() {
-  if (!watching) return;
-  watching = false;
-  document.removeEventListener('pointermove', onMove);
-  document.documentElement.removeEventListener('pointerleave', release);
-  window.removeEventListener('blur', release);
-  window.removeEventListener('resize', restale);
-  window.removeEventListener('scroll', restale);
-}
-
-function light(button) {
-  if (lit === button) return;
-  if (lit) delete lit.dataset.hovered;
-  lit = button;
-  button.dataset.hovered = '1';
-  grid.dataset.hover = '1';
-  prime(button.dataset.full);
-}
-
-function release() {
-  unwatch();
-  if (lit) delete lit.dataset.hovered;
-  lit = null;
-  delete grid.dataset.hover;
-}
+   The mechanism is mooreStage.sticky, shared with the splash nav; the comment
+   there explains why the sheet's bound has to be measured rather than taken
+   from the container. Slots are in the bound but not in the items: an empty
+   cell is part of the sheet you are still inside, but it lights nothing. */
+const roll = window.mooreStage.sticky(thumbs, {
+  bounds: grid.querySelectorAll('.thumb, .slot'),
+  light: b => { grid.dataset.hover = '1'; b.dataset.hovered = '1'; prime(b.dataset.full); },
+  clear: b => { if (b) delete b.dataset.hovered; delete grid.dataset.hover; }
+});
 
 for (const button of thumbs) {
-  button.addEventListener('pointerenter', () => { light(button); watch(); });
-  // no pointerleave: the frame stays lit until another one takes it or the
-  // pointer leaves the sheet
-  button.addEventListener('focus', () => { light(button); watch(); });
-  button.addEventListener('blur', () => { if (lit === button) release(); });
   button.addEventListener('click', () => open(Number(button.dataset.n)));
 }
 
@@ -215,7 +144,7 @@ function open(n, { push = true } = {}) {
 
   // drop the roll-over state before the sheet goes, so the dimmed siblings
   // aren't animating back up while the whole layer fades away
-  release();
+  roll.release();
 
   grid.dataset.state = 'out';
   viewer.dataset.open = '1';

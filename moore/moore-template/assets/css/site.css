@@ -175,21 +175,36 @@ a.nav-item:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
    there is no reason to hold the rest back: the whole list stands at full
    strength until you reach for it, and then it behaves like the gallery nav —
    the one under the pointer keeps its weight and takes its section's colour,
-   the rest drop away. Hovering the list is what dims it, so the fade has to
-   hang off the container, not the item. */
+   the rest drop away.
+
+   And it is *sticky*, like the contact sheets: roll off a label and it stays
+   lit until you reach the next one. The labels are far enough apart that
+   releasing on the way past made the whole row flare between every pair.
+   mooreStage.stickyNav drives the two data attributes below.
+
+   Without scripting there is no sticky to be had, so the plain hover stands
+   in: the same states, released the moment the pointer leaves a label. */
 .nav-home .nav-item { opacity: 1; }
-.nav-home:hover .nav-item { opacity: var(--nav-off); }
-.nav-home .nav-item:hover,
+.nav-home[data-lit] .nav-item { opacity: var(--nav-off); }
+.nav-home .nav-item[data-lit],
 .nav-home .nav-item:focus-visible { opacity: 1; color: var(--on, var(--ink)); }
+
+html:not(.js) .nav-home:hover .nav-item { opacity: var(--nav-off); }
+html:not(.js) .nav-home .nav-item:hover { opacity: 1; color: var(--on, var(--ink)); }
 
 /* categories the 2004 original named but never published */
 .nav-item[aria-disabled="true"] { opacity: .24; cursor: default; }
 
 /* a section that runs to more than one contact sheet */
 .sheets { margin: 0; }
+/* The pager belongs to the contact sheet, so it goes when the sheet goes.
+   The rule between the two labels is a *child* of .sheets, not a sibling of
+   it — written with `~` it was never matched, and the divider stayed hanging
+   in the middle of the enlargement with nothing either side of it. */
 #grid[data-state="out"] ~ .sheets .sheet-item,
-#grid[data-state="out"] ~ .sheets ~ .tick { opacity: 0; pointer-events: none; }
-.sheets .sheet-item { transition: opacity var(--t-dim) linear; }
+#grid[data-state="out"] ~ .sheets .tick { opacity: 0; pointer-events: none; }
+.sheets .sheet-item,
+.sheets .tick { transition: opacity var(--t-dim) linear; }
 
 /* the wordmark, reduced to nav size, linking home */
 .masthead {
