@@ -42,10 +42,28 @@
   /* The SWF took 13 frames to clear the sheet while the enlargement arrived
      in 9, so thumbnails were still dissolving behind a photograph that had
      already landed — it reads as lag. Clear first, and quickly. */
-  --t-thumbs-out: 200ms;
-  --t-enlarge: 300ms;
+  --t-thumbs-out: 240ms;
+  --t-enlarge: 420ms;
   --t-dim: 350ms;
-  --t-caption: 150ms;        /* the annotation rides in with the photograph */
+  --t-caption: 300ms;        /* the annotation rides in with the photograph */
+  /* Flash tweened linearly, and a linear opacity ramp is what made this read
+     as blocky: it starts and stops at full speed, so there is no sense of
+     anything having been set in motion. These are the two curves the whole
+     enlargement uses.
+
+     `glide` is a decelerating curve — quick off the mark, long settle — which
+     is what lets the sheet clear early while the photograph is still easing
+     in, keeping the ordering the note above is about. `ease-out-soft` is
+     gentler still, for the thing that leaves.
+
+     Duration matters as much as shape: 300ms of movement is about 18 frames,
+     and the eye reads the end of a short ramp as a stop rather than a
+     settle. 420 buys enough frames to feel continuous without dragging. */
+  --ease-glide: cubic-bezier(.16, .68, .3, 1);
+  --ease-soft:  cubic-bezier(.4, 0, .5, 1);
+  /* how far the enlargement travels as it arrives. Small on purpose — this is
+     a photograph coming to rest, not a card being dealt. */
+  --enlarge-rise: 10px;
   --t-flip: 560ms;           /* turning a print over to read its back */
   --dim-alpha: 0.2;
   --fold-face: #ded3b7;      /* the back of a print, turned up at the corner */
@@ -263,6 +281,11 @@ html:not(.js) .nav .nav-item:hover { opacity: 1; color: var(--on, var(--ink)); }
 .grid[data-hover] .thumb:not([data-hovered]) { opacity: var(--dim-alpha); }
 
 .thumb:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+/* ...but not when the script moved the focus itself, which is what returning
+   from an enlargement does. The stage is scaled up to 1.75, so this outline
+   lands as a heavy black box around one frame of a quiet sheet — the same
+   complaint the viewer's own ring drew, and the same answer. */
+html[data-quiet] .thumb:focus-visible { outline: none; }
 
 /* ------------------------------------------------- adaptive contact sheet
    The Kodachromes grid is hand-placed at the coordinates the SWF used. The
@@ -327,7 +350,12 @@ html:not(.js) .nav .nav-item:hover { opacity: 1; color: var(--on, var(--ink)); }
 .grid[data-hover] .slot { opacity: var(--dim-alpha); }
 
 /* the grid fades out as a whole while an enlargement fades in */
-.grid { opacity: 1; transition: opacity var(--t-thumbs-out) linear; }
+/* `will-change` keeps the sheet and the enlargement on their own compositor
+   layers, so neither has to be rasterised on the first frame of the
+   transition — which is where a dropped frame shows most. Two layers only;
+   this is not a hint worth spreading around. */
+.grid { opacity: 1; transition: opacity var(--t-thumbs-out) var(--ease-soft);
+        will-change: opacity; }
 .grid[data-state="out"] { opacity: 0; pointer-events: none; }
 .grid[data-state="in"]  { transition-duration: var(--t-thumbs-in); }
 
@@ -338,14 +366,32 @@ html:not(.js) .nav .nav-item:hover { opacity: 1; color: var(--on, var(--ink)); }
 .grid[data-state="out"] .thumb,
 .grid[data-state="out"] .slot { transition: none; }
 
+/* The enlargement glides up into place rather than simply appearing. The
+   transform is on the whole layer, so the photograph, its annotation and the
+   controls all arrive together as one composition — and it is a transform, so
+   the browser can run it on the compositor without repainting anything.
+   `.viewer-photo` below establishes the 3D context for the flip; this
+   translate sits above that and does not disturb it. */
 .viewer {
   position: absolute;
   inset: 0;
   opacity: 0;
   pointer-events: none;
-  transition: opacity var(--t-enlarge) linear;
+  transform: translate3d(0, var(--enlarge-rise), 0);
+  transition: opacity var(--t-enlarge) var(--ease-glide),
+              transform var(--t-enlarge) var(--ease-glide);
+  will-change: opacity, transform;
 }
-.viewer[data-open] { opacity: 1; pointer-events: auto; }
+.viewer[data-open] {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0);
+}
+/* Stepping with the arrow keys keeps the enlargement open, so there is
+   nothing to travel — only the picture inside changes. Re-running the rise on
+   every step would jog the whole composition sideways of the reader. */
+.viewer[data-step] { transition-duration: var(--t-caption); }
+.viewer[data-step], .viewer[data-step][data-open] { transform: none; }
 
 .viewer-photo {
   position: absolute;
@@ -362,7 +408,7 @@ html:not(.js) .nav .nav-item:hover { opacity: 1; color: var(--on, var(--ink)); }
 .viewer-photo:focus-visible { outline: none; }
 .viewer-photo:focus-visible .flip { outline: 2px solid var(--ink); outline-offset: 3px; }
 /* ...but not when we moved the focus there ourselves */
-.viewer[data-quiet] .viewer-photo:focus-visible .flip { outline: none; }
+html[data-quiet] .viewer-photo:focus-visible .flip { outline: none; }
 
 /* ------------------------------------------------------------- the flip
    Seventeen prints in the archive were scanned on both sides, because
@@ -441,7 +487,9 @@ html:not(.js) .nav .nav-item:hover { opacity: 1; color: var(--on, var(--ink)); }
   font-size: 12px;
   line-height: 13.7px;
   opacity: 0;
-  transition: opacity var(--t-caption) ease-out;
+  /* a shade behind the photograph, so the picture leads and the words settle
+     onto it rather than the two arriving as one flat block */
+  transition: opacity var(--t-caption) var(--ease-glide) 90ms;
 }
 .viewer[data-open] .viewer-caption { opacity: 1; }
 /* stepping between slides swaps the text in place, quicker still */
@@ -482,10 +530,52 @@ html:not(.js) .nav .nav-item:hover { opacity: 1; color: var(--on, var(--ink)); }
   text-transform: uppercase;
   opacity: .45;
 }
-.viewer-turn { left: auto; right: 55.4px; text-align: right; }
+/* Under the right-hand edge of the enlargement, not the right-hand edge of
+   the stage. The Kodachrome enlargement sits at x 55.4 and is 450 wide, so
+   its far edge is 505.4 and this is the 800-wide stage less that. The hint
+   opposite already sits on 55.4, the picture's near edge, so the two now
+   bracket the photograph instead of straddling the caption column as well.
+   `.viewer--plain` needs no such correction: its box is centred, and 175 is
+   already both its inset and its far edge. */
+.viewer-turn { left: auto; right: 294.6px; text-align: right; }
 .viewer-hint:hover, .viewer-hint:focus-visible,
 .viewer-turn:hover, .viewer-turn:focus-visible { opacity: 1; }
 .viewer-turn[hidden] { display: none; }
+
+/* ------------------------------------------- the second frame, announcing
+   A card that carries more than one frame has to say so, and a 10px line of
+   grey at the foot of the stage does not. So when such an enlargement opens,
+   the control arrives after the photograph: the letters start far apart and
+   close to their resting tracking as they fade up.
+
+   Tracking rather than scale, deliberately. Everything else on this site
+   moves by fading, and a control that flew in at two and a half times its
+   size would be the only piece of theatre in the place. Opening the letters
+   is the same gesture the SWF's own tracked "moore" is built on, and it reads
+   as type settling rather than as an animation.
+
+   It rests in the section's colour — the same ink the nav gives the page you
+   are on, from gen_site.nav_ink() — and a little stronger than the hint
+   opposite, because the colour is the point and .45 mutes it to nearly
+   nothing. `--turn-rest` is the one number to change if it wants to be
+   quieter.
+
+   `backwards`, not `both`: a filled animation would out-rank the :hover rule
+   and leave the control unable to brighten afterwards. The last keyframe and
+   the resting rule carry the same values, so nothing jumps at the end. */
+:root { --turn-rest: .72; }
+.viewer-turn {
+  opacity: var(--turn-rest);
+  color: var(--section-ink, inherit);
+}
+.viewer[data-open] .viewer-turn {
+  animation: turn-in 900ms var(--ease-glide) backwards;
+}
+@keyframes turn-in {
+  0%   { opacity: 0; letter-spacing: .55em; }
+  40%  { opacity: 1; }
+  100% { opacity: var(--turn-rest); letter-spacing: .08em; }
+}
 
 /* ------------------------------------------- about / bios (unwritten yet)
    Two sections the 2004 project named and never filled in. Same stage, a
@@ -563,6 +653,17 @@ html:not(.js) .nav .nav-item:hover { opacity: 1; color: var(--on, var(--ink)); }
 .gate button:hover, .gate button:focus-visible { opacity: 1; }
 .gate-error { color: #7d2f24; opacity: 1; }
 .gate-error[hidden] { display: none; }
+
+/* the way out, for anyone who does not have the password */
+.gate-out { margin: 22px 0 0; text-align: center; }
+.gate-out a {
+  font: normal 10px/1.4 "Akzidenz BE Cn", "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: .1em;
+  text-decoration: none;
+  opacity: .45;
+  transition: opacity var(--t-dim) linear;
+}
+.gate-out a:hover, .gate-out a:focus-visible { opacity: 1; }
 
 /* everything the gate protects stays out of sight until it opens */
 .page { opacity: 0; transition: opacity 300ms ease-out; }
@@ -643,15 +744,25 @@ html:not(.js) .viewer { display: none; }
 @media (max-width: 859px) {
   .viewport { padding: 0; }
 
+  /* The paper goes on the page rather than on the stage, so it runs under the
+     safe-area inset as well. With the texture on .stage alone, the band iOS
+     reserves for the notch showed the html background — two grey bars down
+     the sides of a landscape phone. */
+  html, body {
+    background: var(--paper) url("../img/paper.jpg") center top / 800px auto repeat;
+  }
+
   .stage {
     width: 100%;
     height: auto;
     transform: none;
     box-shadow: none;
-    background-repeat: repeat;
-    background-size: 800px auto;
+    background: none;
     min-height: 100svh;
-    padding: 32px 20px 40px;
+    /* pad back off the notch, but never less than the layout's own margin */
+    padding: 32px max(20px, env(safe-area-inset-right))
+             calc(40px + env(safe-area-inset-bottom))
+             max(20px, env(safe-area-inset-left));
     display: flex;
     flex-direction: column;
     gap: 18px;
@@ -676,7 +787,10 @@ html:not(.js) .viewer { display: none; }
   .masthead .mast-line { display: block; }
   .masthead .mast-line + .mast-line { margin-top: 2px; }
 
-  .home-title { order: 1; font-size: clamp(30px, 9.5vw, 65px); }
+  /* Sized off the shorter axis as well as the wider one. On width alone a
+     landscape phone — 852 by 393 — took the 65px ceiling on the shortest
+     screen it will ever be shown on, and the splash ran 1.7 screens deep. */
+  .home-title { order: 1; font-size: clamp(30px, min(9.5vw, 13vh), 65px); }
   .home-title .t { display: inline; font-size: inherit; }
 
   .home-sub  { order: 2; font-size: 15px; }
@@ -686,7 +800,7 @@ html:not(.js) .viewer { display: none; }
   .home-who .t + .t { font-size: 13px; }
   .nav-home  { order: 5; }
 
-  .gallery-title { order: 1; font-size: clamp(30px, 9.5vw, 65px); }
+  .gallery-title { order: 1; font-size: clamp(30px, min(9.5vw, 13vh), 65px); }
   .gallery-title .t { display: inline; font-size: inherit; opacity: 1; }
   .grid { order: 2; }
   .nav-gallery { order: 3; }
@@ -759,4 +873,56 @@ html:not(.js) .viewer { display: none; }
   .viewer-caption h2 { font-size: 14px; line-height: 1.45; margin-bottom: 8px; }
   .viewer-caption p { margin-bottom: 1em; }
   .viewer-hint { margin-top: 20px; opacity: .6; }
+}
+
+/* ------------------------------------------------- a phone held sideways
+   Short and wide: 852 by 393 on the phone this was found on. The flow layout
+   above is built for a narrow column, so laid out sideways it stacked a 65px
+   title, a 340px photograph and the nav into 1.7 screens of scrolling while
+   using half the width.
+
+   The splash becomes two columns — the writing beside the photograph, which
+   is roughly where the fixed stage puts them anyway — and the whole thing
+   fits one screen. Keyed on height rather than orientation: a short window on
+   a laptop has the same problem, and `orientation` would not catch it. */
+@media (max-width: 859px) and (max-height: 560px) {
+  .stage { padding-top: 20px; padding-bottom: 20px; gap: 10px; }
+
+  .home-title { font-size: clamp(26px, 11vh, 44px); }
+  .home-sub   { font-size: 13px; }
+
+  /* the two columns: everything textual on the left, the cover on the right */
+  .stage:has(.home-cover) {
+    display: grid;
+    grid-template-columns: 1fr minmax(200px, 38%);
+    /* every text row sized to its content, and one flexible row before the
+       nav to take up the slack. Putting the slack anywhere earlier drove the
+       two names apart, which is what a `1fr` in the middle of the stack does. */
+    grid-template-rows: auto auto auto auto 1fr auto;
+    column-gap: 26px;
+    row-gap: 0;
+    align-content: start;
+  }
+  .stage:has(.home-cover) > .home-title { grid-column: 1; margin-bottom: 6px; }
+  .stage:has(.home-cover) > .home-sub   { grid-column: 1; margin-bottom: 14px; }
+  .stage:has(.home-cover) > .home-who   { grid-column: 1; margin-bottom: 8px; }
+  .stage:has(.home-cover) > .home-cover {
+    grid-column: 2;
+    grid-row: 1 / span 5;
+    align-self: center;
+    justify-self: end;
+    max-width: 100%;
+    max-height: 78svh;
+    width: auto;
+    object-fit: contain;
+    margin: 0;
+  }
+  .stage:has(.home-cover) > .nav-home { grid-column: 1 / -1; align-self: end; }
+
+  .home-who { font-size: 13px; }
+  .home-who .t + .t { font-size: 11px; }
+
+  /* the sheets want more columns across a wide short screen, not bigger ones */
+  .grid, .grid--auto { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); }
+  .nav { padding-top: 8px; margin-top: 4px; }
 }

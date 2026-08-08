@@ -31,21 +31,29 @@ const count  = thumbs.length;
 
 let current = null;
 let lastFocused = null;
+// the frames of a grouped card, and where in them we are
+let cycle = null, at = 0;
 
 const entryFor = n => document.getElementById(`slide-${n}`);
 
-/* Focus we move ourselves — on opening, and on every arrow-key step — should
-   not draw a ring. The reader already knows where they are; the ring reads as
-   a stray black box round the photograph. Focus the user *tabs* to still
-   shows, which is the case the indicator exists for. */
+/* Focus we move ourselves — on opening, on every arrow-key step, and on the
+   way back to the sheet — should not draw a ring. The reader already knows
+   where they are; the ring reads as a stray black box round the photograph.
+   Focus the user *tabs* to still shows, which is the case the indicator
+   exists for.
+
+   The flag lives on the document rather than on the viewer, because the
+   return from an enlargement lands on a thumbnail — outside the viewer — and
+   that is the one that reads worst: the stage is scaled up to 1.75, so a 2px
+   outline at a 2px offset is drawn as a heavy black box around one frame of
+   an otherwise quiet contact sheet. */
 function focusQuietly(el) {
-  viewer.dataset.quiet = '1';
+  document.documentElement.dataset.quiet = '1';
   el.focus({ preventScroll: true });
 }
-addEventListener('keydown', e => {
-  if (e.key === 'Tab') delete viewer.dataset.quiet;
-}, true);
-addEventListener('pointerdown', () => { delete viewer.dataset.quiet; }, true);
+const speak = () => { delete document.documentElement.dataset.quiet; };
+addEventListener('keydown', e => { if (e.key === 'Tab') speak(); }, true);
+addEventListener('pointerdown', speak, true);
 
 /* --------------------------------------------------------- image priming
    The enlargements are only referenced from the thumbnails, so without this
@@ -57,9 +65,16 @@ function prime(url) {
   if (!primed.has(url)) {
     const img = new Image();
     img.src = url;
-    primed.set(url, img.decode ? img.decode().catch(() => {}) : Promise.resolve());
+    primed.set(url, { img, done: img.decode ? img.decode().catch(() => {})
+                                            : Promise.resolve() });
   }
-  return primed.get(url);
+  return primed.get(url).done;
+}
+
+/** Has this URL already finished loading? Then it can be painted this frame. */
+function ready(url) {
+  const p = primed.get(url);
+  return !!p && p.img.complete && p.img.naturalWidth > 0;
 }
 
 /* Which file the browser will actually choose for this frame.
@@ -121,14 +136,20 @@ function open(n, { push = true } = {}) {
       `${shot.getAttribute('width')} / ${shot.getAttribute('height')}`);
   }
   photo.setAttribute('aria-label', `${title} — back to the contact sheet`);
-  // swap only once the frame has decoded, so stepping never blanks the box
-  prime(best(button)).then(() => {
-    if (current !== n) return;               // moved on while decoding
+  /* Swap only once the frame has decoded, so stepping never blanks the box —
+     but when it has *already* decoded, do it in this same frame, before the
+     fade starts. The roll-over primes every enlargement you reach for, so
+     that is the usual case; going through a promise there meant the picture
+     landed a frame or two into a transition that had begun without it, which
+     is the snap you can see at the start of the fade. */
+  const paintRecto = () => {
     if (hi) photoImg.srcset = `${src} 1x, ${hi} 2x`;
     else photoImg.removeAttribute('srcset');
     photoImg.src = src;
     photoImg.alt = title;
-  });
+  };
+  if (ready(best(button))) paintRecto();
+  else prime(best(button)).then(() => { if (current === n) paintRecto(); });
 
   /* The card can carry a second face, and there are two kinds.
 
@@ -139,11 +160,22 @@ function open(n, { push = true } = {}) {
      the same way, because that is the gesture this viewer has, but it is not
      the back of anything: no corner, and the control says so too. Only
      `data-verso` sets `viewer.dataset.verso`, which is what draws the fold. */
+  /* A card can carry any number of further frames — several shots of the same
+     moment folded onto one cell, on the Kodachromes as on the section sheets.
+     The flip becomes a cycle: the face you cannot see is loaded with whatever
+     comes next, then the card turns, so it keeps turning through the set and
+     round to the first. Two faces are enough for any number of frames.
+
+     With more than two, the control cannot say "the first frame" on the way
+     back, because it is not going back — it is going on. */
   const back  = button.dataset.verso;
-  const other = button.dataset.other;
-  const second = back || other;
+  const many  = button.dataset.others ? JSON.parse(button.dataset.others) : null;
+  const second = back || (many && many[0].full);
   const labels = back ? ['Turn over', 'Turn back']
-                      : ['Another frame', 'The first frame'];
+               : many && many.length > 1 ? ['Another frame', 'Another frame']
+               : ['Another frame', 'The first frame'];
+  cycle = many ? [{ full: src, full2x: hi, alt: title }].concat(many) : null;
+  at = 0;
   delete viewer.dataset.face;
   turn.hidden = !second;
   turn.textContent = labels[0];
@@ -151,15 +183,17 @@ function open(n, { push = true } = {}) {
   // the turned corner is drawn off this, so it has to be set before the
   // enlargement fades in rather than when the reverse finishes decoding
   if (back) viewer.dataset.verso = '1'; else delete viewer.dataset.verso;
-  if (second) {
-    const hi2 = button.dataset.other2x;
+  if (many) {
     prime(second).then(() => {
       if (current !== n) return;
-      if (other && hi2) versoImg.srcset = `${other} 1x, ${hi2} 2x`;
-      else versoImg.removeAttribute('srcset');
-      versoImg.src = second;
-      versoImg.alt = (back ? button.dataset.versoAlt : button.dataset.otherAlt)
-                     || `${title} — ${back ? 'reverse' : 'another frame'}`;
+      paint(versoImg, many[0]);
+    });
+  } else if (back) {
+    prime(back).then(() => {
+      if (current !== n) return;
+      versoImg.removeAttribute('srcset');
+      versoImg.src = back;
+      versoImg.alt = button.dataset.versoAlt || `${title} — reverse`;
     });
   } else {
     versoImg.removeAttribute('src');
@@ -199,7 +233,7 @@ function close({ push = true } = {}) {
   grid.dataset.state = 'in';
 
   const target = thumbs.find(t => Number(t.dataset.n) === n) || lastFocused;
-  target?.focus({ preventScroll: true });
+  if (target) focusQuietly(target);
 
   if (push) setHash(location.pathname + location.search);
 }
@@ -213,12 +247,31 @@ function step(delta) {
 function flip() {
   if (turn.hidden) return;
   const showing = viewer.dataset.face === 'verso';
+  // On a grouped card, load the face that is *about* to come into view with
+  // the next frame before turning to it. The one you are looking at is left
+  // alone, so nothing changes under you mid-turn.
+  if (cycle) {
+    at = (at + 1) % cycle.length;
+    const next = cycle[at];
+    const img = showing ? photoImg : versoImg;
+    prime(next.full).then(() => {
+      if (cycle && cycle[at] === next) paint(img, next);
+    });
+  }
   if (showing) delete viewer.dataset.face;
   else viewer.dataset.face = 'verso';
   // the wording belongs to the kind of second face this frame has — a print's
   // back turns over, a second exposure does not
   const [front, reverse] = (turn.dataset.labels || 'Turn over|Turn back').split('|');
   turn.textContent = showing ? front : reverse;
+}
+
+/** Put one frame of a grouped card onto a face. */
+function paint(img, frame) {
+  if (frame.full2x) img.srcset = `${frame.full} 1x, ${frame.full2x} 2x`;
+  else img.removeAttribute('srcset');
+  img.src = frame.full;
+  img.alt = frame.alt || '';
 }
 
 photo.addEventListener('click', () => close());
@@ -254,7 +307,11 @@ boot(stage, ['assets/img/paper.jpg', ...thumbs.map(t => t.querySelector('img').s
       if (i >= thumbs.length) return;
       const t = thumbs[i++];
       if (t.dataset.verso) prime(t.dataset.verso);
-      if (t.dataset.other) prime(t.dataset.other);   // 1x, as below
+      // the first further frame of a card, so the turn is ready too. 1x only,
+      // as below — the rest of a long card waits until it is asked for.
+      if (t.dataset.others) {
+        try { prime(JSON.parse(t.dataset.others)[0].full); } catch { /* ignore */ }
+      }
       prime(t.dataset.full).then(() => idle(next));   // 1x only; see best()
     };
     idle(next);

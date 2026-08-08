@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- viewport-fit=cover: without it iOS keeps the page clear of the notch and
+     fills the reserved band with the html background, which on a landscape
+     phone reads as two grey bars down the sides of the paper. The stage pads
+     itself back off the inset with env(safe-area-inset-*). -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>1950-1980, sheet 1 — your family archive</title>
 <meta name="description" content="A family archive of photographs — a template for one, with the photographs and the writing left for you to supply.">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
@@ -34,7 +38,7 @@
   </div>
 
   <div class="viewport">
-    <div class="stage" id="stage" role="main" tabindex="-1" style="--title-alpha:0.102">
+    <div class="stage" id="stage" role="main" tabindex="-1" style="--title-alpha:0.102;--section-ink:#3d4f7c">
 
       <h1 class="gallery-title">
         <svg class="tpl-mark" aria-hidden="true" viewBox="0 -911 5927 1127" style="--x:0.9;--y:489.88;--w:385.25;--h:73.25"><path d="M42.0 -92.0C171.0 -313.0 505.0 -265.0 505.0 -519.0C505.0 -617.0 420.0 -686.0 320.0 -686.0C170.0 -686.0 75.0 -532.0 75.0 -508.0C75.0 -503.0 78.0 -500.0 84.0 -500.0C106.0 -500.0 139.0 -620.0 275.0 -620.0C343.0 -620.0 405.0 -570.0 405.0 -492.0C405.0 -262.0 22.0 -280.0 -30.0 0.0H376.0C433.0 -123.0 446.0 -137.0 446.0 -153.0C446.0 -157.0 443.0 -162.0 438.0 -162.0C414.0 -162.0 426.0 -92.0 328.0 -92.0Z M872.0 -686.0C728.0 -686.0 572.0 -489.0 572.0 -270.0C572.0 -104.0 662.0 8.0 768.0 8.0C912.0 8.0 1068.0 -189.0 1068.0 -408.0C1068.0 -574.0 978.0 -686.0 872.0 -686.0ZM878.0 -662.0C936.0 -662.0 974.0 -616.0 974.0 -506.0C974.0 -385.0 927.0 -16.0 762.0 -16.0C704.0 -16.0 666.0 -62.0 666.0 -172.0C666.0 -293.0 713.0 -662.0 878.0 -662.0Z M1154.0 -92.0C1283.0 -313.0 1617.0 -265.0 1617.0 -519.0C1617.0 -617.0 1532.0 -686.0 1432.0 -686.0C1282.0 -686.0 1187.0 -532.0 1187.0 -508.0C1187.0 -503.0 1190.0 -500.0 1196.0 -500.0C1218.0 -500.0 1251.0 -620.0 1387.0 -620.0C1455.0 -620.0 1517.0 -570.0 1517.0 -492.0C1517.0 -262.0 1134.0 -280.0 1082.0 0.0H1488.0C1545.0 -123.0 1558.0 -137.0 1558.0 -153.0C1558.0 -157.0 1555.0 -162.0 1550.0 -162.0C1526.0 -162.0 1538.0 -92.0 1440.0 -92.0Z M1984.0 -686.0C1840.0 -686.0 1684.0 -489.0 1684.0 -270.0C1684.0 -104.0 1774.0 8.0 1880.0 8.0C2024.0 8.0 2180.0 -189.0 2180.0 -408.0C2180.0 -574.0 2090.0 -686.0 1984.0 -686.0ZM1990.0 -662.0C2048.0 -662.0 2086.0 -616.0 2086.0 -506.0C2086.0 -385.0 2039.0 -16.0 1874.0 -16.0C1816.0 -16.0 1778.0 -62.0 1778.0 -172.0C1778.0 -293.0 1825.0 -662.0 1990.0 -662.0Z M2242.0 -265.0 2228.0 -189.0H2466.0L2480.0 -265.0Z M2698.0 -39.0C2719.0 -21.0 2754.0 8.0 2817.0 8.0C2948.0 8.0 3082.0 -114.0 3082.0 -275.0C3082.0 -386.0 3011.0 -462.0 2924.0 -462.0C2845.0 -462.0 2803.0 -409.0 2769.0 -350.0H2767.0C2767.0 -416.0 2746.0 -462.0 2677.0 -462.0C2576.0 -462.0 2542.0 -317.0 2542.0 -305.0C2542.0 -300.0 2545.0 -298.0 2549.0 -298.0C2555.0 -298.0 2557.0 -314.0 2572.0 -345.0C2589.0 -381.0 2608.0 -412.0 2639.0 -412.0C2666.0 -412.0 2677.0 -399.0 2677.0 -370.0C2677.0 -340.0 2665.0 -308.0 2558.0 194.0C2570.0 190.0 2582.0 186.0 2598.0 186.0C2611.0 186.0 2628.0 190.0 2645.0 194.0ZM2992.0 -318.0C2992.0 -242.0 2941.0 -16.0 2814.0 -16.0C2745.0 -16.0 2721.0 -66.0 2721.0 -110.0C2721.0 -229.0 2793.0 -430.0 2904.0 -430.0C2954.0 -430.0 2992.0 -396.0 2992.0 -318.0Z M3356.0 -328.0C3359.0 -342.0 3360.0 -359.0 3360.0 -375.0C3360.0 -432.0 3326.0 -462.0 3280.0 -462.0C3173.0 -462.0 3143.0 -311.0 3143.0 -296.0C3143.0 -291.0 3146.0 -288.0 3150.0 -288.0C3157.0 -288.0 3158.0 -295.0 3169.0 -326.0C3183.0 -365.0 3205.0 -412.0 3242.0 -412.0C3261.0 -412.0 3270.0 -399.0 3270.0 -379.0C3270.0 -361.0 3264.0 -324.0 3189.0 4.0C3201.0 2.0 3217.0 -2.0 3232.0 -2.0C3246.0 -2.0 3261.0 1.0 3278.0 4.0L3318.0 -156.0C3346.0 -271.0 3396.0 -390.0 3452.0 -390.0C3482.0 -390.0 3490.0 -362.0 3531.0 -362.0C3564.0 -362.0 3586.0 -380.0 3586.0 -415.0C3586.0 -444.0 3564.0 -462.0 3531.0 -462.0C3438.0 -462.0 3381.0 -372.0 3358.0 -328.0Z M3592.0 -185.0C3592.0 -82.0 3664.0 8.0 3779.0 8.0C3914.0 8.0 3995.0 -104.0 3995.0 -117.0C3995.0 -122.0 3992.0 -125.0 3988.0 -125.0C3982.0 -125.0 3974.0 -113.0 3934.0 -84.0C3912.0 -68.0 3876.0 -50.0 3836.0 -50.0C3732.0 -50.0 3680.0 -120.0 3682.0 -201.0C3757.0 -215.0 3829.0 -232.0 3868.0 -245.0C3969.0 -279.0 4002.0 -325.0 4002.0 -368.0C4002.0 -429.0 3948.0 -462.0 3872.0 -462.0C3772.0 -462.0 3592.0 -369.0 3592.0 -185.0ZM3869.0 -444.0C3903.0 -444.0 3926.0 -426.0 3926.0 -382.0C3926.0 -356.0 3918.0 -324.0 3896.0 -298.0C3858.0 -253.0 3755.0 -235.0 3682.0 -221.0C3693.0 -381.0 3800.0 -444.0 3869.0 -444.0Z M4459.0 -366.0C4459.0 -407.0 4407.0 -462.0 4287.0 -462.0C4201.0 -462.0 4112.0 -408.0 4112.0 -316.0C4112.0 -179.0 4362.0 -204.0 4362.0 -105.0C4362.0 -50.0 4313.0 -10.0 4237.0 -10.0C4166.0 -10.0 4156.0 -42.0 4150.0 -94.0C4146.0 -134.0 4137.0 -168.0 4102.0 -168.0C4071.0 -168.0 4055.0 -144.0 4055.0 -106.0C4055.0 -42.0 4116.0 8.0 4229.0 8.0C4379.0 8.0 4438.0 -70.0 4438.0 -142.0C4438.0 -294.0 4188.0 -260.0 4188.0 -366.0C4188.0 -407.0 4226.0 -444.0 4283.0 -444.0C4343.0 -444.0 4352.0 -423.0 4358.0 -386.0C4364.0 -350.0 4372.0 -318.0 4417.0 -318.0C4446.0 -318.0 4459.0 -338.0 4459.0 -366.0Z M4518.0 -185.0C4518.0 -82.0 4590.0 8.0 4705.0 8.0C4840.0 8.0 4921.0 -104.0 4921.0 -117.0C4921.0 -122.0 4918.0 -125.0 4914.0 -125.0C4908.0 -125.0 4900.0 -113.0 4860.0 -84.0C4838.0 -68.0 4802.0 -50.0 4762.0 -50.0C4658.0 -50.0 4606.0 -120.0 4608.0 -201.0C4683.0 -215.0 4755.0 -232.0 4794.0 -245.0C4895.0 -279.0 4928.0 -325.0 4928.0 -368.0C4928.0 -429.0 4874.0 -462.0 4798.0 -462.0C4698.0 -462.0 4518.0 -369.0 4518.0 -185.0ZM4795.0 -444.0C4829.0 -444.0 4852.0 -426.0 4852.0 -382.0C4852.0 -356.0 4844.0 -324.0 4822.0 -298.0C4784.0 -253.0 4681.0 -235.0 4608.0 -221.0C4619.0 -381.0 4726.0 -444.0 4795.0 -444.0Z M5157.0 -185.0C5171.0 -242.0 5237.0 -424.0 5332.0 -424.0C5368.0 -424.0 5387.0 -403.0 5387.0 -369.0C5387.0 -317.0 5329.0 -130.0 5329.0 -74.0C5329.0 -27.0 5353.0 8.0 5408.0 8.0C5522.0 8.0 5549.0 -142.0 5549.0 -153.0C5549.0 -160.0 5547.0 -162.0 5541.0 -162.0C5533.0 -162.0 5533.0 -152.0 5521.0 -119.0C5506.0 -77.0 5484.0 -42.0 5450.0 -42.0C5428.0 -42.0 5419.0 -55.0 5419.0 -74.0C5419.0 -104.0 5477.0 -300.0 5477.0 -352.0C5477.0 -415.0 5434.0 -462.0 5369.0 -462.0C5291.0 -462.0 5240.0 -413.0 5183.0 -310.0L5181.0 -312.0C5185.0 -330.0 5188.0 -359.0 5188.0 -380.0C5188.0 -427.0 5162.0 -462.0 5107.0 -462.0C5003.0 -462.0 4968.0 -319.0 4968.0 -309.0C4968.0 -302.0 4972.0 -300.0 4976.0 -300.0C4983.0 -300.0 4987.0 -314.0 4995.0 -335.0C5011.0 -377.0 5033.0 -412.0 5067.0 -412.0C5089.0 -412.0 5098.0 -397.0 5098.0 -375.0C5098.0 -336.0 5059.0 -159.0 5026.0 4.0C5039.0 0.0 5053.0 -2.0 5065.0 -2.0C5077.0 -2.0 5094.0 0.0 5111.0 4.0Z M5689.0 -404.0C5636.0 -178.0 5618.0 -114.0 5618.0 -71.0C5618.0 -23.0 5657.0 8.0 5713.0 8.0C5808.0 8.0 5880.0 -77.0 5880.0 -88.0C5880.0 -93.0 5877.0 -96.0 5873.0 -96.0C5862.0 -96.0 5819.0 -42.0 5764.0 -42.0C5731.0 -42.0 5708.0 -60.0 5708.0 -90.0C5708.0 -110.0 5722.0 -157.0 5775.0 -404.0H5880.0L5895.0 -454.0H5786.0L5816.0 -594.0C5744.0 -482.0 5688.0 -440.0 5604.0 -404.0Z"/></svg>
@@ -42,7 +46,7 @@
       </h1>
 
       <ul class="grid grid--auto" id="grid" data-state="out"
-          style="--gx:124.48;--gy:68.5;--cell:61.53;--gap:21.54;--cols:7;--slot-ar:1">
+          style="--gx:74.5;--gy:74.65;--cell:103.11;--gap:36.09;--cols:5;--slot-ar:1">
         <li><button class="thumb" type="button" data-n="1"
           data-full="assets/img/1965-2004/full/1.jpg" aria-controls="viewer">
           <span class="shot" style="--ar:150/120"><img src="assets/img/1965-2004/thumb/1.jpg" width="150" height="120" alt="Photograph 1"></span>
@@ -103,80 +107,6 @@
           data-full="assets/img/1965-2004/full/15.jpg" aria-controls="viewer">
           <span class="shot" style="--ar:150/120"><img src="assets/img/1965-2004/thumb/15.jpg" width="150" height="120" alt="Photograph 15"></span>
         </button></li>
-        <li><button class="thumb" type="button" data-n="16"
-          data-full="assets/img/1965-2004/full/16.jpg" aria-controls="viewer">
-          <span class="shot" style="--ar:150/120"><img src="assets/img/1965-2004/thumb/16.jpg" width="150" height="120" alt="Photograph 16"></span>
-        </button></li>
-        <li><button class="thumb" type="button" data-n="17"
-          data-full="assets/img/1965-2004/full/17.jpg" aria-controls="viewer">
-          <span class="shot" style="--ar:150/120"><img src="assets/img/1965-2004/thumb/17.jpg" width="150" height="120" alt="Photograph 17"></span>
-        </button></li>
-        <li><button class="thumb" type="button" data-n="18"
-          data-full="assets/img/1965-2004/full/18.jpg" aria-controls="viewer">
-          <span class="shot" style="--ar:150/120"><img src="assets/img/1965-2004/thumb/18.jpg" width="150" height="120" alt="Photograph 18"></span>
-        </button></li>
-        <li><button class="thumb" type="button" data-n="19"
-          data-full="assets/img/1965-2004/full/19.jpg" aria-controls="viewer">
-          <span class="shot" style="--ar:150/120"><img src="assets/img/1965-2004/thumb/19.jpg" width="150" height="120" alt="Photograph 19"></span>
-        </button></li>
-        <li><button class="thumb" type="button" data-n="20"
-          data-full="assets/img/1965-2004/full/20.jpg" aria-controls="viewer">
-          <span class="shot" style="--ar:150/120"><img src="assets/img/1965-2004/thumb/20.jpg" width="150" height="120" alt="Photograph 20"></span>
-        </button></li>
-        <li><button class="thumb" type="button" data-n="21"
-          data-full="assets/img/1965-2004/full/21.jpg" aria-controls="viewer">
-          <span class="shot" style="--ar:150/120"><img src="assets/img/1965-2004/thumb/21.jpg" width="150" height="120" alt="Photograph 21"></span>
-        </button></li>
-        <li><button class="thumb" type="button" data-n="22"
-          data-full="assets/img/1965-2004/full/22.jpg" aria-controls="viewer">
-          <span class="shot" style="--ar:150/120"><img src="assets/img/1965-2004/thumb/22.jpg" width="150" height="120" alt="Photograph 22"></span>
-        </button></li>
-        <li><button class="thumb" type="button" data-n="23"
-          data-full="assets/img/1965-2004/full/23.jpg" aria-controls="viewer">
-          <span class="shot" style="--ar:150/120"><img src="assets/img/1965-2004/thumb/23.jpg" width="150" height="120" alt="Photograph 23"></span>
-        </button></li>
-        <li><button class="thumb" type="button" data-n="24"
-          data-full="assets/img/1965-2004/full/24.jpg" aria-controls="viewer">
-          <span class="shot" style="--ar:150/120"><img src="assets/img/1965-2004/thumb/24.jpg" width="150" height="120" alt="Photograph 24"></span>
-        </button></li>
-        <li><button class="thumb" type="button" data-n="25"
-          data-full="assets/img/1965-2004/full/25.jpg" aria-controls="viewer">
-          <span class="shot" style="--ar:150/120"><img src="assets/img/1965-2004/thumb/25.jpg" width="150" height="120" alt="Photograph 25"></span>
-        </button></li>
-        <li><button class="thumb" type="button" data-n="26"
-          data-full="assets/img/1965-2004/full/26.jpg" aria-controls="viewer">
-          <span class="shot" style="--ar:150/120"><img src="assets/img/1965-2004/thumb/26.jpg" width="150" height="120" alt="Photograph 26"></span>
-        </button></li>
-        <li><button class="thumb" type="button" data-n="27"
-          data-full="assets/img/1965-2004/full/27.jpg" aria-controls="viewer">
-          <span class="shot" style="--ar:150/120"><img src="assets/img/1965-2004/thumb/27.jpg" width="150" height="120" alt="Photograph 27"></span>
-        </button></li>
-        <li><button class="thumb" type="button" data-n="28"
-          data-full="assets/img/1965-2004/full/28.jpg" aria-controls="viewer">
-          <span class="shot" style="--ar:150/120"><img src="assets/img/1965-2004/thumb/28.jpg" width="150" height="120" alt="Photograph 28"></span>
-        </button></li>
-        <li><button class="thumb" type="button" data-n="29"
-          data-full="assets/img/1965-2004/full/29.jpg" aria-controls="viewer">
-          <span class="shot" style="--ar:150/120"><img src="assets/img/1965-2004/thumb/29.jpg" width="150" height="120" alt="Photograph 29"></span>
-        </button></li>
-        <li><button class="thumb" type="button" data-n="30"
-          data-full="assets/img/1965-2004/full/30.jpg" aria-controls="viewer">
-          <span class="shot" style="--ar:150/120"><img src="assets/img/1965-2004/thumb/30.jpg" width="150" height="120" alt="Photograph 30"></span>
-        </button></li>
-        <li><button class="thumb" type="button" data-n="31"
-          data-full="assets/img/1965-2004/full/31.jpg" aria-controls="viewer">
-          <span class="shot" style="--ar:150/120"><img src="assets/img/1965-2004/thumb/31.jpg" width="150" height="120" alt="Photograph 31"></span>
-        </button></li>
-        <li><button class="thumb" type="button" data-n="32"
-          data-full="assets/img/1965-2004/full/32.jpg" aria-controls="viewer">
-          <span class="shot" style="--ar:150/120"><img src="assets/img/1965-2004/thumb/32.jpg" width="150" height="120" alt="Photograph 32"></span>
-        </button></li>
-        <li><button class="thumb" type="button" data-n="33"
-          data-full="assets/img/1965-2004/full/33.jpg" aria-controls="viewer">
-          <span class="shot" style="--ar:150/120"><img src="assets/img/1965-2004/thumb/33.jpg" width="150" height="120" alt="Photograph 33"></span>
-        </button></li>
-        <li class="slot" style="background:#557261" aria-hidden="true"></li>
-        <li class="slot" style="background:#8a554a" aria-hidden="true"></li>
       </ul>
 
       <div class="viewer viewer--plain" id="viewer" role="region" aria-label="Enlargement" aria-hidden="true">
@@ -203,9 +133,13 @@
         <ul><li><a href="about.html">About the Project</a></li><li><a href="bios.html">Bios</a></li><li><a href="early.html">Early Photos</a></li><li><a href="kodachromes.html">1960's</a></li><li><a href="beforethewar.html">1970's</a></li><li><a href="wwii.html">1980's</a></li><li><a href="afterthewar.html">1990's</a></li><li><a href="landscapes.html">2000-2009</a></li><li><a href="negatives.html">2010-2019</a></li><li><span aria-current="page">2020-present</span></li></ul>
       </nav>
       <p class="sheets" aria-label="Sheets in this section">
-        <span class="nav-item f-akzidenz-cn sheet-item" style="--x:124.5;--bl:482.3;--sz:12;--on:#3d4f7c" aria-current="page">SHEET 1</span>
-        <span class="tick" style="--x:162.9;--y1:473.9;--y2:482.3"></span>
-        <a class="nav-item f-akzidenz-cn sheet-item" style="--x:171.1;--bl:482.3;--sz:12;--on:#3d4f7c" href="1965-2004-2.html">SHEET 2</a>
+        <span class="nav-item f-akzidenz-cn sheet-item" style="--x:74.5;--bl:476.2;--sz:12;--on:#3d4f7c" aria-current="page">SHEET 1</span>
+        <span class="tick" style="--x:112.9;--y1:467.8;--y2:476.2"></span>
+        <a class="nav-item f-akzidenz-cn sheet-item" style="--x:121.1;--bl:476.2;--sz:12;--on:#3d4f7c" href="1965-2004-2.html">SHEET 2</a>
+        <span class="tick" style="--x:160.5;--y1:467.8;--y2:476.2"></span>
+        <a class="nav-item f-akzidenz-cn sheet-item" style="--x:168.5;--bl:476.2;--sz:12;--on:#3d4f7c" href="1965-2004-3.html">SHEET 3</a>
+        <span class="tick" style="--x:207.6;--y1:467.8;--y2:476.2"></span>
+        <a class="nav-item f-akzidenz-cn sheet-item" style="--x:215.8;--bl:476.2;--sz:12;--on:#3d4f7c" href="1965-2004-4.html">SHEET 4</a>
       </p>
 
     </div>
@@ -271,78 +205,6 @@
   </article>
   <article id="slide-15" class="entry">
     <img src="assets/img/1965-2004/full/15.jpg" width="450" height="360" loading="lazy" alt="Photograph 15">
-    <div class="entry-text"><h2>Photograph</h2></div>
-  </article>
-  <article id="slide-16" class="entry">
-    <img src="assets/img/1965-2004/full/16.jpg" width="450" height="360" loading="lazy" alt="Photograph 16">
-    <div class="entry-text"><h2>Photograph</h2></div>
-  </article>
-  <article id="slide-17" class="entry">
-    <img src="assets/img/1965-2004/full/17.jpg" width="450" height="360" loading="lazy" alt="Photograph 17">
-    <div class="entry-text"><h2>Photograph</h2></div>
-  </article>
-  <article id="slide-18" class="entry">
-    <img src="assets/img/1965-2004/full/18.jpg" width="450" height="360" loading="lazy" alt="Photograph 18">
-    <div class="entry-text"><h2>Photograph</h2></div>
-  </article>
-  <article id="slide-19" class="entry">
-    <img src="assets/img/1965-2004/full/19.jpg" width="450" height="360" loading="lazy" alt="Photograph 19">
-    <div class="entry-text"><h2>Photograph</h2></div>
-  </article>
-  <article id="slide-20" class="entry">
-    <img src="assets/img/1965-2004/full/20.jpg" width="450" height="360" loading="lazy" alt="Photograph 20">
-    <div class="entry-text"><h2>Photograph</h2></div>
-  </article>
-  <article id="slide-21" class="entry">
-    <img src="assets/img/1965-2004/full/21.jpg" width="450" height="360" loading="lazy" alt="Photograph 21">
-    <div class="entry-text"><h2>Photograph</h2></div>
-  </article>
-  <article id="slide-22" class="entry">
-    <img src="assets/img/1965-2004/full/22.jpg" width="450" height="360" loading="lazy" alt="Photograph 22">
-    <div class="entry-text"><h2>Photograph</h2></div>
-  </article>
-  <article id="slide-23" class="entry">
-    <img src="assets/img/1965-2004/full/23.jpg" width="450" height="360" loading="lazy" alt="Photograph 23">
-    <div class="entry-text"><h2>Photograph</h2></div>
-  </article>
-  <article id="slide-24" class="entry">
-    <img src="assets/img/1965-2004/full/24.jpg" width="450" height="360" loading="lazy" alt="Photograph 24">
-    <div class="entry-text"><h2>Photograph</h2></div>
-  </article>
-  <article id="slide-25" class="entry">
-    <img src="assets/img/1965-2004/full/25.jpg" width="450" height="360" loading="lazy" alt="Photograph 25">
-    <div class="entry-text"><h2>Photograph</h2></div>
-  </article>
-  <article id="slide-26" class="entry">
-    <img src="assets/img/1965-2004/full/26.jpg" width="450" height="360" loading="lazy" alt="Photograph 26">
-    <div class="entry-text"><h2>Photograph</h2></div>
-  </article>
-  <article id="slide-27" class="entry">
-    <img src="assets/img/1965-2004/full/27.jpg" width="450" height="360" loading="lazy" alt="Photograph 27">
-    <div class="entry-text"><h2>Photograph</h2></div>
-  </article>
-  <article id="slide-28" class="entry">
-    <img src="assets/img/1965-2004/full/28.jpg" width="450" height="360" loading="lazy" alt="Photograph 28">
-    <div class="entry-text"><h2>Photograph</h2></div>
-  </article>
-  <article id="slide-29" class="entry">
-    <img src="assets/img/1965-2004/full/29.jpg" width="450" height="360" loading="lazy" alt="Photograph 29">
-    <div class="entry-text"><h2>Photograph</h2></div>
-  </article>
-  <article id="slide-30" class="entry">
-    <img src="assets/img/1965-2004/full/30.jpg" width="450" height="360" loading="lazy" alt="Photograph 30">
-    <div class="entry-text"><h2>Photograph</h2></div>
-  </article>
-  <article id="slide-31" class="entry">
-    <img src="assets/img/1965-2004/full/31.jpg" width="450" height="360" loading="lazy" alt="Photograph 31">
-    <div class="entry-text"><h2>Photograph</h2></div>
-  </article>
-  <article id="slide-32" class="entry">
-    <img src="assets/img/1965-2004/full/32.jpg" width="450" height="360" loading="lazy" alt="Photograph 32">
-    <div class="entry-text"><h2>Photograph</h2></div>
-  </article>
-  <article id="slide-33" class="entry">
-    <img src="assets/img/1965-2004/full/33.jpg" width="450" height="360" loading="lazy" alt="Photograph 33">
     <div class="entry-text"><h2>Photograph</h2></div>
   </article>
   </section>

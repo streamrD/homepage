@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- viewport-fit=cover: without it iOS keeps the page clear of the notch and
+     fills the reserved band with the html background, which on a landscape
+     phone reads as two grey bars down the sides of the paper. The stage pads
+     itself back off the inset with env(safe-area-inset-*). -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>before the war — moore archives</title>
 <meta name="description" content="14 photographs from the Before the war section of the Moore family archive. Photographs by James E. Moore.">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
@@ -33,7 +37,7 @@
   </div>
 
   <div class="viewport">
-    <div class="stage" id="stage" role="main" tabindex="-1" style="--title-alpha:0.102">
+    <div class="stage" id="stage" role="main" tabindex="-1" style="--title-alpha:0.102;--section-ink:#26585c">
 
       <h1 class="gallery-title">
         <span class="t f-caslon-book" style="--x:0.9;--bl:549.1;--sz:65">before the war</span>
@@ -117,7 +121,7 @@
 
       <a class="masthead" href="index.html"
          aria-label="moore archives, 1900 to 2004 — James E. Moore and Emily M. Moore. Back to the front page.">
-        <span class="mast-line"><span class="t f-caslon-black is-i" style="--x:12;--bl:21;--sz:13;--tr:0.809">moore</span><span class="t f-caslon-book is-i" style="--x:59.8;--bl:21;--sz:13">archives</span><span class="t f-helvetica45" style="--x:123.1;--bl:21;--sz:9">1900–2004</span></span>
+        <span class="mast-line"><span class="t f-caslon-black is-i" style="--x:12;--bl:21;--sz:13;--tr:0.809">moore</span><span class="t f-caslon-book is-i" style="--x:59.8;--bl:21;--sz:13">archives</span><span class="t f-helvetica45" style="--x:123.1;--bl:21;--sz:9">1900–1980</span></span>
         <span class="mast-line"><span class="t f-caslon-medium" style="--x:12;--bl:33.5;--sz:6.3">James E. Moore </span><span class="t f-caslon-book" style="--x:59.2;--bl:33.5;--sz:6.3">&amp; </span><span class="t f-caslon-medium" style="--x:65.3;--bl:33.5;--sz:6.3">Emily M. Moore</span></span>
       </a>
 

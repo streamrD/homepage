@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- viewport-fit=cover: without it iOS keeps the page clear of the notch and
+     fills the reserved band with the html background, which on a landscape
+     phone reads as two grey bars down the sides of the paper. The stage pads
+     itself back off the inset with env(safe-area-inset-*). -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>kodachromes — moore archives</title>
 <meta name="description" content="Twenty Kodachrome slides photographed by James E. Moore in Detroit and Michigan, c. 1953–1964, with family annotations.">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
@@ -34,7 +38,7 @@
   </div>
 
   <div class="viewport">
-    <div class="stage" id="stage" role="main" tabindex="-1" style="--title-alpha:0.102">
+    <div class="stage" id="stage" role="main" tabindex="-1" style="--title-alpha:0.102;--section-ink:#853455">
 
       <h1 class="gallery-title">
         <span class="t f-caslon-medium is-i" style="--x:-4.3;--bl:549.1;--sz:65">kodachromes</span>
@@ -42,12 +46,12 @@
 
       <ul class="grid" id="grid" data-state="out" style="--slot-ar:1.42">
         <li><button class="thumb" type="button" data-n="1"
-          data-full="assets/img/full/1.jpg" data-full2x="assets/img/full/1@2x.jpg" data-other="assets/img/full/1a.jpg" data-other2x="assets/img/full/1a@2x.jpg" data-other-alt="James Edward Moore, c. 1958 — another frame" aria-controls="viewer"
+          data-full="assets/img/full/1.jpg" data-full2x="assets/img/full/1@2x.jpg" data-others='[{"full": "assets/img/full/1a.jpg", "full2x": "assets/img/full/1a@2x.jpg", "alt": "James Edward Moore, c. 1958 \u2014 another frame"}]' aria-controls="viewer"
           style="--x:74.5;--y:68.5;--w:90.9;--h:72.7">
           <span class="shot" style="--ar:150/106"><img src="assets/img/thumb/1.jpg" width="150" height="106" alt="James Edward Moore, c. 1958"></span>
         </button></li>
         <li><button class="thumb" type="button" data-n="2"
-          data-full="assets/img/full/2.jpg" data-full2x="assets/img/full/2@2x.jpg" data-other="assets/img/full/2a.jpg" data-other2x="assets/img/full/2a@2x.jpg" data-other-alt="Detroit, MI, 1964 — another frame" aria-controls="viewer"
+          data-full="assets/img/full/2.jpg" data-full2x="assets/img/full/2@2x.jpg" data-others='[{"full": "assets/img/full/2a.jpg", "full2x": "assets/img/full/2a@2x.jpg", "alt": "Detroit, MI, 1964 \u2014 another frame"}, {"full": "assets/img/full/2b.jpg", "full2x": "assets/img/full/2b@2x.jpg", "alt": "Detroit, MI, 1964 \u2014 another frame"}]' aria-controls="viewer"
           style="--x:218.5;--y:68.5;--w:90.9;--h:72.7">
           <span class="shot" style="--ar:150/106"><img src="assets/img/thumb/2.jpg" width="150" height="106" alt="Detroit, MI, 1964"></span>
         </button></li>
@@ -72,17 +76,17 @@
           <span class="shot" style="--ar:150/106"><img src="assets/img/thumb/6.jpg" width="150" height="106" alt="Moore kids in dining room with Boston Coolers, c. 1954-5"></span>
         </button></li>
         <li><button class="thumb" type="button" data-n="7"
-          data-full="assets/img/full/7.jpg" data-full2x="assets/img/full/7@2x.jpg" data-other="assets/img/full/7a.jpg" data-other2x="assets/img/full/7a@2x.jpg" data-other-alt="Barbara Florence Moore, c. 1958 — another frame" aria-controls="viewer"
+          data-full="assets/img/full/7.jpg" data-full2x="assets/img/full/7@2x.jpg" data-others='[{"full": "assets/img/full/7a.jpg", "full2x": "assets/img/full/7a@2x.jpg", "alt": "Barbara Florence Moore, c. 1958 \u2014 another frame"}]' aria-controls="viewer"
           style="--x:218.5;--y:178.4;--w:90.9;--h:72.7">
           <span class="shot" style="--ar:150/106"><img src="assets/img/thumb/7.jpg" width="150" height="106" alt="Barbara Florence Moore, c. 1958"></span>
         </button></li>
         <li><button class="thumb" type="button" data-n="8"
-          data-full="assets/img/full/8.jpg" data-full2x="assets/img/full/8@2x.jpg" data-other="assets/img/full/8a.jpg" data-other2x="assets/img/full/8a@2x.jpg" data-other-alt="Paul Alan Moore, c. 1955 — another frame" aria-controls="viewer"
+          data-full="assets/img/full/8.jpg" data-full2x="assets/img/full/8@2x.jpg" data-others='[{"full": "assets/img/full/8a.jpg", "full2x": "assets/img/full/8a@2x.jpg", "alt": "Paul Alan Moore, c. 1955 \u2014 another frame"}]' aria-controls="viewer"
           style="--x:360.2;--y:178.4;--w:90.9;--h:72.7">
           <span class="shot" style="--ar:150/106"><img src="assets/img/thumb/8.jpg" width="150" height="106" alt="Paul Alan Moore, c. 1955"></span>
         </button></li>
         <li><button class="thumb" type="button" data-n="9"
-          data-full="assets/img/full/9.jpg" data-full2x="assets/img/full/9@2x.jpg" data-other="assets/img/full/9a.jpg" data-other2x="assets/img/full/9a@2x.jpg" data-other-alt="Julia Ann Moore, mid 1950&#x27;s — another frame" aria-controls="viewer"
+          data-full="assets/img/full/9.jpg" data-full2x="assets/img/full/9@2x.jpg" data-others='[{"full": "assets/img/full/9a.jpg", "full2x": "assets/img/full/9a@2x.jpg", "alt": "Julia Ann Moore, mid 1950&#39;s \u2014 another frame"}]' aria-controls="viewer"
           style="--x:501.9;--y:178.4;--w:90.9;--h:72.7">
           <span class="shot" style="--ar:150/106"><img src="assets/img/thumb/9.jpg" width="150" height="106" alt="Julia Ann Moore, mid 1950&#x27;s"></span>
         </button></li>
@@ -92,12 +96,12 @@
           <span class="shot" style="--ar:150/106"><img src="assets/img/thumb/10.jpg" width="150" height="106" alt="A man in a suit and tie playing a trumpet, standing against a panelled door in a kitchen"></span>
         </button></li>
         <li><button class="thumb" type="button" data-n="11"
-          data-full="assets/img/full/11.jpg" data-full2x="assets/img/full/11@2x.jpg" data-other="assets/img/full/11a.jpg" data-other2x="assets/img/full/11a@2x.jpg" data-other-alt="A small boy and a girl in a plaid dress in front of a white chenille bedspread — another frame" aria-controls="viewer"
+          data-full="assets/img/full/11.jpg" data-full2x="assets/img/full/11@2x.jpg" data-others='[{"full": "assets/img/full/11a.jpg", "full2x": "assets/img/full/11a@2x.jpg", "alt": "A small boy and a girl in a plaid dress in front of a white chenille bedspread \u2014 another frame"}]' aria-controls="viewer"
           style="--x:74.5;--y:283.9;--w:90.9;--h:72.7">
           <span class="shot" style="--ar:150/106"><img src="assets/img/thumb/11.jpg" width="150" height="106" alt="A small boy and a girl in a plaid dress in front of a white chenille bedspread"></span>
         </button></li>
         <li><button class="thumb" type="button" data-n="12"
-          data-full="assets/img/full/12.jpg" data-full2x="assets/img/full/12@2x.jpg" data-other="assets/img/full/12a.jpg" data-other2x="assets/img/full/12a@2x.jpg" data-other-alt="James Edward Moore with his mother, Julia Ann, late 1950&#x27;s — another frame" aria-controls="viewer"
+          data-full="assets/img/full/12.jpg" data-full2x="assets/img/full/12@2x.jpg" data-others='[{"full": "assets/img/full/12a.jpg", "full2x": "assets/img/full/12a@2x.jpg", "alt": "James Edward Moore with his mother, Julia Ann, late 1950&#39;s \u2014 another frame"}]' aria-controls="viewer"
           style="--x:218.5;--y:283.9;--w:90.9;--h:72.7">
           <span class="shot" style="--ar:150/106"><img src="assets/img/thumb/12.jpg" width="150" height="106" alt="James Edward Moore with his mother, Julia Ann, late 1950&#x27;s"></span>
         </button></li>
@@ -160,7 +164,7 @@
 
       <a class="masthead" href="index.html"
          aria-label="moore archives, 1900 to 2004 — James E. Moore and Emily M. Moore. Back to the front page.">
-        <span class="mast-line"><span class="t f-caslon-black is-i" style="--x:12;--bl:21;--sz:13;--tr:0.809">moore</span><span class="t f-caslon-book is-i" style="--x:59.8;--bl:21;--sz:13">archives</span><span class="t f-helvetica45" style="--x:123.1;--bl:21;--sz:9">1900–2004</span></span>
+        <span class="mast-line"><span class="t f-caslon-black is-i" style="--x:12;--bl:21;--sz:13;--tr:0.809">moore</span><span class="t f-caslon-book is-i" style="--x:59.8;--bl:21;--sz:13">archives</span><span class="t f-helvetica45" style="--x:123.1;--bl:21;--sz:9">1900–1980</span></span>
         <span class="mast-line"><span class="t f-caslon-medium" style="--x:12;--bl:33.5;--sz:6.3">James E. Moore </span><span class="t f-caslon-book" style="--x:59.2;--bl:33.5;--sz:6.3">&amp; </span><span class="t f-caslon-medium" style="--x:65.3;--bl:33.5;--sz:6.3">Emily M. Moore</span></span>
       </a>
 
@@ -205,6 +209,7 @@
            data-cx="521.5" data-cy="188.1" data-cw="219.7">
     <img src="assets/img/full/2.jpg" srcset="assets/img/full/2.jpg 1x, assets/img/full/2@2x.jpg 2x" width="900" height="634" loading="lazy" alt="Detroit, MI, 1964">
     <img src="assets/img/full/2a.jpg" srcset="assets/img/full/2a.jpg 1x, assets/img/full/2a@2x.jpg 2x" width="900" height="634" loading="lazy" alt="Detroit, MI, 1964 — another frame">
+    <img src="assets/img/full/2b.jpg" srcset="assets/img/full/2b.jpg 1x, assets/img/full/2b@2x.jpg 2x" width="900" height="634" loading="lazy" alt="Detroit, MI, 1964 — another frame">
     <div class="entry-text">
     <h2>Detroit, MI, 1964</h2>
       <p>View from the front porch of 16547 Coyle. This new 1964 Chevy Impala was the family car for many years and the car Barbara learned to drive in 1964.</p>
