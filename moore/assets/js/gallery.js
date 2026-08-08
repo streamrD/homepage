@@ -62,6 +62,15 @@ function prime(url) {
   return primed.get(url);
 }
 
+/* Which file the browser will actually choose for this frame.
+   Thirty of the 1965-2004 enlargements now have a 2x cut, so on a retina
+   screen the idle sweep below would warm 8MB in the background if it took
+   them. It warms the 1x only; the 2x is fetched for the frame you reach for,
+   which is the one you are about to open. Priming the same URL the srcset
+   will resolve to is what stops it being fetched twice. */
+const best = b => (window.devicePixelRatio > 1.3 && b.dataset.full2x)
+  ? b.dataset.full2x : b.dataset.full;
+
 const idle = window.requestIdleCallback || (fn => setTimeout(fn, 400));
 
 // pushState is rejected on file:// (opaque origin), so deep links are a
@@ -81,7 +90,7 @@ const setHash = url => { try { history.pushState({}, '', url); } catch { /* file
    cell is part of the sheet you are still inside, but it lights nothing. */
 const roll = window.mooreStage.sticky(thumbs, {
   bounds: grid.querySelectorAll('.thumb, .slot'),
-  light: b => { grid.dataset.hover = '1'; b.dataset.hovered = '1'; prime(b.dataset.full); },
+  light: b => { grid.dataset.hover = '1'; b.dataset.hovered = '1'; prime(best(b)); },
   clear: b => { if (b) delete b.dataset.hovered; delete grid.dataset.hover; }
 });
 
@@ -103,6 +112,7 @@ function open(n, { push = true } = {}) {
 
   const title = entry.querySelector('h2').textContent;
   const src = button.dataset.full;
+  const hi = button.dataset.full2x;
 
   // shape the card to this print (recto and verso are the same object)
   const shot = entry.querySelector('img');
@@ -112,8 +122,10 @@ function open(n, { push = true } = {}) {
   }
   photo.setAttribute('aria-label', `${title} — back to the contact sheet`);
   // swap only once the frame has decoded, so stepping never blanks the box
-  prime(src).then(() => {
+  prime(best(button)).then(() => {
     if (current !== n) return;               // moved on while decoding
+    if (hi) photoImg.srcset = `${src} 1x, ${hi} 2x`;
+    else photoImg.removeAttribute('srcset');
     photoImg.src = src;
     photoImg.alt = title;
   });
@@ -221,7 +233,7 @@ boot(stage, ['assets/img/paper.jpg', ...thumbs.map(t => t.querySelector('img').s
       if (i >= thumbs.length) return;
       const t = thumbs[i++];
       if (t.dataset.verso) prime(t.dataset.verso);
-      prime(t.dataset.full).then(() => idle(next));
+      prime(t.dataset.full).then(() => idle(next));   // 1x only; see best()
     };
     idle(next);
   });

@@ -42,7 +42,8 @@ web/
   Makefile              `make deps` then `make all` rebuilds everything
 ```
 
-The deployable site is about 12 MB, of which the template edition is 3 MB.
+The deployable site is about 26 MB, of which the template edition is 3 MB and
+the 2x enlargements are 9 MB.
 `tools/` is build-time only, and must be left out of the deployed folder —
 it would otherwise be publicly fetchable.
 
@@ -117,7 +118,7 @@ copied:
   | `afterthewar.html` | `afterthewar/` | 61 |
   | `landscapes.html` | `landscapes/` | 12 |
   | `negatives.html` | `6x9cmNegs/` | 15 |
-  | `1965-2004.html` | `../momSent10-2002/` + selects | 34 |
+  | `1965-2004.html` | `../momSent10-2002/` + selects | 33 |
   | `1965-2004-2.html` | `1965-2004/` | 12 |
 
   The counts are what each sheet publishes, not what the folder holds — the
@@ -207,7 +208,20 @@ copied:
   spends most of the journey over no frame at all, and the whole sheet flared
   back and dimmed again at every crossing. The lit frame now stays lit until
   another takes over or the pointer leaves the sheet — one cross-fade per
-  landing.
+  landing. Both navigation rows behave the same way, off the same code.
+* **Colour on the nav.** The section you are in is named by a hue as well as
+  by weight, drawn from the palette the empty contact-sheet cells use. On the
+  landing page, where no section is current, the whole list stands at full
+  strength until you reach for it.
+* **Enlargements at 900px, and 1600 where the scans allow.** The stage draws
+  one at up to 787 css px, so the 2004 size of 450 was being upscaled. 35
+  frames — nearly all of 1965-2004, whose sources are 4000px originals — also
+  carry a 2x cut for retina, delivered by `srcset`. The idle prefetch stays at
+  1x deliberately; see `../CLAUDE.md`.
+* **Quicker transitions.** The 2004 frame counts were authored to cover a
+  modem-speed wait that priming has already removed, so they come down about a
+  third: the enlargement arrives in 300ms rather than 450, the sheet returns
+  in 420 rather than 700.
 * **No underlines.** The site's entire interaction language is the SWF's:
   things fade, nothing is decorated. So the nav carries no rules or
   underlines — the section you are in is simply the one at full strength, the
@@ -237,7 +251,7 @@ Two typos in the 2004 captions ("cancer inthe late 1960's", "lived from
 ## Fonts
 
 The typefaces are commercial (ITC Caslon 224, Akzidenz-Grotesk BE,
-Helvetica Neue). All but twenty-one characters came out of the SWFs, which
+Helvetica Neue). All but twenty-three characters came out of the SWFs, which
 embed `DefineFont2` glyph outlines for exactly the characters they use; those
 outlines are converted straight to WOFF2:
 
@@ -249,7 +263,7 @@ have no layout block). The result is the same subset the SWF already carried
 — ten characters for Caslon 224 Medium Italic, sixty-four for Caslon 224
 Book — totalling 34 KB for all eight faces.
 
-Twenty-one characters are grafted from installed copies of the real fonts,
+Twenty-three characters are grafted from installed copies of the real fonts,
 because the site was painting them in a face that had no glyph for them — and
 a missing glyph is not visibly missing, it is quietly served from Georgia, so
 one letter in a word changes weight and slope. `f` was the worst of them:
