@@ -41,6 +41,7 @@
   --dim-alpha: 0.2;
   --fold-face: #ded3b7;      /* the back of a print, turned up at the corner */
   --fold-large: 26px;        /* that corner, on the enlargement */
+  --nav-off: .38;            /* a nav label that is not the one you want */
 }
 
 * { box-sizing: border-box; }
@@ -160,15 +161,26 @@ a { color: inherit; }
      is coloured rather than merely full-strength (gen_site.SECTION_COLOUR),
      and colour alone is a weak signal at 12px, so the gap either side of it
      does the rest of the work. */
-  opacity: .38;
+  opacity: var(--nav-off);
   transition: opacity var(--t-dim) linear, color var(--t-dim) linear;
 }
 a.nav-item { cursor: pointer; }
 a.nav-item:hover,
-a.nav-item:focus-visible { opacity: 1; }
+a.nav-item:focus-visible { opacity: 1; color: var(--on, var(--ink)); }
 a.nav-item:focus-visible { outline: 1px solid var(--ink); outline-offset: 4px; }
 
-.nav-item[aria-current="page"] { opacity: 1; }
+.nav-item[aria-current="page"] { opacity: 1; color: var(--on, var(--ink)); }
+
+/* The splash has no current section, so nothing there is holding the eye and
+   there is no reason to hold the rest back: the whole list stands at full
+   strength until you reach for it, and then it behaves like the gallery nav —
+   the one under the pointer keeps its weight and takes its section's colour,
+   the rest drop away. Hovering the list is what dims it, so the fade has to
+   hang off the container, not the item. */
+.nav-home .nav-item { opacity: 1; }
+.nav-home:hover .nav-item { opacity: var(--nav-off); }
+.nav-home .nav-item:hover,
+.nav-home .nav-item:focus-visible { opacity: 1; color: var(--on, var(--ink)); }
 
 /* categories the 2004 original named but never published */
 .nav-item[aria-disabled="true"] { opacity: .24; cursor: default; }
