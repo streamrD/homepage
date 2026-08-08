@@ -130,22 +130,40 @@ function open(n, { push = true } = {}) {
     photoImg.alt = title;
   });
 
-  // a print scanned on both sides can be turned over
-  const back = button.dataset.verso;
+  /* The card can carry a second face, and there are two kinds.
+
+     A *verso* is the back of a print somebody wrote on — one object, two
+     sides, and it earns the turned-up corner that says so.
+
+     An *other frame* is a second exposure of the same moment. It turns over
+     the same way, because that is the gesture this viewer has, but it is not
+     the back of anything: no corner, and the control says so too. Only
+     `data-verso` sets `viewer.dataset.verso`, which is what draws the fold. */
+  const back  = button.dataset.verso;
+  const other = button.dataset.other;
+  const second = back || other;
+  const labels = back ? ['Turn over', 'Turn back']
+                      : ['Another frame', 'The first frame'];
   delete viewer.dataset.face;
-  turn.hidden = !back;
-  turn.textContent = 'Turn over';
+  turn.hidden = !second;
+  turn.textContent = labels[0];
+  turn.dataset.labels = labels.join('|');
   // the turned corner is drawn off this, so it has to be set before the
   // enlargement fades in rather than when the reverse finishes decoding
   if (back) viewer.dataset.verso = '1'; else delete viewer.dataset.verso;
-  if (back) {
-    prime(back).then(() => {
+  if (second) {
+    const hi2 = button.dataset.other2x;
+    prime(second).then(() => {
       if (current !== n) return;
-      versoImg.src = back;
-      versoImg.alt = button.dataset.versoAlt || `${title} — reverse`;
+      if (other && hi2) versoImg.srcset = `${other} 1x, ${hi2} 2x`;
+      else versoImg.removeAttribute('srcset');
+      versoImg.src = second;
+      versoImg.alt = (back ? button.dataset.versoAlt : button.dataset.otherAlt)
+                     || `${title} — ${back ? 'reverse' : 'another frame'}`;
     });
   } else {
     versoImg.removeAttribute('src');
+    versoImg.removeAttribute('srcset');
     versoImg.alt = '';
   }
 
@@ -197,7 +215,10 @@ function flip() {
   const showing = viewer.dataset.face === 'verso';
   if (showing) delete viewer.dataset.face;
   else viewer.dataset.face = 'verso';
-  turn.textContent = showing ? 'Turn over' : 'Turn back';
+  // the wording belongs to the kind of second face this frame has — a print's
+  // back turns over, a second exposure does not
+  const [front, reverse] = (turn.dataset.labels || 'Turn over|Turn back').split('|');
+  turn.textContent = showing ? front : reverse;
 }
 
 photo.addEventListener('click', () => close());
@@ -233,6 +254,7 @@ boot(stage, ['assets/img/paper.jpg', ...thumbs.map(t => t.querySelector('img').s
       if (i >= thumbs.length) return;
       const t = thumbs[i++];
       if (t.dataset.verso) prime(t.dataset.verso);
+      if (t.dataset.other) prime(t.dataset.other);   // 1x, as below
       prime(t.dataset.full).then(() => idle(next));   // 1x only; see best()
     };
     idle(next);

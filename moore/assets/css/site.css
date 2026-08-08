@@ -248,7 +248,12 @@ html:not(.js) .nav .nav-item:hover { opacity: 1; color: var(--on, var(--ink)); }
   transition: opacity var(--t-dim) linear;
 }
 .shot { position: relative; display: block; width: 100%; height: 100%; }
-.shot img { display: block; width: 100%; height: 100%; }
+/* `contain`, not a stretch. The 2004 Kodachrome thumbs were 5:4 like their
+   cell, so a stretch was invisible; the re-scans are mounted to the slide's
+   own 1.42 and would be squashed by one. A frame narrower than its cell now
+   letterboxes and sits centred, which is also what lets a re-scanned frame
+   and a 2004 one share a sheet without either being distorted. */
+.shot img { display: block; width: 100%; height: 100%; object-fit: contain; }
 
 /* The turned corner that marks a two-sided print lives on the enlargement
    only — see `.flip::after`. On a contact sheet it read as damage to the
@@ -292,6 +297,20 @@ html:not(.js) .nav .nav-item:hover { opacity: 1; color: var(--on, var(--ink)); }
    corner is inset by however much letterbox there is on each axis instead. */
 .grid--auto .shot { width: 100%; height: 100%; }
 .grid--auto .shot img { object-fit: contain; }
+
+/* An empty cell on the Kodachrome sheet, waiting on a photograph. That grid
+   is hand-placed at the SWF's own coordinates rather than solved, so unlike
+   the section sheets' slots below this one is positioned, and gen_site gives
+   it the cards' shape and centres it in the cell. */
+.grid:not(.grid--auto) .slot {
+  position: absolute;
+  left: calc(var(--x) * 1px);
+  top: calc(var(--y) * 1px);
+  width: calc(var(--w) * 1px);
+  height: calc(var(--h) * 1px);
+  opacity: 1;
+  transition: opacity var(--t-dim) linear;
+}
 
 /* An empty cell, waiting on a photograph. Square unless the sheet has a
    standard shape of its own — Landscapes is all 5:4 slides — in which case a
@@ -433,6 +452,19 @@ html:not(.js) .nav .nav-item:hover { opacity: 1; color: var(--on, var(--ink)); }
 }
 .viewer-caption p { margin: 0 0 13.7px; }
 .viewer-caption p:last-child { margin-bottom: 0; }
+/* A URL is one long unbreakable word in a 228px column, so it has to be
+   allowed to break rather than push the column wider than the stage. */
+.viewer-caption, .entry p { overflow-wrap: anywhere; }
+/* The site decorates nothing — but a link inside running text is the one
+   place where the reader has to be told, and fading is not a signal you can
+   see in a single word. An underline, kept off the baseline. */
+.viewer-caption a, .entry a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: from-font;
+  text-underline-offset: 2px;
+}
+.viewer-caption a:hover, .entry a:hover { opacity: .7; }
 
 /* sits in the empty band between the photograph and the nav rule */
 .viewer-hint, .viewer-turn {
@@ -697,6 +729,10 @@ html:not(.js) .viewer { display: none; }
   .grid--auto .thumb { width: auto; height: auto; aspect-ratio: 1; }
   .grid--auto .shot { height: auto; max-height: 100%; }
   .grid--auto .slot { width: auto; height: auto; aspect-ratio: var(--slot-ar, 1); }
+  .grid:not(.grid--auto) .slot {
+    position: static; width: auto; height: auto;
+    aspect-ratio: var(--slot-ar, 1.42);
+  }
   .grid[data-state="out"] { opacity: 1; pointer-events: auto; }
   .grid[data-hover] .thumb:not([data-hovered]) { opacity: 1; }
   .thumb img { width: 100%; height: auto; }

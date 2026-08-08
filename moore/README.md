@@ -263,7 +263,7 @@ have no layout block). The result is the same subset the SWF already carried
 — ten characters for Caslon 224 Medium Italic, sixty-four for Caslon 224
 Book — totalling 34 KB for all eight faces.
 
-Twenty-three characters are grafted from installed copies of the real fonts,
+Twenty-four characters are grafted from installed copies of the real fonts,
 because the site was painting them in a face that had no glyph for them — and
 a missing glyph is not visibly missing, it is quietly served from Georgia, so
 one letter in a word changes weight and slope. `f` was the worst of them:

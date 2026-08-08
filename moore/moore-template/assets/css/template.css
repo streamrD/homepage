@@ -89,9 +89,16 @@
   opacity: var(--title-alpha, .102);
   overflow: visible;
 }
+/* The words stay in the markup beside the drawing so the h1 is still a
+   heading. Clipped rather than removed — and they need the substitute stack
+   here, not only in the narrow layout below: without it they inherit the
+   archive's Caslon from `body`, which has no `2` for "2010-2019" and no
+   apostrophe for "1980's". Invisible, but declared in a face that cannot set
+   it, which is exactly what audit_faces.py is for. */
 .tpl-mark-text {
   position: absolute; width: 1px; height: 1px;
   overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+  font-family: var(--tpl-serif);
 }
 /* Below the breakpoint the composition reflows and the watermark stops being
    a watermark, so the drawing goes and the words are set as ordinary type. */
