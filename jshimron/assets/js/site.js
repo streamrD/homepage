@@ -112,6 +112,7 @@
     current = id;
     fig.classList.add('is-open');
     thumbs.classList.add('is-hidden');
+    light(null);   // the grid is going away; don't bring a lit thumb back with it
     mark(ids.indexOf(id));
     warmNeighbours(id);
   }
@@ -214,10 +215,41 @@
     });
   }
 
+  /* --- sticky roll-over -------------------------------------------
+
+     Which thumb is lit is held here rather than left to :hover, because
+     the grid has gaps in it — 29 to 38px, depending on the page, against
+     a 100px cell — so a third of any crossing is spent over no thumb at
+     all. Releasing on the way out of a thumb would drop it back to the
+     dim and light it again on landing, and reading along a row would
+     strobe.
+
+     So leaving a thumb does nothing. The lit one stays lit until another
+     takes over, or until the pointer leaves the field, which is the
+     padded box .thumbs draws around the grid. CSS reads .is-lit; see the
+     note above .thumbs:hover in site.css.                             */
+
+  var lit = null;
+
+  function light(link) {
+    if (lit === link) return;
+    if (lit) lit.classList.remove('is-lit');
+    lit = link;
+    if (link) link.classList.add('is-lit');
+  }
+
   thumbs.addEventListener('mouseover', function (e) {
     var link = e.target.closest('.thumb');
-    if (link) warm(link.href);
+    if (!link) return;
+    light(link);
+    warm(link.href);
   });
+
+  // Leaving the field is the one thing that puts the grid back to rest.
+  // Clearing it matters even though :hover has already lifted the dim by
+  // then: a stale .is-lit would show through the next time the pointer
+  // came in over a gap.
+  thumbs.addEventListener('mouseleave', function () { light(null); });
 
   /* Last, because a deep-linked hash calls show() -> warmNeighbours() -> warm(),
      and `warmed` must already be initialised by then. */
